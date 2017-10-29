@@ -7,7 +7,7 @@ image-w-console:
 	CHECKPOINT_DISABLE=1 packer build -var 'headless=false' ubuntu1604.json
 
 image:
-	CHECKPOINT_DISABLE=1 packer build ubuntu1604.json
+	CHECKPOINT_DISABLE=1 packer build ubuntu1604.json | tee build.log
 
 # This assumes a VM running with IP address in $TESTVM_IP and injected SSH key 
 test-image:

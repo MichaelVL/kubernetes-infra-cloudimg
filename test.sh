@@ -9,6 +9,13 @@ else
     exit -1
 fi
 
+if [ `sysctl -n net.bridge.bridge-nf-call-iptables` -eq "1" ]; then
+    echo "Bridged iptables configured .... OK"
+else
+    echo "** Iptables configuration ERROR"
+    exit -1
+fi
+
 if [ `cat /etc/shadow | cut -d':' -f2 | grep -v '^[!*]' | wc -l` -eq "0" ]; then
     echo "Password disabling ............. OK"
 else
