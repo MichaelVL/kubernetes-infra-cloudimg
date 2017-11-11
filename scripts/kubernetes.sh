@@ -9,7 +9,7 @@ deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 apt-get update
 apt-get install -y docker.io
-apt-get install -y ebtables ethtool
+apt-get install -y ebtables ethtool socat
 apt-get install -y kubelet kubeadm kubectl kubernetes-cni
 
 KUBE_MAJOR=$(echo $KUBERNETES_VERSION | cut -d. -f1)
@@ -66,8 +66,9 @@ docker pull gcr.io/google_containers/heapster-amd64:v1.4.0
 docker pull gcr.io/google_containers/heapster-influxdb-amd64:v1.3.3
 docker pull gcr.io/kubernetes-helm/tiller:v2.4.2
 
-echo "--> Images available"
-docker images
+echo "--> Pulling Ingress controller images"
+docker pull gcr.io/google_containers/defaultbackend:1.3
+docker pull gcr.io/google_containers/nginx-ingress-controller:0.9.0-beta.15
 
 echo "--> Fetching add-on manifests"
 
@@ -88,6 +89,9 @@ mkdir -p /etc/kubernetes/addon-manifests/canal
 cd /etc/kubernetes/addon-manifests/canal
 curl -O https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/$CANAL_VER/rbac.yaml
 curl -O https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/$CANAL_VER/canal.yaml
+
+echo "--> Images available after installing Kubernetes"
+docker images
 
 echo "--> Manifests available"
 ls -R /etc/kubernetes/addon-manifests/

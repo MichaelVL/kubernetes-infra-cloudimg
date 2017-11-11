@@ -70,6 +70,7 @@
         "scripts/base-packages.sh",
         "scripts/cloud-init.sh",
         "scripts/kubernetes.sh",
+        "scripts/addon-images.sh",
         "scripts/swap.sh",
         "scripts/grub.sh",
         "scripts/cleanup.sh"
