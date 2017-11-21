@@ -14,7 +14,7 @@
     "ssh_fullname": "ubuntu",
     "ssh_password": "ubuntu",
     "ssh_username": "ubuntu",
-    "kubernetes_version": "1.8.3"
+    "kubernetes_version": "1.8.4"
   },
   "builders": [
     {
