@@ -2,10 +2,10 @@
 
 echo "--> Remove udev rules"
 rm -rf /dev/.udev/
-rm /lib/udev/rules.d/75-persistent-net-generator.rules
+rm -f /lib/udev/rules.d/75-persistent-net-generator.rules
 
 echo "--> Remove dhcp leases"
-rm /var/lib/dhcp/*
+rm -f /var/lib/dhcp/*
 
 echo "--> Remove tmp"
 rm -rf /tmp/*
