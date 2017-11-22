@@ -1,5 +1,11 @@
 #!/bin/bash -eux
 
+echo "--> Images available after installing Kubernetes"
+docker images
+
+echo "--> Manifests available"
+ls -R /etc/kubernetes/addon-manifests/
+
 echo "--> Remove udev rules"
 rm -rf /dev/.udev/
 rm -f /lib/udev/rules.d/75-persistent-net-generator.rules
