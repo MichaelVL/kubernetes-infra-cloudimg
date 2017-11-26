@@ -70,6 +70,7 @@
         "scripts/base-packages.sh",
         "scripts/cloud-init.sh",
         "scripts/kubernetes.sh",
+        "scripts/kubernetes_nfs_storage.sh",
         "scripts/kubernetes_ingress.sh",
         "scripts/kubernetes_efk.sh",
         "scripts/kubernetes_cncf_test.sh",
