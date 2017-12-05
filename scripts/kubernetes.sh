@@ -35,8 +35,19 @@ then
     ETC_VER="3.0.17"
     PAUSE_VER="3.0"
     DNS_VER="1.14.5"
-    FLANNEL_VER="v0.8.0"
-    # FIXME - canal have no 1.8 manifests
+    FLANNEL_VER="v0.9.1"
+    # Canal resources are 1.7 for Kubernetes 1.8
+    CANAL_VER="1.7"
+    CANAL_NODE_IMG_VER="v2.6.2"
+    CANAL_CNI_IMG_VER="v1.11.0"
+fi
+if [ "$KUBE_MM" == "1.9" ]
+then
+    ETC_VER="3.0.17"
+    PAUSE_VER="3.0"
+    DNS_VER="1.14.5"
+    FLANNEL_VER="v0.9.1"
+    # Canal resources are 1.7 for Kubernetes 1.9
     CANAL_VER="1.7"
     CANAL_NODE_IMG_VER="v2.6.2"
     CANAL_CNI_IMG_VER="v1.11.0"
