@@ -15,4 +15,4 @@ curl -sO https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deplo
 
 echo "--> Pulling Ingress controller images"
 docker pull gcr.io/google_containers/defaultbackend:1.4
-docker pull quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0-beta.17
+docker pull quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
