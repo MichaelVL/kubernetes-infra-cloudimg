@@ -14,7 +14,7 @@
     "ssh_fullname": "ubuntu",
     "ssh_password": "ubuntu",
     "ssh_username": "ubuntu",
-    "kubernetes_version": "1.8.4"
+    "kubernetes_version": "1.8.5"
   },
   "builders": [
     {
@@ -72,6 +72,7 @@
         "scripts/kubernetes.sh",
         "scripts/kubernetes_nfs_storage.sh",
         "scripts/kubernetes_ingress.sh",
+        "scripts/kubernetes_prometheus_grafana.sh",
         "scripts/kubernetes_efk.sh",
         "scripts/kubernetes_cncf_test.sh",
         "scripts/addon-images.sh",
