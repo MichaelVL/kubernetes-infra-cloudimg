@@ -1,13 +1,16 @@
 .PHONY: image image-w-console validate test-image test-cncf
 
+#KUBERNETES_VERSION=1.8.6
+KUBERNETES_VERSION=1.9.1
+
 validate:
 	CHECKPOINT_DISABLE=1 packer validate ubuntu1604.json
 
 image-w-console:
-	CHECKPOINT_DISABLE=1 packer build -var 'headless=false' ubuntu1604.json
+	KUBERNETES_VERSION=$(KUBERNETES_VERSION) CHECKPOINT_DISABLE=1 packer build -var 'headless=false' ubuntu1604.json
 
 image:
-	CHECKPOINT_DISABLE=1 packer build ubuntu1604.json | tee build.log
+	KUBERNETES_VERSION=$(KUBERNETES_VERSION) CHECKPOINT_DISABLE=1 packer build ubuntu1604.json | tee build.log
 
 # This assumes a VM running with IP address in $TESTVM_IP and injected SSH key 
 test-image:
@@ -17,4 +20,4 @@ test-image:
 # This assumes a working Kubernetes cluster
 # See https://github.com/cncf/k8s-conformance/blob/master/instructions.md
 test-cncf:
-	ssh -i ${SSH_KEY} ${SSH_USER}@${TESTVM_IP} sudo kubectl create -f /etc/kubernetes/addon-manifests/cncf-conformance-test/ && watch kubectl -n sonobuoy logs sonobuoy
+	ssh -i ${SSH_KEY} ${SSH_USER}@${TESTVM_IP} sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl create -f /etc/kubernetes/addon-manifests/cncf-conformance-test/ && kubectl -n sonobuoy logs --follow sonobuoy
