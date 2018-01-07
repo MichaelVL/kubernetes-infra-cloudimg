@@ -6,8 +6,8 @@ echo "--> Fetching Prometheus and Grafana images"
 docker pull prom/alertmanager:v0.9.1
 docker pull jimmidyson/configmap-reload:v0.1
 docker pull gcr.io/google_containers/kube-state-metrics:v1.1.0-rc.0
-docker pull prom/node-exporter:v0.15.0
-docker pull prom/prometheus:v1.8.1
+docker pull prom/node-exporter:v0.15.2
+docker pull prom/prometheus:v1.8.2
 docker pull prom/pushgateway:v0.4.0
 
 # https://github.com/kubernetes/charts/tree/master/stable/grafana
