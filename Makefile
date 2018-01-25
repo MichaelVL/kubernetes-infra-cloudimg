@@ -1,7 +1,9 @@
 .PHONY: image image-w-console validate test-image test-cncf
 
-#KUBERNETES_VERSION=1.8.6
-KUBERNETES_VERSION=1.9.1
+ifndef KUBERNETES_VERSION
+#KUBERNETES_VERSION=1.8.7
+KUBERNETES_VERSION=1.9.2
+endif
 
 validate:
 	CHECKPOINT_DISABLE=1 packer validate ubuntu1604.json

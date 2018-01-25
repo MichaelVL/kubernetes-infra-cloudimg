@@ -1,14 +1,32 @@
 #!/bin/bash -eux
 
-echo "--> Installing Kubernetes packages"
-apt-get update && apt-get install -y curl apt-transport-https
+echo "--> Updating packages"
+apt-get update && apt-get upgrade -y && apt-get install -y curl apt-transport-https
 
+echo "--> Installing docker packages"
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 apt-get update
-apt-get install -y docker.io
+# Ubuntu docker version
+#apt-get install -y docker.io
+
+apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+
+# Docker docker version
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+add-apt-repository \
+   "deb https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+   $(lsb_release -cs) \
+   stable"
+apt-get update && apt-get install -y docker-ce=$(apt-cache madison docker-ce | grep 17.03 | head -1 | awk '{print $3}')
+
+echo "--> Installing Kubernetes packages"
 apt-get install -y ebtables ethtool socat
 apt-get install -y kubelet kubeadm kubectl kubernetes-cni
 
@@ -17,8 +35,8 @@ KUBE_MINOR=$(echo $KUBERNETES_VERSION | cut -d. -f2)
 KUBE_PATCH=$(echo $KUBERNETES_VERSION | cut -d. -f3)
 KUBE_MM="$KUBE_MAJOR.$KUBE_MINOR"
 
+# https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/
 # https://raw.githubusercontent.com/kubernetes/kubernetes/master/cmd/kubeadm/app/constants/constants.go
-# https://kubernetes.io/docs/admin/kubeadm/#custom-images
 # /etc/kubernetes/manifests/
 if [ "$KUBE_MM" == "1.7" ]
 then
@@ -43,9 +61,9 @@ then
 fi
 if [ "$KUBE_MM" == "1.9" ]
 then
-    ETC_VER="3.0.17"
+    ETC_VER="3.1.11"
     PAUSE_VER="3.0"
-    DNS_VER="1.14.5"
+    DNS_VER="1.14.7"
     FLANNEL_VER="v0.9.1"
     # Canal resources are 1.7 for Kubernetes 1.9
     CANAL_VER="1.7"
