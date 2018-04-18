@@ -70,6 +70,17 @@ then
     CANAL_NODE_IMG_VER="v2.6.2"
     CANAL_CNI_IMG_VER="v1.11.0"
 fi
+if [ "$KUBE_MM" == "1.10" ]
+then
+    ETC_VER="3.1.11"
+    PAUSE_VER="3.0"
+    DNS_VER="1.14.7"
+    FLANNEL_VER="v0.9.1"
+    # Canal resources are 1.7 for Kubernetes 1.9
+    CANAL_VER="1.7"
+    CANAL_NODE_IMG_VER="v2.6.2"
+    CANAL_CNI_IMG_VER="v1.11.0"
+fi
 
 echo "--> Pulling Kubernetes container images ($KUBERNETES_VERSION)"
 KUBEVER="v$KUBERNETES_VERSION"
