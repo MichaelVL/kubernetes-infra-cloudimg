@@ -72,9 +72,9 @@ then
 fi
 if [ "$KUBE_MM" == "1.10" ]
 then
-    ETC_VER="3.1.11"
-    PAUSE_VER="3.0"
-    DNS_VER="1.14.7"
+    ETC_VER="3.1.12"
+    PAUSE_VER="3.1"
+    DNS_VER="1.14.8"
     FLANNEL_VER="v0.9.1"
     # Canal resources are 1.7 for Kubernetes 1.9
     CANAL_VER="1.7"
@@ -84,17 +84,17 @@ fi
 
 echo "--> Pulling Kubernetes container images ($KUBERNETES_VERSION)"
 KUBEVER="v$KUBERNETES_VERSION"
-docker pull gcr.io/google_containers/kube-apiserver-amd64:$KUBEVER
-docker pull gcr.io/google_containers/kube-controller-manager-amd64:$KUBEVER
-docker pull gcr.io/google_containers/kube-scheduler-amd64:$KUBEVER
-docker pull gcr.io/google_containers/kube-proxy-amd64:$KUBEVER
+docker pull k8s.gcr.io/kube-apiserver-amd64:$KUBEVER
+docker pull k8s.gcr.io/kube-controller-manager-amd64:$KUBEVER
+docker pull k8s.gcr.io/kube-scheduler-amd64:$KUBEVER
+docker pull k8s.gcr.io/kube-proxy-amd64:$KUBEVER
 
-docker pull gcr.io/google_containers/etcd-amd64:$ETC_VER
+docker pull k8s.gcr.io/etcd-amd64:$ETC_VER
 
-docker pull gcr.io/google_containers/pause-amd64:$PAUSE_VER
-docker pull gcr.io/google_containers/k8s-dns-sidecar-amd64:$DNS_VER
-docker pull gcr.io/google_containers/k8s-dns-kube-dns-amd64:$DNS_VER
-docker pull gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:$DNS_VER
+docker pull k8s.gcr.io/pause-amd64:$PAUSE_VER
+docker pull k8s.gcr.io/k8s-dns-sidecar-amd64:$DNS_VER
+docker pull k8s.gcr.io/k8s-dns-kube-dns-amd64:$DNS_VER
+docker pull k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:$DNS_VER
 
 echo "--> Contents of /var/lib/kubelet"
 ls /var/lib/kubelet
