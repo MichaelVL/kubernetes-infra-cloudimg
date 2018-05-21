@@ -75,7 +75,7 @@ then
     ETC_VER="3.1.12"
     PAUSE_VER="3.1"
     DNS_VER="1.14.8"
-    FLANNEL_VER="v0.9.1"
+    FLANNEL_VER="v0.10.0-amd64"
     # Canal resources are 1.7 for Kubernetes 1.9
     CANAL_VER="1.7"
     CANAL_NODE_IMG_VER="v2.6.2"
