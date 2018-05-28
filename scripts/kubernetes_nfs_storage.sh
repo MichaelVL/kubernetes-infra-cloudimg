@@ -21,7 +21,7 @@ curl -O https://raw.githubusercontent.com/kubernetes-incubator/external-storage/
 curl -O https://raw.githubusercontent.com/kubernetes-incubator/external-storage/master/nfs/deploy/kubernetes/auth/clusterrole.yaml
 curl -O https://raw.githubusercontent.com/kubernetes-incubator/external-storage/master/nfs/deploy/kubernetes/auth/clusterrolebinding.yaml
 
-if [ "$KUBE_MM" == "1.8" ] || [ "$KUBE_MM" == "1.9" ] ; then
+if [ "$KUBE_MM" == "1.9" ] ; then
   # Moved to 'v1' in 1.8
   sed -i -e 's/apiVersion: rbac.authorization.k8s.io\/v1alpha1/apiVersion: rbac.authorization.k8s.io\/v1/' clusterrole.yaml
   sed -i -e 's/apiVersion: rbac.authorization.k8s.io\/v1alpha1/apiVersion: rbac.authorization.k8s.io\/v1/' clusterrolebinding.yaml

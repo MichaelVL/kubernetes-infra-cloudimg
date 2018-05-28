@@ -10,7 +10,7 @@ deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 apt-get update
 # Ubuntu docker version
-#apt-get install -y docker.io
+apt-get install -y docker.io
 
 apt-get install -y \
     apt-transport-https \
@@ -19,46 +19,27 @@ apt-get install -y \
     software-properties-common
 
 # Docker docker version
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-add-apt-repository \
-   "deb https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
-   $(lsb_release -cs) \
-   stable"
-apt-get update && apt-get install -y docker-ce=$(apt-cache madison docker-ce | grep 17.03 | head -1 | awk '{print $3}')
+#curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+#add-apt-repository \
+#   "deb https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+#   $(lsb_release -cs) \
+#   stable"
+#apt-get update && apt-get install -y docker-ce=$(apt-cache madison docker-ce | grep 17.03 | head -1 | awk '{print $3}')
 
 echo "--> Installing Kubernetes packages"
 apt-get install -y ebtables ethtool socat
-apt-get install -y kubelet kubeadm kubectl kubernetes-cni
+apt-get install -y kubelet kubeadm=${KUBERNETES_VERSION}-00 kubectl kubernetes-cni
 
 KUBE_MAJOR=$(echo $KUBERNETES_VERSION | cut -d. -f1)
 KUBE_MINOR=$(echo $KUBERNETES_VERSION | cut -d. -f2)
 KUBE_PATCH=$(echo $KUBERNETES_VERSION | cut -d. -f3)
 KUBE_MM="$KUBE_MAJOR.$KUBE_MINOR"
 
+echo "${KUBERNETES_VERSION}" > /etc/kubernetes_version
+
 # https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/
 # https://raw.githubusercontent.com/kubernetes/kubernetes/master/cmd/kubeadm/app/constants/constants.go
 # /etc/kubernetes/manifests/
-if [ "$KUBE_MM" == "1.7" ]
-then
-    ETC_VER="3.0.17"
-    PAUSE_VER="3.0"
-    DNS_VER="1.14.5"
-    FLANNEL_VER="v0.8.0"
-    CANAL_VER="1.7"
-    CANAL_NODE_IMG_VER="v2.6.2"
-    CANAL_CNI_IMG_VER="v1.11.0"
-fi
-if [ "$KUBE_MM" == "1.8" ]
-then
-    ETC_VER="3.0.17"
-    PAUSE_VER="3.0"
-    DNS_VER="1.14.5"
-    FLANNEL_VER="v0.9.1"
-    # Canal resources are 1.7 for Kubernetes 1.8
-    CANAL_VER="1.7"
-    CANAL_NODE_IMG_VER="v2.6.2"
-    CANAL_CNI_IMG_VER="v1.11.0"
-fi
 if [ "$KUBE_MM" == "1.9" ]
 then
     ETC_VER="3.1.11"
