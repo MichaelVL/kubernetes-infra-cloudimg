@@ -1,8 +1,8 @@
 .PHONY: image image-w-console validate test-image test-cncf
 
 ifndef KUBERNETES_VERSION
-#KUBERNETES_VERSION=1.9.6
-KUBERNETES_VERSION=1.10.3
+#KUBERNETES_VERSION=1.9.8
+KUBERNETES_VERSION=1.10.4
 endif
 
 validate:
