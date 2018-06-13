@@ -1,89 +1,89 @@
 {
-  "_comment": "Ubuntu16.04 Kubernetes base image",
-  "variables": {
-    "boot_command": "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-    "build_vm_name": "tmp-ubuntu1604",
-    "cpus": "1",
-    "disk_size": "20480",
-    "headless": "true",
-    "hostname": "ubuntu",
-    "http_proxy": "",
-    "https_proxy": "",
-    "no_proxy": "",
-    "iso_checksum": "ee834fbeb94cc55972b38caafa2029c29625e2e8",
-    "iso_checksum_type": "sha1",
-    "iso_url": "http://releases.ubuntu.com/16.04/ubuntu-16.04.4-server-amd64.iso",
-    "memory": "1024",
-    "ssh_fullname": "ubuntu",
-    "ssh_password": "ubuntu",
-    "ssh_username": "ubuntu",
-    "kubernetes_version": "{{env `KUBERNETES_VERSION`}}"
-  },
-  "builders": [
-    {
-      "type": "qemu",
-      "boot_command": [
-        "{{ user `boot_command` }}",
-        "/install/vmlinuz noapic ",
-        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
-        "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
-        "hostname={{ user `hostname` }} ",
-        "keyboard-configuration/modelcode=SKIP ",
-        "keyboard-configuration/layout=USA ",
-        "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
-        "passwd/user-fullname={{ user `ssh_fullname` }} ",
-        "passwd/user-password={{ user `ssh_password` }} ",
-        "passwd/user-password-again={{ user `ssh_password` }} ",
-        "passwd/username={{ user `ssh_username` }} ",
-        "initrd=/install/initrd.gz -- <enter>"
-      ],
-      "accelerator": "kvm",
-      "boot_wait": "2s",
-      "disk_size": "{{ user `disk_size` }}",
-      "format": "qcow2",
-      "headless": "{{ user `headless` }}",
-      "http_directory": "http",
-      "iso_checksum": "{{ user `iso_checksum` }}",
-      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
-      "iso_url": "{{ user `iso_url` }}",
-      "output_directory": "output-{{ user `build_vm_name` }}",
-      "shutdown_command": "echo '{{ user `ssh_password` }}'|sudo -S shutdown -P now",
-      "ssh_password": "{{ user `ssh_password` }}",
-      "ssh_username": "{{ user `ssh_username` }}",
-      "ssh_wait_timeout": "1800s",
-      "vm_name": "{{ user `build_vm_name` }}",
-      "qemuargs": [
-        [ "-m", "{{ user `memory` }}" ],
-        [ "-smp", "cpus={{ user `cpus`}}"]
-      ]
-    }
-  ],
-  "provisioners": [
-    {
-      "environment_vars": [
-        "SSH_USERNAME={{user `ssh_username`}}",
-        "SSH_PASSWORD={{user `ssh_password`}}",
-        "http_proxy={{user `http_proxy`}}",
-        "https_proxy={{user `https_proxy`}}",
-        "no_proxy={{user `no_proxy`}}",
-        "KUBERNETES_VERSION={{user `kubernetes_version`}}"
-      ],
-      "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
-      "scripts": [
-        "scripts/base-packages.sh",
-        "scripts/cloud-init.sh",
-        "scripts/kubernetes.sh",
-        "scripts/kubernetes_nfs_storage.sh",
-        "scripts/kubernetes_ingress.sh",
-        "scripts/kubernetes_prometheus_grafana.sh",
-        "scripts/kubernetes_efk.sh",
-        "scripts/kubernetes_cncf_test.sh",
-        "scripts/addon-images.sh",
-        "scripts/swap.sh",
-        "scripts/grub.sh",
-        "scripts/cleanup.sh"
-      ],
-      "type": "shell"
-    }	
-  ]
+    "_comment": "Ubuntu16.04 Kubernetes base image",
+    "variables": {
+	"boot_command": "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+	"build_vm_name": "tmp-ubuntu1604",
+	"cpus": "1",
+	"disk_size": "20480",
+	"headless": "true",
+	"hostname": "ubuntu",
+	"http_proxy": "",
+	"https_proxy": "",
+	"no_proxy": "",
+	"iso_checksum": "ee834fbeb94cc55972b38caafa2029c29625e2e8",
+	"iso_checksum_type": "sha1",
+	"iso_url": "http://releases.ubuntu.com/16.04/ubuntu-16.04.4-server-amd64.iso",
+	"memory": "1024",
+	"ssh_fullname": "ubuntu",
+	"ssh_password": "ubuntu",
+	"ssh_username": "ubuntu",
+	"kubernetes_version": "{{env `KUBERNETES_VERSION`}}"
+    },
+    "builders": [
+	{
+	    "type": "qemu",
+	    "boot_command": [
+		"{{ user `boot_command` }}",
+		"/install/vmlinuz noapic ",
+		"preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+		"debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+		"hostname={{ user `hostname` }} ",
+		"keyboard-configuration/modelcode=SKIP ",
+		"keyboard-configuration/layout=USA ",
+		"keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+		"passwd/user-fullname={{ user `ssh_fullname` }} ",
+		"passwd/user-password={{ user `ssh_password` }} ",
+		"passwd/user-password-again={{ user `ssh_password` }} ",
+		"passwd/username={{ user `ssh_username` }} ",
+		"initrd=/install/initrd.gz -- <enter>"
+	    ],
+	    "accelerator": "kvm",
+	    "boot_wait": "2s",
+	    "disk_size": "{{ user `disk_size` }}",
+	    "format": "qcow2",
+	    "headless": "{{ user `headless` }}",
+	    "http_directory": "http",
+	    "iso_checksum": "{{ user `iso_checksum` }}",
+	    "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+	    "iso_url": "{{ user `iso_url` }}",
+	    "output_directory": "output-{{ user `build_vm_name` }}",
+	    "shutdown_command": "echo '{{ user `ssh_password` }}'|sudo -S shutdown -P now",
+	    "ssh_password": "{{ user `ssh_password` }}",
+	    "ssh_username": "{{ user `ssh_username` }}",
+	    "ssh_wait_timeout": "1800s",
+	    "vm_name": "{{ user `build_vm_name` }}",
+	    "qemuargs": [
+		[ "-m", "{{ user `memory` }}" ],
+		[ "-smp", "cpus={{ user `cpus`}}"]
+	    ]
+	}
+    ],
+    "provisioners": [
+	{
+	    "environment_vars": [
+		"SSH_USERNAME={{user `ssh_username`}}",
+		"SSH_PASSWORD={{user `ssh_password`}}",
+		"http_proxy={{user `http_proxy`}}",
+		"https_proxy={{user `https_proxy`}}",
+		"no_proxy={{user `no_proxy`}}",
+		"KUBERNETES_VERSION={{user `kubernetes_version`}}"
+	    ],
+	    "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+	    "scripts": [
+		"scripts/base-packages.sh",
+		"scripts/cloud-init.sh",
+		"scripts/kubernetes.sh",
+		"scripts/kubernetes_nfs_storage.sh",
+		"scripts/kubernetes_ingress.sh",
+		"scripts/kubernetes_prometheus_grafana.sh",
+		"scripts/kubernetes_efk.sh",
+		"scripts/kubernetes_cncf_test.sh",
+		"scripts/addon-images.sh",
+		"scripts/swap.sh",
+		"scripts/grub.sh",
+		"scripts/cleanup.sh"
+	    ],
+	    "type": "shell"
+	}	
+    ]
 }
