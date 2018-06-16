@@ -28,4 +28,4 @@ if [ "$KUBE_MM" == "1.9" ] ; then
 fi
 
 echo "--> Pulling NFS storage image"
-docker pull quay.io/kubernetes_incubator/nfs-provisioner:v1.0.8
+docker pull quay.io/kubernetes_incubator/nfs-provisioner:v1.0.9
