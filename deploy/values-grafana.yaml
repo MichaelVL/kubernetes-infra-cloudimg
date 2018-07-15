@@ -1,0 +1,9 @@
+adminPassword: {{ env "GRAFANA_ADMIN_PASSWD" | default "" }}
+service:
+  type: NodePort
+  nodePort: 30009
+sidecar:
+  datasources:
+    enabled: true
+  dashboards:
+    enabled: true

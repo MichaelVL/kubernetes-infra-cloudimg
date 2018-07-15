@@ -1,0 +1,10 @@
+rbac:
+  create: true
+alertmanager:
+  enabled: false
+pushgateway:
+  enabled: false,
+networkPolicy:
+  enabled: true
+server:
+  retention: '7d'
