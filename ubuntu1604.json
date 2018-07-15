@@ -75,7 +75,7 @@
 		"scripts/kubernetes.sh",
 		"scripts/kubernetes_nfs_storage.sh",
 		"scripts/kubernetes_ingress.sh",
-		"scripts/kubernetes_prometheus_grafana.sh",
+		"scripts/helm_chart_images.sh",
 		"scripts/kubernetes_efk.sh",
 		"scripts/kubernetes_cncf_test.sh",
 		"scripts/addon-images.sh",

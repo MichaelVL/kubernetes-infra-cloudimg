@@ -1,3 +1,4 @@
-output-tmp-ubuntu1604/
 packer_cache/
 *~
+scripts/helm_chart_images.sh
+kubeimg-*

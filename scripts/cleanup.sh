@@ -3,6 +3,9 @@
 echo "--> Images available after installing Kubernetes"
 docker images
 
+echo "--> Image count"
+docker images -q | wc -l
+
 echo "--> Manifests available"
 ls -R /etc/kubernetes/addon-manifests/
 
@@ -37,6 +40,9 @@ echo "--> Remove machine ID"
 
 echo "--> Truncate log files"
 truncate -s 0 /var/log/*log
+
+echo "--> Zero unused disk space"
+dd if=/dev/zero of=/zap bs=1M; rm -f /zap; echo "Zero-filling OK"
 
 echo "--> Syncing..."
 sync

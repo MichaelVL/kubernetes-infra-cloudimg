@@ -30,6 +30,11 @@ echo "--> Installing Kubernetes packages"
 apt-get install -y ebtables ethtool socat
 apt-get install -y kubelet kubeadm=${KUBERNETES_VERSION}-00 kubectl kubernetes-cni
 
+echo "ip_vs" > /etc/modules-load.d/ip_vs.conf
+echo "ip_vs_rr" >> /etc/modules-load.d/ip_vs.conf
+echo "ip_vs_wrr" >> /etc/modules-load.d/ip_vs.conf
+echo "ip_vs_sh" >> /etc/modules-load.d/ip_vs.conf
+
 KUBE_MAJOR=$(echo $KUBERNETES_VERSION | cut -d. -f1)
 KUBE_MINOR=$(echo $KUBERNETES_VERSION | cut -d. -f2)
 KUBE_PATCH=$(echo $KUBERNETES_VERSION | cut -d. -f3)
@@ -40,64 +45,73 @@ echo "${KUBERNETES_VERSION}" > /etc/kubernetes_version
 # https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/
 # https://raw.githubusercontent.com/kubernetes/kubernetes/master/cmd/kubeadm/app/constants/constants.go
 # /etc/kubernetes/manifests/
-if [ "$KUBE_MM" == "1.9" ]
-then
-    ETC_VER="3.1.11"
-    PAUSE_VER="3.0"
-    DNS_VER="1.14.7"
-    FLANNEL_VER="v0.9.1"
-    # Canal resources are 1.7 for Kubernetes 1.9
-    CANAL_VER="1.7"
-    CANAL_NODE_IMG_VER="v2.6.2"
-    CANAL_CNI_IMG_VER="v1.11.0"
-fi
 if [ "$KUBE_MM" == "1.10" ]
 then
     ETC_VER="3.1.12"
     PAUSE_VER="3.1"
     DNS_VER="1.14.8"
     FLANNEL_VER="v0.10.0-amd64"
-    # Canal resources are 1.7 for Kubernetes 1.9
     CANAL_VER="1.7"
     CANAL_NODE_IMG_VER="v2.6.2"
     CANAL_CNI_IMG_VER="v1.11.0"
+    CANAL_FLANNEL_VER="v0.9.1"
+fi
+if [ "$KUBE_MM" == "1.11" ]
+then
+    FLANNEL_VER="v0.10.0-amd64"
+    CANAL_VER="v3.1"
+    CANAL_NODE_IMG_VER="v3.1.3"
+    CANAL_CNI_IMG_VER="v3.1.3"
+    CANAL_FLANNEL_VER="v0.9.1"
 fi
 
 echo "--> Pulling Kubernetes container images ($KUBERNETES_VERSION)"
-KUBEVER="v$KUBERNETES_VERSION"
-docker pull k8s.gcr.io/kube-apiserver-amd64:$KUBEVER
-docker pull k8s.gcr.io/kube-controller-manager-amd64:$KUBEVER
-docker pull k8s.gcr.io/kube-scheduler-amd64:$KUBEVER
-docker pull k8s.gcr.io/kube-proxy-amd64:$KUBEVER
+if [ "$KUBE_MM" == "1.10" ]
+then
+    KUBEVER="v$KUBERNETES_VERSION"
+    docker pull k8s.gcr.io/kube-apiserver-amd64:$KUBEVER
+    docker pull k8s.gcr.io/kube-controller-manager-amd64:$KUBEVER
+    docker pull k8s.gcr.io/kube-scheduler-amd64:$KUBEVER
+    docker pull k8s.gcr.io/kube-proxy-amd64:$KUBEVER
 
-docker pull k8s.gcr.io/etcd-amd64:$ETC_VER
+    docker pull k8s.gcr.io/etcd-amd64:$ETC_VER
 
-docker pull k8s.gcr.io/pause-amd64:$PAUSE_VER
-docker pull k8s.gcr.io/k8s-dns-sidecar-amd64:$DNS_VER
-docker pull k8s.gcr.io/k8s-dns-kube-dns-amd64:$DNS_VER
-docker pull k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:$DNS_VER
-
-echo "--> Contents of /var/lib/kubelet"
-ls /var/lib/kubelet
+    docker pull k8s.gcr.io/pause-amd64:$PAUSE_VER
+    docker pull k8s.gcr.io/k8s-dns-sidecar-amd64:$DNS_VER
+    docker pull k8s.gcr.io/k8s-dns-kube-dns-amd64:$DNS_VER
+    docker pull k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:$DNS_VER
+fi
+if [ "$KUBE_MM" == "1.11" ]
+then
+    kubeadm config images pull
+fi
 
 echo "--> Fetching add-on images and manifests"
 
-# https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/canal.yaml
+echo "--> Fetching Canal manifests"
+mkdir -p /etc/kubernetes/addon-manifests/canal
+cd /etc/kubernetes/addon-manifests/canal
+if [ "$KUBE_MM" == "1.10" ]
+then
+    curl -sO https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/$CANAL_VER/rbac.yaml
+    curl -sO https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/$CANAL_VER/canal.yaml
+else
+    curl -sO https://docs.projectcalico.org/$CANAL_VER/getting-started/kubernetes/installation/hosted/canal/rbac.yaml
+    curl -sO https://docs.projectcalico.org/$CANAL_VER/getting-started/kubernetes/installation/hosted/canal/canal.yaml
+fi
+
 echo "--> Pulling Calico/Canal images"
 docker pull quay.io/calico/node:$CANAL_NODE_IMG_VER
 docker pull quay.io/calico/cni:$CANAL_CNI_IMG_VER
-docker pull quay.io/coreos/flannel:$FLANNEL_VER
+docker pull quay.io/coreos/flannel:$CANAL_FLANNEL_VER
 
 echo "--> Fetching Flannel manifests"
 mkdir -p /etc/kubernetes/addon-manifests/flannel
 cd /etc/kubernetes/addon-manifests/flannel
 curl -sO https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
-echo "--> Fetching Canal manifests"
-mkdir -p /etc/kubernetes/addon-manifests/canal
-cd /etc/kubernetes/addon-manifests/canal
-curl -sO https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/$CANAL_VER/rbac.yaml
-curl -sO https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/$CANAL_VER/canal.yaml
+echo "--> Fetching Flannel image"
+docker pull quay.io/coreos/flannel:$FLANNEL_VER
 
 echo "--> Pulling Dashboard and Helm images"
 docker pull gcr.io/google_containers/kubernetes-dashboard-amd64:v1.7.1
@@ -105,9 +119,9 @@ docker pull gcr.io/google_containers/kubernetes-dashboard-init-amd64:v1.0.0
 docker pull gcr.io/google_containers/heapster-amd64:v1.4.0
 docker pull gcr.io/google_containers/heapster-influxdb-amd64:v1.3.3
 docker pull gcr.io/google_containers/heapster-grafana-amd64:v4.4.3
-docker pull gcr.io/kubernetes-helm/tiller:v2.8.0
+docker pull gcr.io/kubernetes-helm/tiller:v2.9.1
 
-echo "--> Fetching Dashboaard manifests"
+echo "--> Fetching Dashboard manifests"
 mkdir -p /etc/kubernetes/addon-manifests/dashboard
 cd /etc/kubernetes/addon-manifests/dashboard
 curl -sO https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml

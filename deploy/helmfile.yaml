@@ -1,0 +1,33 @@
+
+releases:
+  - name: prometheus
+    namespace: default
+    chart: stable/prometheus
+    version: 6.7.2
+    set:
+    - name: rbac.create
+      value: true
+    - name: alertmanager.enabled
+      value: false
+    - name: pushgateway.enabled
+      value: false,
+    - name: networkPolicy.enabled
+      value: true
+    - name: server.retention
+      value: '7d'
+
+  - name: grafana
+    namespace: default
+    chart: stable/grafana
+    version: 1.11.1
+    set:
+    - name: adminPassword
+      value: {{ env "GRAFANA_ADMIN_PASSWD" | default "" }}
+    - name: service.type
+      value: NodePort
+    - name: service.nodePort
+      value: 30009
+    - name: sidecar.datasources.enabled
+      value: true
+    - name: sidecar.dashboards.enabled
+      value: true
