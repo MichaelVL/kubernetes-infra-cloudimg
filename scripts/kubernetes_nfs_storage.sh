@@ -19,6 +19,7 @@ curl -O https://raw.githubusercontent.com/kubernetes-incubator/external-storage/
 curl -O https://raw.githubusercontent.com/kubernetes-incubator/external-storage/master/nfs/deploy/kubernetes/deployment.yaml
 curl -O https://raw.githubusercontent.com/kubernetes-incubator/external-storage/master/nfs/deploy/kubernetes/statefulset.yaml
 curl -O https://raw.githubusercontent.com/kubernetes-incubator/external-storage/master/nfs/deploy/kubernetes/class.yaml
+sed -i -e 's/namespace:.*/namespace: default/' rbac.yaml
 
 echo "--> Pulling NFS storage image"
 docker pull quay.io/kubernetes_incubator/nfs-provisioner:latest
