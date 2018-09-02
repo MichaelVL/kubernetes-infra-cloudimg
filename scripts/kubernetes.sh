@@ -59,9 +59,9 @@ fi
 if [ "$KUBE_MM" == "1.11" ]
 then
     FLANNEL_VER="v0.10.0-amd64"
-    CANAL_VER="v3.1"
-    CANAL_NODE_IMG_VER="v3.1.3"
-    CANAL_CNI_IMG_VER="v3.1.3"
+    CANAL_VER="v3.2"
+    CANAL_NODE_IMG_VER="v3.2.1"
+    CANAL_CNI_IMG_VER="v3.2.1"
     CANAL_FLANNEL_VER="v0.9.1"
 fi
 
