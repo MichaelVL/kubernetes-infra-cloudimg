@@ -1,4 +1,6 @@
-#!/bin/bash -eux
+#!/bin/bash
+
+set -eux
 
 # https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/fluentd-elasticsearch
 echo "--> Fetching Elasticsearch, Fluentd and Kibana manifests"

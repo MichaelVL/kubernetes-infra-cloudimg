@@ -1,4 +1,6 @@
-#!/bin/bash -eux
+#!/bin/bash
+
+set -eux
 
 apt-get install -y cloud-init cloud-initramfs-growroot
 

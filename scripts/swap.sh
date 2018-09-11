@@ -1,4 +1,6 @@
-#!/bin/bash -eux
+#!/bin/bash
+
+set -eux
 
 swapuuid=$(/sbin/blkid -o value -l -s UUID -t TYPE=swap)
 swappart=$(readlink -f /dev/disk/by-uuid/$swapuuid)

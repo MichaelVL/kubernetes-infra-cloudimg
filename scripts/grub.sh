@@ -1,4 +1,6 @@
-#!/bin/bash -eux
+#!/bin/bash
+
+set -eux
 
 # https://docs.openstack.org/image-guide/openstack-images.html
 sed -i 's/#GRUB_TERMINAL=.*/GRUB_TERMINAL=console/' /etc/default/grub

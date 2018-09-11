@@ -1,4 +1,6 @@
-#!/bin/bash -eux
+#!/bin/bash
+
+set -eux
 
 echo "--> Images available after installing Kubernetes"
 docker images

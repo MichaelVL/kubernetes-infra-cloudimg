@@ -1,4 +1,6 @@
-#!/bin/bash -eux
+#!/bin/bash
+
+set -eux
 
 echo "--> Fetching CNCF Kubernetes conformance test manifest"
 mkdir -p /etc/kubernetes/addon-manifests/cncf-conformance-test

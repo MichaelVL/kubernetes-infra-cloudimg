@@ -1,4 +1,6 @@
-#!/bin/bash -eux
+#!/bin/bash
+
+set -eux
 
 echo "--> Updating packages"
 apt-get update && apt-get upgrade -y && apt-get install -y curl apt-transport-https
@@ -29,6 +31,7 @@ apt-get install -y \
 echo "--> Installing Kubernetes packages"
 apt-get install -y ebtables ethtool socat
 apt-get install -y kubelet kubeadm=${KUBERNETES_VERSION}-00 kubectl kubernetes-cni
+apt-mark hold kubelet kubeadm kubectl
 
 echo "ip_vs" > /etc/modules-load.d/ip_vs.conf
 echo "ip_vs_rr" >> /etc/modules-load.d/ip_vs.conf

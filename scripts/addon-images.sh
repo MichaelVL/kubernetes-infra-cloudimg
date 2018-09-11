@@ -1,4 +1,6 @@
-#!/bin/bash -eux
+#!/bin/bash
+
+set -eux
 
 echo "--> Pulling a selection of Docker base images"
 docker pull busybox

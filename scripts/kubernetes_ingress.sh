@@ -1,4 +1,6 @@
-#!/bin/bash -eux
+#!/bin/bash
+
+set -eux
 
 # https://github.com/kubernetes/charts/tree/master/stable/nginx-ingress
 

@@ -29,6 +29,7 @@ test-cncf:
 	ssh -i ${SSH_KEY} ${SSH_USER}@${TESTVM_IP} sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl create -f /etc/kubernetes/addon-manifests/cncf-conformance-test/ && sleep 10 && kubectl -n sonobuoy logs --follow sonobuoy
 
 build-helm-image-list:
-	echo "#!/bin/bash -eux" > scripts/helm_chart_images.sh
+	echo "#!/bin/bash" > scripts/helm_chart_images.sh
+	echo "set -eux" >> scripts/helm_chart_images.sh
 	echo "# This file is auto-generated - do not edit!" >> scripts/helm_chart_images.sh
 	scripts/get_helm_image_list.sh 'docker pull' >> scripts/helm_chart_images.sh
