@@ -1,7 +1,7 @@
 .PHONY: validate image image-w-console test-image test-cncf build-helm-image-list
 
 ifndef KUBERNETES_VERSION
-KUBERNETES_VERSION=1.11.2
+KUBERNETES_VERSION=1.11.3
 #KUBERNETES_VERSION=1.10.5
 endif
 
