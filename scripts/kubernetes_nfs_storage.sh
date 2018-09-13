@@ -9,7 +9,7 @@ KUBE_MINOR=$(echo $KUBERNETES_VERSION | cut -d. -f2)
 KUBE_MM="$KUBE_MAJOR.$KUBE_MINOR"
 
 # See deployment.yaml - uses hostPath
-mkdir /srv
+mkdir -p /srv
 
 # https://github.com/kubernetes-incubator/external-storage/tree/master/nfs
 echo "--> Fetching NFS storage manifests"
