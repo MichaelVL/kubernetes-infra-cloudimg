@@ -122,7 +122,7 @@ docker pull gcr.io/google_containers/kubernetes-dashboard-init-amd64:v1.0.0
 docker pull gcr.io/google_containers/heapster-amd64:v1.4.0
 docker pull gcr.io/google_containers/heapster-influxdb-amd64:v1.3.3
 docker pull gcr.io/google_containers/heapster-grafana-amd64:v4.4.3
-docker pull gcr.io/kubernetes-helm/tiller:v2.9.1
+docker pull gcr.io/kubernetes-helm/tiller:v2.10.0
 
 echo "--> Fetching Dashboard manifests"
 mkdir -p /etc/kubernetes/addon-manifests/dashboard
