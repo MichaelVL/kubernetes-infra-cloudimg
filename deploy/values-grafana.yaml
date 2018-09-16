@@ -1,4 +1,3 @@
-adminPassword: {{ env "GRAFANA_ADMIN_PASSWD" | default "" }}
 service:
   type: NodePort
   nodePort: 30009

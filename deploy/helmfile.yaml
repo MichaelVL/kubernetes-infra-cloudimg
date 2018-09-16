@@ -13,3 +13,6 @@ releases:
     version: 1.11.1
     values:
     - values-grafana.yaml
+    set:
+    - name: adminPassword
+      value: {{ env "GRAFANA_ADMIN_PASSWD" | default "" | quote }}
