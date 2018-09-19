@@ -23,10 +23,8 @@ test-image:
 	scp -i ${SSH_KEY} test.sh ${SSH_USER}@${TESTVM_IP}:.
 	ssh -i ${SSH_KEY} ${SSH_USER}@${TESTVM_IP} sudo bash ./test.sh
 
-# This assumes a working Kubernetes cluster
-# See https://github.com/cncf/k8s-conformance/blob/master/instructions.md
 test-cncf:
-	ssh -i ${SSH_KEY} ${SSH_USER}@${TESTVM_IP} sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl create -f /etc/kubernetes/addon-manifests/cncf-conformance-test/ && sleep 10 && kubectl -n sonobuoy logs --follow sonobuoy
+	sonobuoy run
 
 build-helm-image-list:
 	echo "#!/bin/bash" > scripts/helm_chart_images.sh

@@ -76,7 +76,6 @@
 		"scripts/kubernetes_nfs_storage.sh",
 		"scripts/helm_chart_images.sh",
 		"scripts/kubernetes_efk.sh",
-		"scripts/kubernetes_cncf_test.sh",
 		"scripts/addon-images.sh",
 		"scripts/swap.sh",
 		"scripts/grub.sh",
