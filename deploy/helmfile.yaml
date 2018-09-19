@@ -16,3 +16,10 @@ releases:
     set:
     - name: adminPassword
       value: {{ env "GRAFANA_ADMIN_PASSWD" | default "" | quote }}
+
+  - name: traefik
+    namespace: default
+    chart: stable/traefik
+    version: 1.43.0
+    values:
+    - values-traefik.yaml
