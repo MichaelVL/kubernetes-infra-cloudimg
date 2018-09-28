@@ -4,10 +4,6 @@ set -eux
 
 apt-get install -y nfs-common
 
-KUBE_MAJOR=$(echo $KUBERNETES_VERSION | cut -d. -f1)
-KUBE_MINOR=$(echo $KUBERNETES_VERSION | cut -d. -f2)
-KUBE_MM="$KUBE_MAJOR.$KUBE_MINOR"
-
 # See deployment.yaml - uses hostPath
 mkdir -p /srv
 
