@@ -2,7 +2,7 @@
 .PHONY: test-cncf test-cncf-wait test-cncf-retrieve test-cncf-check
 
 ifndef KUBERNETES_VERSION
-KUBERNETES_VERSION=1.11.3
+KUBERNETES_VERSION=1.12.0
 endif
 
 TARGET_DIR="kubeimg-${KUBERNETES_VERSION}-$$(date +%Y%m%d-%H%M)"

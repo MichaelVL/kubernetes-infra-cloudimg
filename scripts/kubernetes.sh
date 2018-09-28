@@ -59,7 +59,7 @@ then
     CANAL_CNI_IMG_VER="v1.11.0"
     CANAL_FLANNEL_VER="v0.9.1"
 fi
-if [ "$KUBE_MM" == "1.11" ]
+if [ "$KUBE_MM" == "1.11" ] || [ "$KUBE_MM" == "1.12" ]
 then
     FLANNEL_VER="v0.10.0-amd64"
     CANAL_VER="v3.2"
@@ -86,7 +86,7 @@ then
     docker pull k8s.gcr.io/k8s-dns-kube-dns-amd64:$DNS_VER
     docker pull k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:$DNS_VER
 fi
-if [ "$KUBE_MM" == "1.11" ]
+if [ "$KUBE_MM" == "1.11" ] || [ "$KUBE_MM" == "1.12" ]
 then
     kubeadm config images pull
 fi
