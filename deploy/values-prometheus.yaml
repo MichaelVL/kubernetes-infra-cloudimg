@@ -8,3 +8,8 @@ networkPolicy:
   enabled: true
 server:
   retention: '7d'
+  #global:
+    # Default 1m
+    #scrape_interval: '5s'
+    # Default 10s
+    #scrape_timeout: '5s'
