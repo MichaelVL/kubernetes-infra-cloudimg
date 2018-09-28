@@ -1,4 +1,5 @@
-.PHONY: validate image image-w-console test-image test-cncf build-helm-image-list
+.PHONY: validate image image-w-console test-image build-helm-image-list
+.PHONY: test-cncf test-cncf-wait test-cncf-retrieve test-cncf-check
 
 ifndef KUBERNETES_VERSION
 KUBERNETES_VERSION=1.11.3
@@ -24,6 +25,24 @@ test-image:
 
 test-cncf:
 	sonobuoy run
+
+test-cncf-wait:
+	echo "Blocking on Sonobuoy"
+	date
+	sleep 10
+	while sonobuoy status | grep -q 'Sonobuoy is still running'; do sleep 10; done
+	echo "Done!"
+	date
+
+test-cncf-retrieve:
+	sonobuoy retrieve
+
+test-cncf-check:
+	$(eval SONOBUOY_UUID := $(shell kubectl -n heptio-sonobuoy get configmap sonobuoy-config-cm -o "jsonpath={.data['config\.json']}" | jq '.UUID'))
+	$(eval SONOBUOY_TS := $(shell kubectl -n heptio-sonobuoy get configmap sonobuoy-config-cm -o jsonpath='{.metadata.creationTimestamp}' | awk '{print substr($$0,1,4) substr($$0,6,2) substr($$0,9,2) substr($$0,12,2) substr($$0,15,2)}'))
+	$(eval SONOBUOY_ARCHIVE_NAME := $(SONOBUOY_TS)_sonobuoy_$(SONOBUOY_UUID).tar.gz)
+	sonobuoy e2e $(SONOBUOY_ARCHIVE_NAME) --show passed
+	sonobuoy e2e $(SONOBUOY_ARCHIVE_NAME) --show failed
 
 build-helm-image-list:
 	echo "#!/bin/bash" > scripts/helm_chart_images.sh
