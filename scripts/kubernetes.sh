@@ -30,7 +30,7 @@ apt-get install -y \
 
 echo "--> Installing Kubernetes packages"
 apt-get install -y ebtables ethtool socat
-apt-get install -y kubelet kubeadm=${KUBERNETES_VERSION}-00 kubectl kubernetes-cni
+apt-get install -y kubelet=${KUBERNETES_VERSION}-00 kubeadm=${KUBERNETES_VERSION}-00 kubectl kubernetes-cni
 apt-mark hold kubelet kubeadm kubectl
 
 echo "ip_vs" > /etc/modules-load.d/ip_vs.conf
@@ -66,6 +66,8 @@ then
     CANAL_NODE_IMG_VER="v3.2.1"
     CANAL_CNI_IMG_VER="v3.2.1"
     CANAL_FLANNEL_VER="v0.9.1"
+    WEAVE_NET_VER="v1.10"
+    WEAVE_NET_IMG_VER="2.4.1"
 fi
 
 echo "--> Pulling Kubernetes container images ($KUBERNETES_VERSION)"
@@ -116,6 +118,15 @@ curl -sO https://raw.githubusercontent.com/coreos/flannel/master/Documentation/k
 echo "--> Fetching Flannel image"
 docker pull quay.io/coreos/flannel:$FLANNEL_VER
 
+echo "--> Fetching Weave-net manifests"
+mkdir -p /etc/kubernetes/addon-manifests/weave-net
+cd /etc/kubernetes/addon-manifests/weave-net
+curl -O https://cloud.weave.works/k8s/$WEAVE_NET_VER/net.yaml
+
+echo "--> Fetching Weave-net image"
+docker pull docker.io/weaveworks/weave-kube:$WEAVE_NET_IMG_VER
+docker pull docker.io/weaveworks/weave-npc:$WEAVE_NET_IMG_VER
+
 echo "--> Pulling Dashboard and Helm images"
 docker pull gcr.io/google_containers/kubernetes-dashboard-amd64:v1.7.1
 docker pull gcr.io/google_containers/kubernetes-dashboard-init-amd64:v1.0.0
@@ -128,7 +139,7 @@ echo "--> Fetching Dashboard manifests"
 mkdir -p /etc/kubernetes/addon-manifests/dashboard
 cd /etc/kubernetes/addon-manifests/dashboard
 curl -sO https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
-curl -sO https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/heapster.yaml
-curl -sO https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/influxdb.yaml
-curl -sO https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/grafana.yaml
-curl -sO https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/rbac/heapster-rbac.yaml
+#curl -sO https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/heapster.yaml
+#curl -sO https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/influxdb.yaml
+#curl -sO https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/grafana.yaml
+#curl -sO https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/rbac/heapster-rbac.yaml
