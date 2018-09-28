@@ -73,6 +73,7 @@
 		"scripts/base-packages.sh",
 		"scripts/cloud-init.sh",
 		"scripts/kubernetes.sh",
+		"scripts/kubernetes_metrics_server.sh",
 		"scripts/kubernetes_nfs_storage.sh",
 		"scripts/helm_chart_images.sh",
 		"scripts/kubernetes_efk.sh",
