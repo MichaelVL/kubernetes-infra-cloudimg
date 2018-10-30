@@ -2,7 +2,10 @@
 .PHONY: test-cncf test-cncf-wait test-cncf-retrieve test-cncf-check
 
 ifndef KUBERNETES_VERSION
-KUBERNETES_VERSION=1.12.0
+KUBERNETES_VERSION=1.12.2
+endif
+ifndef KUBERNETES_PATCHLEVEL
+KUBERNETES_PATCHLEVEL=00
 endif
 
 TARGET_DIR="kubeimg-${KUBERNETES_VERSION}-$$(date +%Y%m%d-%H%M)"
@@ -11,11 +14,11 @@ validate:
 	CHECKPOINT_DISABLE=1 packer validate ubuntu1604.json
 
 image-w-console: build-helm-image-list
-	KUBERNETES_VERSION=$(KUBERNETES_VERSION) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -color=false -var 'headless=false' ubuntu1604.json
+	KUBERNETES_VERSION=$(KUBERNETES_VERSION) KUBERNETES_PATCHLEVEL=$(KUBERNETES_PATCHLEVEL) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -color=false -var 'headless=false' ubuntu1604.json
 	mv output-tmp-ubuntu1604 ${TARGET_DIR}
 
 image: build-helm-image-list
-	KUBERNETES_VERSION=$(KUBERNETES_VERSION) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -color=false ubuntu1604.json | tee build.log
+	KUBERNETES_VERSION=$(KUBERNETES_VERSION) KUBERNETES_PATCHLEVEL=$(KUBERNETES_PATCHLEVEL) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -color=false ubuntu1604.json | tee build.log
 	mv output-tmp-ubuntu1604 ${TARGET_DIR}
 
 # This assumes a VM running with IP address in $TESTVM_IP and injected SSH key 
@@ -45,6 +48,7 @@ test-cncf-check:
 	sonobuoy e2e $(SONOBUOY_ARCHIVE_NAME) --show failed
 
 build-helm-image-list:
+	helm repo update
 	echo "#!/bin/bash" > scripts/helm_chart_images.sh
 	echo "set -eux" >> scripts/helm_chart_images.sh
 	echo "# This file is auto-generated - do not edit!" >> scripts/helm_chart_images.sh

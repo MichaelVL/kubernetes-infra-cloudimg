@@ -5,19 +5,19 @@ set -eux
 echo "--> Updating packages"
 apt-get update && apt-get upgrade -y && apt-get install -y curl apt-transport-https
 
-echo "--> Installing docker packages"
+echo "--> Installing Kubernetes repo"
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 apt-get update
 # Ubuntu docker version
+
+echo "--> Installing docker"
 apt-get install -y docker.io
 
 apt-get install -y \
-    apt-transport-https \
     ca-certificates \
-    curl \
     software-properties-common
 
 # Docker docker version
@@ -27,10 +27,9 @@ apt-get install -y \
 #   $(lsb_release -cs) \
 #   stable"
 #apt-get update && apt-get install -y docker-ce=$(apt-cache madison docker-ce | grep 17.03 | head -1 | awk '{print $3}')
-
-echo "--> Installing Kubernetes packages"
+echo "--> Installing Kubernetes packages (${KUBERNETES_VERSION}-${KUBERNETES_PATCHLEVEL})"
 apt-get install -y ebtables ethtool socat
-apt-get install -y kubelet=${KUBERNETES_VERSION}-00 kubeadm=${KUBERNETES_VERSION}-00 kubectl kubernetes-cni
+apt-get install -y kubelet=${KUBERNETES_VERSION}-${KUBERNETES_PATCHLEVEL} kubeadm=${KUBERNETES_VERSION}-${KUBERNETES_PATCHLEVEL} kubectl kubernetes-cni
 apt-mark hold kubelet kubeadm kubectl
 
 echo "ip_vs" > /etc/modules-load.d/ip_vs.conf
