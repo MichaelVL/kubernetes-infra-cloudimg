@@ -24,3 +24,10 @@ echo "# ${HELM_TRAEFIK_CHART} ${HELM_TRAEFIK_VERSION}"
 HELM_VALUES=$(helm inspect values ${HELM_TRAEFIK_CHART} --version ${HELM_TRAEFIK_VERSION} |yq .)
 IMAGE=`echo ${HELM_VALUES}|jq -r "[.image, .imageTag] | join(\":\")"`
 echo "$1 ${IMAGE}"
+
+echo "# ${HELM_METALLB_CHART} ${HELM_METALLB_VERSION}"
+HELM_VALUES=$(helm inspect values ${HELM_METALLB_CHART} --version ${HELM_METALLB_VERSION} |yq .)
+for component in controller speaker; do
+    IMAGE=`echo ${HELM_VALUES}|jq -r ".${component}.image | [.repository, .tag] | join(\":\")"`
+    echo "$1 ${IMAGE}"
+done
