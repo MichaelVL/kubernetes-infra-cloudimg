@@ -25,6 +25,7 @@ The following add-ons are also included (images and manifests):
  - [Elasticsearch, Fluentd, Kibana](https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/fluentd-elasticsearch)
  - [Nginx ingress controller](https://github.com/kubernetes/ingress-nginx)
  - [NFS storage provider](https://github.com/kubernetes-incubator/external-storage/tree/master/nfs)
+ - [MetalLB load balancer](https://metallb.universe.tf)
 
 The manifests for deploying these add-ons are stored in /etc/kubernetes/addon-manifests/
 
