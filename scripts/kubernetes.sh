@@ -44,6 +44,12 @@ KUBE_MM="$KUBE_MAJOR.$KUBE_MINOR"
 
 echo "${KUBERNETES_VERSION}" > /etc/kubernetes_version
 
+# Install crictl
+CRICTL_VERSION="v1.12.0"
+wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRICTL_VERSION/crictl-$CRICTL_VERSION-linux-amd64.tar.gz
+sudo tar zxvf crictl-$CRICTL_VERSION-linux-amd64.tar.gz -C /usr/local/bin
+rm -f crictl-$CRICTL_VERSION-linux-amd64.tar.gz
+
 # https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/
 # https://raw.githubusercontent.com/kubernetes/kubernetes/master/cmd/kubeadm/app/constants/constants.go
 # /etc/kubernetes/manifests/
