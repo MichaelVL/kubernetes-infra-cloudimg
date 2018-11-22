@@ -1,3 +1,5 @@
+export HELM_VERSION='v2.10.0'
+
 export HELM_PROMETHEUS_CHART='stable/prometheus'
 export HELM_PROMETHEUS_VERSION='7.1.3'
 

@@ -4,6 +4,8 @@ set -eux
 
 source scripts/context-variables.sh
 
+echo "$1 gcr.io/kubernetes-helm/tiller:$HELM_VERSION"
+
 echo "# ${HELM_PROMETHEUS_CHART} ${HELM_PROMETHEUS_VERSION}"
 HELM_VALUES=$(helm inspect values ${HELM_PROMETHEUS_CHART} --version ${HELM_PROMETHEUS_VERSION} |yq .)
 for component in alertmanager configmapReload initChownData kubeStateMetrics nodeExporter server pushgateway; do
