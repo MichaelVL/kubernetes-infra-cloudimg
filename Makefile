@@ -2,7 +2,7 @@
 .PHONY: test-cncf test-cncf-wait test-cncf-retrieve test-cncf-check
 
 ifndef KUBERNETES_VERSION
-KUBERNETES_VERSION=1.12.2
+KUBERNETES_VERSION=1.12.3
 endif
 ifndef KUBERNETES_PATCHLEVEL
 KUBERNETES_PATCHLEVEL=00
@@ -41,7 +41,7 @@ test-cncf-retrieve:
 	sonobuoy retrieve
 
 test-cncf-check:
-	$(eval SONOBUOY_UUID := $(shell kubectl -n heptio-sonobuoy get configmap sonobuoy-config-cm -o "jsonpath={.data['config\.json']}" | jq '.UUID'))
+	$(eval SONOBUOY_UUID := $(shell kubectl -n heptio-sonobuoy get configmap sonobuoy-config-cm -o "jsonpath={.data['config\.json']}" | jq '.UUID' | sed -e 's/^"//' -e 's/"$$//'))
 	$(eval SONOBUOY_TS := $(shell kubectl -n heptio-sonobuoy get configmap sonobuoy-config-cm -o jsonpath='{.metadata.creationTimestamp}' | awk '{print substr($$0,1,4) substr($$0,6,2) substr($$0,9,2) substr($$0,12,2) substr($$0,15,2)}'))
 	$(eval SONOBUOY_ARCHIVE_NAME := $(SONOBUOY_TS)_sonobuoy_$(SONOBUOY_UUID).tar.gz)
 	sonobuoy e2e $(SONOBUOY_ARCHIVE_NAME) --show passed
