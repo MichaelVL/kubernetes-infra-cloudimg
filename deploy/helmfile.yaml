@@ -20,11 +20,11 @@ releases:
   - name: traefik
     namespace: default
     chart: stable/traefik
-    version: 1.43.0
+    version: 1.55.1
     values:
     - values-traefik.yaml
 
   - name: metallb
     namespace: metallb-system
     chart: stable/metallb
-    version: 0.8.0
+    version: 0.8.3
