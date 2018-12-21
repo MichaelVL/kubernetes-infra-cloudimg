@@ -45,7 +45,7 @@ KUBE_MM="$KUBE_MAJOR.$KUBE_MINOR"
 echo "${KUBERNETES_VERSION}" > /etc/kubernetes_version
 
 # Install crictl
-CRICTL_VERSION="v1.12.0"
+CRICTL_VERSION="v1.13.0"
 wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRICTL_VERSION/crictl-$CRICTL_VERSION-linux-amd64.tar.gz
 sudo tar zxvf crictl-$CRICTL_VERSION-linux-amd64.tar.gz -C /usr/local/bin
 rm -f crictl-$CRICTL_VERSION-linux-amd64.tar.gz
@@ -53,67 +53,34 @@ rm -f crictl-$CRICTL_VERSION-linux-amd64.tar.gz
 # https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/
 # https://raw.githubusercontent.com/kubernetes/kubernetes/master/cmd/kubeadm/app/constants/constants.go
 # /etc/kubernetes/manifests/
-if [ "$KUBE_MM" == "1.10" ]
-then
-    ETC_VER="3.1.12"
-    PAUSE_VER="3.1"
-    DNS_VER="1.14.8"
-    FLANNEL_VER="v0.10.0-amd64"
-    CANAL_VER="1.7"
-    CANAL_NODE_IMG_VER="v2.6.2"
-    CANAL_CNI_IMG_VER="v1.11.0"
-    CANAL_FLANNEL_VER="v0.9.1"
-fi
-if [ "$KUBE_MM" == "1.11" ] || [ "$KUBE_MM" == "1.12" ]
-then
-    FLANNEL_VER="v0.10.0-amd64"
-    CANAL_VER="v3.2"
-    CANAL_NODE_IMG_VER="v3.2.1"
-    CANAL_CNI_IMG_VER="v3.2.1"
-    CANAL_FLANNEL_VER="v0.9.1"
-    WEAVE_NET_VER="v1.10"
-    WEAVE_NET_IMG_VER="2.4.1"
-fi
+FLANNEL_VER="v0.10.0-amd64"
+CALICO_VER="v3.3"
+CALICO_NODE_IMG_VER="v3.3.1"
+CALICO_CNI_IMG_VER="v3.3.1"
+CALICO_FLANNEL_VER="v0.9.1"
+WEAVE_NET_VER="v1.10"
+WEAVE_NET_IMG_VER="2.4.1"
 
-echo "--> Pulling Kubernetes container images ($KUBERNETES_VERSION)"
-if [ "$KUBE_MM" == "1.10" ]
-then
-    KUBEVER="v$KUBERNETES_VERSION"
-    docker pull k8s.gcr.io/kube-apiserver-amd64:$KUBEVER
-    docker pull k8s.gcr.io/kube-controller-manager-amd64:$KUBEVER
-    docker pull k8s.gcr.io/kube-scheduler-amd64:$KUBEVER
-    docker pull k8s.gcr.io/kube-proxy-amd64:$KUBEVER
-
-    docker pull k8s.gcr.io/etcd-amd64:$ETC_VER
-
-    docker pull k8s.gcr.io/pause-amd64:$PAUSE_VER
-    docker pull k8s.gcr.io/k8s-dns-sidecar-amd64:$DNS_VER
-    docker pull k8s.gcr.io/k8s-dns-kube-dns-amd64:$DNS_VER
-    docker pull k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:$DNS_VER
-fi
-if [ "$KUBE_MM" == "1.11" ] || [ "$KUBE_MM" == "1.12" ]
-then
-    kubeadm config images pull
-fi
+kubeadm config images pull
 
 echo "--> Fetching add-on images and manifests"
+
+echo "--> Fetching Calico manifests"
+mkdir -p /etc/kubernetes/addon-manifests/calico
+cd /etc/kubernetes/addon-manifests/calico
+curl -sO https://docs.projectcalico.org/$CALICO_VER/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
+curl -sO https://docs.projectcalico.org/$CALICO_VER/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
 
 echo "--> Fetching Canal manifests"
 mkdir -p /etc/kubernetes/addon-manifests/canal
 cd /etc/kubernetes/addon-manifests/canal
-if [ "$KUBE_MM" == "1.10" ]
-then
-    curl -sO https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/$CANAL_VER/rbac.yaml
-    curl -sO https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/$CANAL_VER/canal.yaml
-else
-    curl -sO https://docs.projectcalico.org/$CANAL_VER/getting-started/kubernetes/installation/hosted/canal/rbac.yaml
-    curl -sO https://docs.projectcalico.org/$CANAL_VER/getting-started/kubernetes/installation/hosted/canal/canal.yaml
-fi
+curl -sO https://docs.projectcalico.org/$CALICO_VER/getting-started/kubernetes/installation/hosted/canal/rbac.yaml
+curl -sO https://docs.projectcalico.org/$CALICO_VER/getting-started/kubernetes/installation/hosted/canal/canal.yaml
 
 echo "--> Pulling Calico/Canal images"
-docker pull quay.io/calico/node:$CANAL_NODE_IMG_VER
-docker pull quay.io/calico/cni:$CANAL_CNI_IMG_VER
-docker pull quay.io/coreos/flannel:$CANAL_FLANNEL_VER
+docker pull quay.io/calico/node:$CALICO_NODE_IMG_VER
+docker pull quay.io/calico/cni:$CALICO_CNI_IMG_VER
+docker pull quay.io/coreos/flannel:$CALICO_FLANNEL_VER
 
 echo "--> Fetching Flannel manifests"
 mkdir -p /etc/kubernetes/addon-manifests/flannel
