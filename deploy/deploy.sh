@@ -46,11 +46,20 @@ function deploy_nfs_storage_provider {
 }
 
 function deploy_rook_ceph_storage_provider {
+    # https://github.com/rook/rook/issues/2380
+    NODES=$(kubectl get nodes -o jsonpath="{.items[*].metadata.name}")
+    FMT="    nodes:"
+    for node in ${NODES[*]}
+    do
+      FMT="$FMT\n    - name: \"$node\""
+    done
+    sed -i -e "s|    useAllNodes: true|$FMT|" cluster.yaml
+
     export KUBECONFIG=/etc/kubernetes/admin.conf
     kubectl create -f /etc/kubernetes/addon-manifests/rook-ceph-storage-provisioner/operator.yaml
     kubectl create -f /etc/kubernetes/addon-manifests/rook-ceph-storage-provisioner/cluster.yaml
     kubectl create -f /etc/kubernetes/addon-manifests/rook-ceph-storage-provisioner/storageclass.yaml
-    kubectl annotate -n \$NAMESPACE storageclass rook-ceph-block storageclass.beta.kubernetes.io/is-default-class=true
+    kubectl annotate storageclass rook-ceph-block storageclass.beta.kubernetes.io/is-default-class=true
 }
 
 function deploy_metrics_server {
