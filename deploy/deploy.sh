@@ -38,11 +38,11 @@ function deploy_nfs_storage_provider {
     export NAMESPACE=default
     #export NAMESPACE=nfs-storage
     #kubectl create ns \$NAMESPACE
-    kubectl create -n  \$NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/rbac.yaml
-    kubectl create -n  \$NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/psp.yaml
-    kubectl create -n  \$NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/deployment.yaml
-    kubectl create -n  \$NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/class.yaml
-    kubectl annotate -n \$NAMESPACE storageclass example-nfs storageclass.beta.kubernetes.io/is-default-class=true
+    kubectl create -n  $NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/rbac.yaml
+    kubectl create -n  $NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/psp.yaml
+    kubectl create -n  $NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/deployment.yaml
+    kubectl create -n  $NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/class.yaml
+    kubectl annotate -n $NAMESPACE storageclass example-nfs storageclass.beta.kubernetes.io/is-default-class=true
 }
 
 function deploy_rook_ceph_storage_provider {
