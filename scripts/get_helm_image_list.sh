@@ -33,3 +33,8 @@ for component in controller speaker; do
     IMAGE=`echo ${HELM_VALUES}|jq -r ".${component}.image | [.repository, .tag] | join(\":\")"`
     echo "$1 ${IMAGE}"
 done
+
+echo "# ${HELM_METRICS_SERVER_CHART} ${HELM_METRICS_SERVER_VERSION}"
+HELM_VALUES=$(helm inspect values ${HELM_METRICS_SERVER_CHART} --version ${HELM_METRICS_SERVER_VERSION} |yq .)
+IMAGE=`echo ${HELM_VALUES}|jq -r "[.image.repository, .image.tag] | join(\":\")"`
+echo "$1 ${IMAGE}"

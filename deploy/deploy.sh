@@ -62,11 +62,6 @@ function deploy_rook_ceph_storage_provider {
     kubectl annotate storageclass rook-ceph-block storageclass.beta.kubernetes.io/is-default-class=true
 }
 
-function deploy_metrics_server {
-    export KUBECONFIG=/etc/kubernetes/admin.conf
-    kubectl create -f /etc/kubernetes/addon-manifests/metrics-server
-}
-
 while [[ $# -gt 0 ]]
 do
   key="$1"
@@ -88,9 +83,6 @@ do
 	;;
     --rook-ceph-provisioner)
 	deploy_rook_ceph_storage_provider
-	;;
-    --metrics-server)
-	deploy_metrics_server
 	;;
   esac
   shift
