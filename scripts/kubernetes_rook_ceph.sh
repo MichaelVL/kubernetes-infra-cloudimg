@@ -17,6 +17,8 @@ curl -O https://raw.githubusercontent.com/rook/rook/master/cluster/examples/kube
 curl -O https://raw.githubusercontent.com/rook/rook/master/cluster/examples/kubernetes/ceph/cluster.yaml
 curl -O https://raw.githubusercontent.com/rook/rook/master/cluster/examples/kubernetes/ceph/storageclass.yaml
 
+curl -O https://raw.githubusercontent.com/rook/rook/master/cluster/examples/kubernetes/ceph/toolbox.yaml
+
 sed -i -e "s|    image: ceph/ceph:v13|    image: ceph/ceph:$CEPH_VER|" cluster.yaml
 sed -i -e 's|#    directories:|    directories:|' cluster.yaml
 sed -i -e 's|#    - path: /rook/storage-dir|    - path: /rook/storage-dir|' cluster.yaml
