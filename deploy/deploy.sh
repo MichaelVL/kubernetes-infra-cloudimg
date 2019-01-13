@@ -46,6 +46,7 @@ function deploy_nfs_storage_provider {
 }
 
 function deploy_rook_ceph_storage_provider {
+    export KUBECONFIG=/etc/kubernetes/admin.conf
     # https://github.com/rook/rook/issues/2380
     NODES=$(kubectl get nodes -o jsonpath="{.items[*].metadata.name}")
     FMT="    nodes:"
@@ -53,9 +54,8 @@ function deploy_rook_ceph_storage_provider {
     do
       FMT="$FMT\n    - name: \"$node\""
     done
-    sed -i -e "s|    useAllNodes: true|$FMT|" cluster.yaml
+    sed -i -e "s|    useAllNodes: true|$FMT|" /etc/kubernetes/addon-manifests/rook-ceph-storage-provisioner/cluster.yaml
 
-    export KUBECONFIG=/etc/kubernetes/admin.conf
     kubectl create -f /etc/kubernetes/addon-manifests/rook-ceph-storage-provisioner/operator.yaml
     kubectl create -f /etc/kubernetes/addon-manifests/rook-ceph-storage-provisioner/cluster.yaml
     kubectl create -f /etc/kubernetes/addon-manifests/rook-ceph-storage-provisioner/storageclass.yaml
