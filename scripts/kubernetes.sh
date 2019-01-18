@@ -99,18 +99,15 @@ echo "--> Fetching Weave-net image"
 docker pull docker.io/weaveworks/weave-kube:$WEAVE_NET_IMG_VER
 docker pull docker.io/weaveworks/weave-npc:$WEAVE_NET_IMG_VER
 
+DASHBOARD_VERSION="v1.10.1"
+
+# https://github.com/kubernetes/dashboard/issues/2986
+# https://github.com/kubernetes/dashboard/pull/3504
+
 echo "--> Pulling Dashboard images"
-docker pull gcr.io/google_containers/kubernetes-dashboard-amd64:v1.7.1
-docker pull gcr.io/google_containers/kubernetes-dashboard-init-amd64:v1.0.0
-docker pull gcr.io/google_containers/heapster-amd64:v1.4.0
-docker pull gcr.io/google_containers/heapster-influxdb-amd64:v1.3.3
-docker pull gcr.io/google_containers/heapster-grafana-amd64:v4.4.3
+docker pull gcr.io/google_containers/kubernetes-dashboard-amd64:$DASHBOARD_VERSION
 
 echo "--> Fetching Dashboard manifests"
 mkdir -p /etc/kubernetes/addon-manifests/dashboard
 cd /etc/kubernetes/addon-manifests/dashboard
-curl -sO https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
-#curl -sO https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/heapster.yaml
-#curl -sO https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/influxdb.yaml
-#curl -sO https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/grafana.yaml
-#curl -sO https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/rbac/heapster-rbac.yaml
+curl -sO https://raw.githubusercontent.com/kubernetes/dashboard/$DASHBOARD_VERSION/src/deploy/recommended/kubernetes-dashboard.yaml

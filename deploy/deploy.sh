@@ -37,7 +37,7 @@ function deploy_nfs_storage_provider {
     export KUBECONFIG=/etc/kubernetes/admin.conf
     export NAMESPACE=default
     #export NAMESPACE=nfs-storage
-    #kubectl create ns \$NAMESPACE
+    #kubectl create ns $NAMESPACE
     kubectl create -n  $NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/rbac.yaml
     kubectl create -n  $NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/psp.yaml
     kubectl create -n  $NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/deployment.yaml
@@ -83,6 +83,9 @@ do
 	;;
     --rook-ceph-provisioner)
 	deploy_rook_ceph_storage_provider
+	;;
+    --dashboard)
+	deploy_dashboard
 	;;
   esac
   shift
