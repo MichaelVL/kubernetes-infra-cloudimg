@@ -45,21 +45,25 @@ KUBE_MM="$KUBE_MAJOR.$KUBE_MINOR"
 echo "${KUBERNETES_VERSION}" > /etc/kubernetes_version
 
 # Install crictl
+# https://github.com/kubernetes-sigs/cri-tools/releases
 CRICTL_VERSION="v1.13.0"
 wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRICTL_VERSION/crictl-$CRICTL_VERSION-linux-amd64.tar.gz
 sudo tar zxvf crictl-$CRICTL_VERSION-linux-amd64.tar.gz -C /usr/local/bin
 rm -f crictl-$CRICTL_VERSION-linux-amd64.tar.gz
 
-# https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/
-# https://raw.githubusercontent.com/kubernetes/kubernetes/master/cmd/kubeadm/app/constants/constants.go
-# /etc/kubernetes/manifests/
-FLANNEL_VER="v0.10.0-amd64"
-CALICO_VER="v3.3"
-CALICO_NODE_IMG_VER="v3.3.1"
-CALICO_CNI_IMG_VER="v3.3.1"
+# https://github.com/coreos/flannel/releases
+# https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml
+FLANNEL_VER="v0.11.0-amd64"
+# https://docs.projectcalico.org/v3.5/getting-started/kubernetes/
+CALICO_VER="v3.5"
+# From https://docs.projectcalico.org/$CALICO_VER/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+CALICO_NODE_IMG_VER="v3.5.0"
+CALICO_CNI_IMG_VER="v3.5.0"
+# For use with Canal, from https://docs.projectcalico.org/$CALICO_VER/getting-started/kubernetes/installation/hosted/canal/canal.yaml
 CALICO_FLANNEL_VER="v0.9.1"
-WEAVE_NET_VER="v1.10"
-WEAVE_NET_IMG_VER="2.4.1"
+WEAVE_NET_VER="v$KUBE_MM"
+# From https://cloud.weave.works/k8s/$WEAVE_NET_VER/net.yaml
+WEAVE_NET_IMG_VER="2.5.1"
 
 kubeadm config images pull
 
@@ -86,6 +90,8 @@ echo "--> Fetching Flannel manifests"
 mkdir -p /etc/kubernetes/addon-manifests/flannel
 cd /etc/kubernetes/addon-manifests/flannel
 curl -sO https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+# FIXME: Remove when kube-flannel.yml is updated
+sed -i -e "s|image: quay.io/coreos/flannel:v0.10.0-amd64|image: quay.io/coreos/flannel:$FLANNEL_VER|" kube-flannel.yml
 
 echo "--> Fetching Flannel image"
 docker pull quay.io/coreos/flannel:$FLANNEL_VER
