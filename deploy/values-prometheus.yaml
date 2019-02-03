@@ -13,3 +13,6 @@ server:
     #scrape_interval: '5s'
     # Default 10s
     #scrape_timeout: '5s'
+  service:
+    nodePort: 30090
+    type: NodePort
