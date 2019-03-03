@@ -62,6 +62,14 @@ function deploy_rook_ceph_storage_provider {
     kubectl annotate storageclass rook-ceph-block storageclass.beta.kubernetes.io/is-default-class=true
 }
 
+function deploy_contour {
+    export KUBECONFIG=/etc/kubernetes/admin.conf
+    kubectl create -f /etc/kubernetes/addon-manifests/contour/common.yaml
+    kubectl create -f /etc/kubernetes/addon-manifests/contour/rbac.yaml
+    kubectl create -f /etc/kubernetes/addon-manifests/contour/02-contour.yaml
+    kubectl create -f /etc/kubernetes/addon-manifests/contour/02-service.yaml
+}
+
 while [[ $# -gt 0 ]]
 do
   key="$1"
@@ -86,6 +94,9 @@ do
 	;;
     --dashboard)
 	deploy_dashboard
+	;;
+    --contour)
+	deploy_contour
 	;;
   esac
   shift

@@ -23,12 +23,15 @@ The following add-ons are also included (images and manifests):
  - Helm (tiller, image only)
  - Prometheus and Grafana (images only - as used by stable Helm charts)
  - [Elasticsearch, Fluentd, Kibana](https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/fluentd-elasticsearch)
- - [Nginx ingress controller](https://github.com/kubernetes/ingress-nginx)
+ - Ingress controllers
+   * [Contour](https://github.com/heptio/contour)
+   * [Traefik](https://traefik.io/) 
  - Storage Providers
    * [NFS storage provider](https://github.com/kubernetes-incubator/external-storage/tree/master/nfs)
    * [ROOK+CEPH storage provider](https://github.com/rook/rook)
  - [MetalLB load balancer](https://metallb.universe.tf)
 
-The manifests for deploying these add-ons are stored in /etc/kubernetes/addon-manifests/
+The manifests for deploying these add-ons are either from the stable helm charts
+(see [helmfile.yaml](deply/helmfile.yaml)) or stored in /etc/kubernetes/addon-manifests/
 
 A build-test are available that can be executed against a running VM - see Makefile for details

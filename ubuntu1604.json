@@ -78,6 +78,7 @@
 		"scripts/kubernetes_metrics_server.sh",
 		"scripts/kubernetes_nfs_storage.sh",
 		"scripts/kubernetes_rook_ceph.sh",
+		"scripts/kubernetes_contour.sh",
 		"scripts/helm_chart_images.sh",
 		"scripts/kubernetes_efk.sh",
 		"scripts/addon-images.sh",
