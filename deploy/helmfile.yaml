@@ -3,14 +3,14 @@ releases:
   - name: prometheus
     namespace: default
     chart: stable/prometheus
-    version: 8.7.1
+    version: 8.8.1
     values:
     - values-prometheus.yaml
 
   - name: grafana
     namespace: default
     chart: stable/grafana
-    version: 2.2.0
+    version: 2.2.1
     values:
     - values-grafana.yaml
     set:
@@ -20,7 +20,7 @@ releases:
   - name: traefik
     namespace: default
     chart: stable/traefik
-    version: 1.61.1
+    version: 1.63.0
     values:
     - values-traefik.yaml
 
