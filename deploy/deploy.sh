@@ -70,6 +70,11 @@ function deploy_contour {
     kubectl create -f /etc/kubernetes/addon-manifests/contour/02-service.yaml
 }
 
+function deploy_cert_manager_crd {
+    export KUBECONFIG=/etc/kubernetes/admin.conf
+    kubectl create -f /etc/kubernetes/addon-manifests/cert-manager/00-crds.yaml
+}
+
 while [[ $# -gt 0 ]]
 do
   key="$1"
@@ -97,6 +102,9 @@ do
 	;;
     --contour)
 	deploy_contour
+	;;
+    --cert-manager-crd)
+	deploy_cert_manager_crd
 	;;
   esac
   shift

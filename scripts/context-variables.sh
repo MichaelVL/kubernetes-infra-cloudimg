@@ -14,3 +14,6 @@ export HELM_METALLB_VERSION='0.8.4'
 
 export HELM_METRICS_SERVER_CHART='stable/metrics-server'
 export HELM_METRICS_SERVER_VERSION='2.4.0'
+
+export HELM_CERT_MANAGER_CHART='stable/cert-manager'
+export HELM_CERT_MANAGER_VERSION='v0.6.6'

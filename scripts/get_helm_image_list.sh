@@ -38,3 +38,8 @@ echo "# ${HELM_METRICS_SERVER_CHART} ${HELM_METRICS_SERVER_VERSION}"
 HELM_VALUES=$(helm inspect values ${HELM_METRICS_SERVER_CHART} --version ${HELM_METRICS_SERVER_VERSION} |yq .)
 IMAGE=`echo ${HELM_VALUES}|jq -r "[.image.repository, .image.tag] | join(\":\")"`
 echo "$1 ${IMAGE}"
+
+echo "# ${HELM_CERT_MANAGER_CHART} ${HELM_CERT_MANAGER_VERSION}"
+HELM_VALUES=$(helm inspect values ${HELM_CERT_MANAGER_CHART} --version ${HELM_CERT_MANAGER_VERSION} |yq .)
+IMAGE=`echo ${HELM_VALUES}|jq -r "[.image.repository, .image.tag] | join(\":\")"`
+echo "$1 ${IMAGE}"

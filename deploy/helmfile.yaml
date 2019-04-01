@@ -1,3 +1,6 @@
+repositories:
+  - name: stable
+    url: https://kubernetes-charts.storage.googleapis.com
 
 releases:
   - name: prometheus
@@ -33,3 +36,8 @@ releases:
     namespace: kube-system
     chart: stable/metrics-server
     version: 2.4.0
+
+  - name: cert-manager
+    namespace: cert-manager
+    chart: stable/cert-manager
+    version: v0.6.6

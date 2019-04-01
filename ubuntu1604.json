@@ -81,6 +81,7 @@
 		"scripts/kubernetes_contour.sh",
 		"scripts/helm_chart_images.sh",
 		"scripts/kubernetes_efk.sh",
+		"scripts/cert_manager.sh",
 		"scripts/addon-images.sh",
 		"scripts/swap.sh",
 		"scripts/grub.sh",
