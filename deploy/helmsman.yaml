@@ -1,0 +1,67 @@
+# For use with Helmsman
+
+helmRepos:
+  stable: "https://kubernetes-charts.storage.googleapis.com"
+  stagingrepo: "https://raw.githubusercontent.com/MichaelVL/contour-envoy-helm-chart/master/"
+
+namespaces:
+  metallb:
+  contour-int:
+  contour-ext:
+  metrics-server:
+  metrics:
+  cert-manager:
+
+apps:
+  metallb:
+    chart: stable/metallb
+    version: 0.9.4
+    enabled: true
+    namespace: metallb
+
+  contour-int:
+    chart: "stagingrepo/contour"
+    version: "0.2.1"
+    enabled: true
+    namespace: "contour-int"
+    set:
+      contour.ingressClassName: "internal"
+      crd.create: false
+      deployment.replicas: 1
+  
+  contour-ext:
+    chart: "stagingrepo/contour"
+    version: "0.2.1"
+    enabled: true
+    namespace: "contour-ext"
+    set:
+      contour.ingressClassName: "external"
+      deployment.replicas: 1
+
+  metrics-server:
+    chart: stable/metrics-server
+    version: 2.5.1
+    enabled: true
+    namespace: kube-system
+
+  prometheus:
+    chart: stable/prometheus
+    version: 8.9.0
+    enabled: true
+    namespace: metrics
+    valuesFile: values-prometheus.yaml
+
+  grafana:
+    chart: stable/grafana
+    version: 3.0.1
+    enabled: true
+    namespace: metrics
+    valuesFile: values-grafana.yaml
+    set:
+      adminPassword: "$GRAFANA_ADMIN_PASSWD"
+
+  cert-manager:
+    chart: stable/cert-manager
+    version: v0.6.6
+    enabled: false
+    namespace: cert-manager

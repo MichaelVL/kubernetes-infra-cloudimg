@@ -22,11 +22,6 @@ done
 IMAGE=`echo ${HELM_VALUES}|jq -r ".sidecar.image"`
 echo "$1 ${IMAGE}"
 
-echo "# ${HELM_TRAEFIK_CHART} ${HELM_TRAEFIK_VERSION}"
-HELM_VALUES=$(helm inspect values ${HELM_TRAEFIK_CHART} --version ${HELM_TRAEFIK_VERSION} |yq .)
-IMAGE=`echo ${HELM_VALUES}|jq -r "[.image, .imageTag] | join(\":\")"`
-echo "$1 ${IMAGE}"
-
 echo "# ${HELM_METALLB_CHART} ${HELM_METALLB_VERSION}"
 HELM_VALUES=$(helm inspect values ${HELM_METALLB_CHART} --version ${HELM_METALLB_VERSION} |yq .)
 for component in controller speaker; do
@@ -43,3 +38,10 @@ echo "# ${HELM_CERT_MANAGER_CHART} ${HELM_CERT_MANAGER_VERSION}"
 HELM_VALUES=$(helm inspect values ${HELM_CERT_MANAGER_CHART} --version ${HELM_CERT_MANAGER_VERSION} |yq .)
 IMAGE=`echo ${HELM_VALUES}|jq -r "[.image.repository, .image.tag] | join(\":\")"`
 echo "$1 ${IMAGE}"
+
+echo "# ${HELM_CONTOUR_CHART} ${HELM_CONTOUR_VERSION} ${HELM_CONTOUR_URL}"
+HELM_VALUES=$(helm inspect values ${HELM_CONTOUR_CHART} --repo ${HELM_CONTOUR_URL} --version ${HELM_CONTOUR_VERSION} |yq .)
+for component in contour envoy; do
+    IMAGE=`echo ${HELM_VALUES}|jq -r ".${component}.image | [.repository, .tag] | join(\":\")"`
+    echo "$1 ${IMAGE}"
+done
