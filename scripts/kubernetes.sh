@@ -46,7 +46,7 @@ echo "${KUBERNETES_VERSION}" > /etc/kubernetes_version
 
 # Install crictl
 # https://github.com/kubernetes-sigs/cri-tools/releases
-CRICTL_VERSION="v1.13.0"
+CRICTL_VERSION="v1.14.0"
 wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRICTL_VERSION/crictl-$CRICTL_VERSION-linux-amd64.tar.gz
 sudo tar zxvf crictl-$CRICTL_VERSION-linux-amd64.tar.gz -C /usr/local/bin
 rm -f crictl-$CRICTL_VERSION-linux-amd64.tar.gz
@@ -90,8 +90,6 @@ echo "--> Fetching Flannel manifests"
 mkdir -p /etc/kubernetes/addon-manifests/flannel
 cd /etc/kubernetes/addon-manifests/flannel
 curl -sO https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-# FIXME: Remove when kube-flannel.yml is updated
-sed -i -e "s|image: quay.io/coreos/flannel:v0.10.0-amd64|image: quay.io/coreos/flannel:$FLANNEL_VER|" kube-flannel.yml
 
 echo "--> Fetching Flannel image"
 docker pull quay.io/coreos/flannel:$FLANNEL_VER
