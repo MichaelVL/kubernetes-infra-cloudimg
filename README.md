@@ -18,20 +18,19 @@ kubeadm init --kubernetes-version "$(cat /etc/kubernetes_version)"
 
 The following add-ons are also included (images and manifests):
 
- - Network plugin Canal (Flannel+Calico)
+ - Network plugins Flannel, Weave-net, Calico, Canal (Flannel+Calico)
  - Kubernetes dashboard
  - Helm (tiller, image only)
  - Prometheus and Grafana (images only - as used by stable Helm charts)
- - [Elasticsearch, Fluentd, Kibana](https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/fluentd-elasticsearch)
- - Ingress controllers
-   * [Contour](https://github.com/heptio/contour)
-   * [Traefik](https://traefik.io/) 
+ - [Contour](https://github.com/heptio/contour) ingress controller (in a variant that supports internal and external services)
  - Storage Providers
    * [NFS storage provider](https://github.com/kubernetes-incubator/external-storage/tree/master/nfs)
    * [ROOK+CEPH storage provider](https://github.com/rook/rook)
  - [MetalLB load balancer](https://metallb.universe.tf)
+ - Metrics server
+ - Cert-manager
 
 The manifests for deploying these add-ons are either from the stable helm charts
-(see [helmfile.yaml](deply/helmfile.yaml)) or stored in /etc/kubernetes/addon-manifests/
+(see [helmsman.yaml](deply/helmsman.yaml)) or stored in /etc/kubernetes/addon-manifests/
 
-A build-test are available that can be executed against a running VM - see Makefile for details
+A build-test are available that can be executed against a running VM - see Makefile for details.
