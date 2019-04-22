@@ -27,7 +27,7 @@ The following add-ons are also included (images and manifests):
    * [NFS storage provider](https://github.com/kubernetes-incubator/external-storage/tree/master/nfs)
    * [ROOK+CEPH storage provider](https://github.com/rook/rook)
  - [MetalLB load balancer](https://metallb.universe.tf)
- - Metrics server
+ - Metrics server (note [issue 146](https://github.com/kubernetes-incubator/metrics-server/issues/146))
  - Cert-manager
 
 The manifests for deploying these add-ons are either from the stable helm charts
