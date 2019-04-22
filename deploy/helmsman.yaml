@@ -15,13 +15,13 @@ namespaces:
 apps:
   metallb:
     chart: stable/metallb
-    version: 0.9.4
+    version: 0.9.5
     enabled: true
     namespace: metallb
 
   contour-int:
     chart: "stagingrepo/contour"
-    version: "0.2.1"
+    version: "0.2.2"
     enabled: true
     namespace: "contour-int"
     set:
@@ -31,7 +31,7 @@ apps:
   
   contour-ext:
     chart: "stagingrepo/contour"
-    version: "0.2.1"
+    version: "0.2.2"
     enabled: true
     namespace: "contour-ext"
     set:
@@ -43,17 +43,20 @@ apps:
     version: 2.6.0
     enabled: true
     namespace: kube-system
+#    set:
+#      args:
+#       - "--kubelet-insecure-tls"
 
   prometheus:
     chart: stable/prometheus
-    version: 8.9.2
+    version: 8.10.1
     enabled: true
     namespace: metrics
     valuesFile: values-prometheus.yaml
 
   grafana:
     chart: stable/grafana
-    version: 3.3.0
+    version: 3.3.1
     enabled: true
     namespace: metrics
     valuesFile: values-grafana.yaml
