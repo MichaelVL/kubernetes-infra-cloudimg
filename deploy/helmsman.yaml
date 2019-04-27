@@ -52,16 +52,26 @@ apps:
     version: 8.10.3
     enabled: true
     namespace: metrics
-    valuesFile: values-prometheus.yaml
+    set:
+      rbac.create: true
+      alertmanager.enabled: false
+      pushgateway.enabled: false,
+      networkPolicy.enabled: true
+      server.retention: '7d'
 
   grafana:
     chart: stable/grafana
     version: 3.3.2
     enabled: true
     namespace: metrics
-    valuesFile: values-grafana.yaml
     set:
       adminPassword: "$GRAFANA_ADMIN_PASSWD"
+      sidecar.datasources.enabled: true
+      sidecar.dashboards.enabled: true
+      sidecar.dashboards.searchNamespace: ALL
+      ingress.enabled: true
+      ingress.annotations."kubernetes\.io/ingress\.class": "internal"
+      ingress.hosts[0]: ""
 
   cert-manager:
     chart: stable/cert-manager
