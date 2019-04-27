@@ -40,7 +40,7 @@ apps:
 
   metrics-server:
     chart: stable/metrics-server
-    version: 2.6.0
+    version: 2.7.0
     enabled: true
     namespace: kube-system
 #    set:
@@ -49,14 +49,14 @@ apps:
 
   prometheus:
     chart: stable/prometheus
-    version: 8.10.1
+    version: 8.10.3
     enabled: true
     namespace: metrics
     valuesFile: values-prometheus.yaml
 
   grafana:
     chart: stable/grafana
-    version: 3.3.1
+    version: 3.3.2
     enabled: true
     namespace: metrics
     valuesFile: values-grafana.yaml
