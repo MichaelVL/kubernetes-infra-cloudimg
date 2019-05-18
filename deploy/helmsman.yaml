@@ -21,17 +21,20 @@ apps:
 
   contour-int:
     chart: "stagingrepo/contour"
-    version: "0.2.3"
+    version: "0.2.5"
     enabled: true
     namespace: "contour-int"
     set:
       contour.ingressClassName: "internal"
       crd.create: false
       deployment.replicas: 1
+      service.type: "NodePort"
+      service.nodePorts.http: 31080
+      service.nodePorts.https: 31443
   
   contour-ext:
     chart: "stagingrepo/contour"
-    version: "0.2.3"
+    version: "0.2.5"
     enabled: true
     namespace: "contour-ext"
     set:
