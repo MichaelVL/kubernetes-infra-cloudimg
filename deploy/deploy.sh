@@ -56,18 +56,11 @@ function deploy_rook_ceph_storage_provider {
     done
     sed -i -e "s|    useAllNodes: true|$FMT|" /etc/kubernetes/addon-manifests/rook-ceph-storage-provisioner/cluster.yaml
 
+    kubectl create -f /etc/kubernetes/addon-manifests/rook-ceph-storage-provisioner/common.yaml
     kubectl create -f /etc/kubernetes/addon-manifests/rook-ceph-storage-provisioner/operator.yaml
     kubectl create -f /etc/kubernetes/addon-manifests/rook-ceph-storage-provisioner/cluster.yaml
     kubectl create -f /etc/kubernetes/addon-manifests/rook-ceph-storage-provisioner/storageclass.yaml
     kubectl annotate storageclass rook-ceph-block storageclass.beta.kubernetes.io/is-default-class=true
-}
-
-function deploy_contour {
-    export KUBECONFIG=/etc/kubernetes/admin.conf
-    kubectl create -f /etc/kubernetes/addon-manifests/contour/common.yaml
-    kubectl create -f /etc/kubernetes/addon-manifests/contour/rbac.yaml
-    kubectl create -f /etc/kubernetes/addon-manifests/contour/02-contour.yaml
-    kubectl create -f /etc/kubernetes/addon-manifests/contour/02-service.yaml
 }
 
 function deploy_cert_manager_crd {
@@ -99,9 +92,6 @@ do
 	;;
     --dashboard)
 	deploy_dashboard
-	;;
-    --contour)
-	deploy_contour
 	;;
     --cert-manager-crd)
 	deploy_cert_manager_crd
