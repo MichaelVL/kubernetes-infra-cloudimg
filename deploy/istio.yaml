@@ -1,0 +1,22 @@
+# For use with Helmsman
+
+helmRepos:
+  istio: "https://storage.googleapis.com/istio-release/releases/1.1.7/charts/"
+
+namespaces:
+  istio-system:
+
+apps:
+  istio-init:
+    chart: istio/istio-init
+    version: 1.1.7
+    enabled: true
+    namespace: istio-system
+    priority: -2
+
+  istio:
+    chart: istio/istio
+    version: 1.1.7
+    enabled: true
+    namespace: istio-system
+    priority: -1
