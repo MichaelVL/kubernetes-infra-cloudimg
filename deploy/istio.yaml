@@ -20,3 +20,18 @@ apps:
     enabled: true
     namespace: istio-system
     priority: -1
+    set:
+      gateways.enabled: true
+      #gateways.istio-ingressgateway.ports.
+      sidecarInjectorWebhook.enabled: false
+      galley.enabled: true
+      mixer.policy.enabled: false
+      mixer.telemetry.enabled: false
+      pilot.enabled: true
+      security.enabled: true
+      nodeagent.enabled: false
+      grafana.enabled: false
+      prometheus.enabled: false
+      tracing.enabled: false
+      kiali.enabled: false
+      certmanager.enabled: false
