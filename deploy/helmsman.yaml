@@ -1,8 +1,9 @@
 # For use with Helmsman
 
 helmRepos:
-  stable: "https://kubernetes-charts.storage.googleapis.com"
+  stable:      "https://kubernetes-charts.storage.googleapis.com"
   stagingrepo: "https://raw.githubusercontent.com/MichaelVL/contour-envoy-helm-chart/master/"
+  jetstack:    "https://charts.jetstack.io"
 
 namespaces:
   metallb:
@@ -79,7 +80,7 @@ apps:
       ingress.hosts[0]: ""
 
   cert-manager:
-    chart: stable/cert-manager
-    version: v0.6.7
-    enabled: false
+    chart: jetstack/cert-manager
+    version: v0.8.0
+    enabled: true
     namespace: cert-manager
