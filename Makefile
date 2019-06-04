@@ -1,3 +1,6 @@
+-include Makefile.local
+-include Makefile.deploy
+
 .PHONY: validate image image-w-console test-image build-helm-image-list
 .PHONY: test-cncf test-cncf-wait test-cncf-retrieve test-cncf-check
 

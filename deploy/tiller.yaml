@@ -1,0 +1,7 @@
+settings:
+  serviceAccount: "tiller-cluster-admin"
+
+namespaces:
+  kube-system:
+    installTiller: true
+    tillerRole: "cluster-admin"

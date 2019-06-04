@@ -1,0 +1,20 @@
+GRAFANA_ADMIN_PASSWD ?= ChangeMePlease
+
+# Grafana data sources should be deployed before Grafana
+# MetalLB config can be deployed after MetalLB
+.PHONY: infra-init
+infra-init:
+	-kubectl create ns metrics
+	kubectl -nmetrics apply -f deploy/grafana-datasources.yaml
+	-kubectl create ns metallb
+	kubectl -nmetallb apply -f deploy/metallb-layer2.yaml
+
+.PHONY: base-apps-deploy
+base-apps-deploy:
+	helmsman --no-banner --keep-untracked-releases --apply -f deploy/tiller.yaml
+	GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) helmsman --no-banner --keep-untracked-releases --apply -f deploy/helmsman.yaml -f deploy/istio.yaml -f deploy/loki.yaml
+
+# This depends on CRDs deployed above
+.PHONY: infra-init-post
+infra-init-post:
+	kubectl -nmetrics apply -f deploy/grafana-istio-ingress.yaml
