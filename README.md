@@ -42,3 +42,9 @@ kubeadm init --kubernetes-version "$(cat /etc/kubernetes_version)"
 ## Testing
 
 A build-test are available that can be executed against a running VM - see Makefile for details.
+
+The [CNCF conformmance
+test](https://github.com/cncf/k8s-conformance/blob/master/instructions.md) can
+be executed using the make target `test-cncf`
+
+
