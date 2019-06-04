@@ -13,7 +13,7 @@ The following applications are included (images and/or manifests):
  - Prometheus and Grafana (images only - as used by stable Helm charts)
  - [Loki log management](https://grafana.com/loki)
  - Ingress controllers in variants that supports internal and external services (See [here for a description of Contour in this dual-ingress controller setup](https://github.com/MichaelVL/contour-envoy-helm-chart)):
-   " [Contour ingress controllers](https://github.com/heptio/contour)
+   * [Contour ingress controllers](https://github.com/heptio/contour)
    * [Istio ingress gateways](https://istio.io/)
  - Storage Providers
    * [NFS storage provider](https://github.com/kubernetes-incubator/external-storage/tree/master/nfs)
