@@ -20,10 +20,10 @@ apps:
     enabled: true
     namespace: istio-system
     priority: -1
-    valuesFile: values-istio-gw.yaml
+    #valuesFile: values-istio-gw.yaml
+    valuesFile: values-istio-gw-lb.yaml
     set:
       gateways.enabled: true
-      #gateways.istio-ingressgateway.ports.
       sidecarInjectorWebhook.enabled: false
       galley.enabled: true
       mixer.policy.enabled: false
