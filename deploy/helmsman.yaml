@@ -6,8 +6,6 @@ helmRepos:
 
 namespaces:
   metallb:
-  contour-int:
-  contour-ext:
   metrics-server:
   metrics:
   cert-manager:
