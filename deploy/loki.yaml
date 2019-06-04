@@ -1,0 +1,28 @@
+# For use with Helmsman
+
+helmRepos:
+  loki: "https://grafana.github.io/loki/charts"
+
+namespaces:
+  loki:
+
+apps:
+  promtail:
+    chart: loki/promtail
+    version: 0.8.0
+    enabled: true
+    namespace: loki
+    priority: -2
+    set:
+      loki.serviceName: loki
+
+  loki:
+    chart: loki/loki
+    version: 0.10.0
+    enabled: true
+    namespace: loki
+    priority: -1
+    set:
+      persistence.enabled: true
+      persistence.storageClassName: ""
+      persistence.size: 10Gi
