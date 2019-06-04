@@ -2,7 +2,6 @@
 
 helmRepos:
   stable:      "https://kubernetes-charts.storage.googleapis.com"
-  stagingrepo: "https://raw.githubusercontent.com/MichaelVL/contour-envoy-helm-chart/master/"
   jetstack:    "https://charts.jetstack.io"
 
 namespaces:
@@ -19,30 +18,6 @@ apps:
     version: 0.9.5
     enabled: true
     namespace: metallb
-
-  contour-int:
-    chart: "stagingrepo/contour"
-    version: "0.2.5"
-    enabled: true
-    namespace: "contour-int"
-    priority: -2
-    set:
-      contour.ingressClassName: "internal"
-      crd.create: false
-      deployment.replicas: 1
-#      service.type: "NodePort"
-#      service.nodePorts.http: 31080
-#      service.nodePorts.https: 31443
-  
-  contour-ext:
-    chart: "stagingrepo/contour"
-    version: "0.2.5"
-    enabled: true
-    namespace: "contour-ext"
-    priority: -1
-    set:
-      contour.ingressClassName: "external"
-      deployment.replicas: 1
 
   metrics-server:
     chart: stable/metrics-server
@@ -82,5 +57,5 @@ apps:
   cert-manager:
     chart: jetstack/cert-manager
     version: v0.8.0
-    enabled: true
+    enabled: false
     namespace: cert-manager

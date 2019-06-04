@@ -1,0 +1,33 @@
+# For use with Helmsman
+
+helmRepos:
+  stagingrepo: "https://raw.githubusercontent.com/MichaelVL/contour-envoy-helm-chart/master/"
+
+namespaces:
+  contour-int:
+  contour-ext:
+
+apps:
+  contour-int:
+    chart: "stagingrepo/contour"
+    version: "0.2.5"
+    enabled: true
+    namespace: "contour-int"
+    priority: -2
+    set:
+      contour.ingressClassName: "internal"
+      crd.create: false
+      deployment.replicas: 1
+#      service.type: "NodePort"
+#      service.nodePorts.http: 31080
+#      service.nodePorts.https: 31443
+  
+  contour-ext:
+    chart: "stagingrepo/contour"
+    version: "0.2.5"
+    enabled: true
+    namespace: "contour-ext"
+    priority: -1
+    set:
+      contour.ingressClassName: "external"
+      deployment.replicas: 1
