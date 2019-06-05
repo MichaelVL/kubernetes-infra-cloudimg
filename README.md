@@ -10,7 +10,8 @@ The following applications are included (images and/or manifests):
  - Network plugins Flannel, Weave-net, Calico, Canal (Flannel+Calico)
  - Kubernetes dashboard
  - Helm (tiller, image only)
- - Prometheus and Grafana (images only - as used by stable Helm charts)
+ - Prometheus and Grafana
+   * Kubernetes Health Dashboard from this [dashboards as code project](https://github.com/MichaelVL/kubernetes-grafana-dashboard)
  - [Loki log management](https://grafana.com/loki)
  - Ingress controllers in variants that supports internal and external services (See [here for a description of Contour in this dual-ingress controller setup](https://github.com/MichaelVL/contour-envoy-helm-chart)):
    * [Contour ingress controllers](https://github.com/heptio/contour)

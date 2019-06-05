@@ -1,11 +1,24 @@
 GRAFANA_ADMIN_PASSWD ?= ChangeMePlease
 
-# Grafana data sources should be deployed before Grafana
-# MetalLB config can be deployed after MetalLB
 .PHONY: infra-init
-infra-init:
+infra-init: grafana-init metallb-init
+
+Get Kubernetes health dashboard from https://github.com/MichaelVL/kubernetes-grafana-dashboard
+dashboard-kubernetes-health.json:
+	curl -sO https://raw.githubusercontent.com/MichaelVL/kubernetes-grafana-dashboard/master/dashboards/dashboard-kubernetes-health.json
+
+# Grafana data sources should be deployed before Grafana
+.PHONY: grafana-init
+grafana-init: dashboard-kubernetes-health.json
 	-kubectl create ns metrics
 	kubectl -nmetrics apply -f deploy/grafana-datasources.yaml
+	-kubectl -nmetrics delete configmap dashboard
+	kubectl -nmetrics create configmap dashboard --from-file dashboard-kubernetes-health.json
+	kubectl -nmetrics label configmap dashboard grafana_dashboard=1
+
+# MetalLB config can be deployed after MetalLB
+.PHONY: metallb-init
+metallb-init:
 	-kubectl create ns metallb
 	kubectl -nmetallb apply -f deploy/metallb-layer2.yaml
 
