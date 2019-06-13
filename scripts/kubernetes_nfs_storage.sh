@@ -20,4 +20,4 @@ curl -O https://raw.githubusercontent.com/kubernetes-incubator/external-storage/
 sed -i -e 's/namespace:.*/namespace: default/' rbac.yaml
 
 echo "--> Pulling NFS storage image"
-docker pull quay.io/kubernetes_incubator/nfs-provisioner:latest
+crictl pull quay.io/kubernetes_incubator/nfs-provisioner:latest

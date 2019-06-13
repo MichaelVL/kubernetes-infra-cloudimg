@@ -3,10 +3,10 @@
 set -eux
 
 echo "--> Images available after installing Kubernetes"
-docker images
+crictl images
 
 echo "--> Image count"
-docker images -q | wc -l
+crictl images -q | wc -l
 
 echo "--> Manifests available"
 ls -R /etc/kubernetes/addon-manifests/

@@ -24,5 +24,5 @@ sed -i -e 's|    #directories:|    directories:|' cluster.yaml
 sed -i -e 's|    #- path: /var/lib/rook|    - path: /rook/storage-dir|' cluster.yaml
 
 echo "--> Pulling ROOK/Ceph images (CEPH version $CEPH_VER)"
-docker pull rook/ceph:master
-docker pull ceph/ceph:$CEPH_VER
+crictl pull rook/ceph:master
+crictl pull ceph/ceph:$CEPH_VER

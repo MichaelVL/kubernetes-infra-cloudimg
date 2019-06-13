@@ -5,6 +5,9 @@ images for the main Kubernetes infrastructure. Included is also a number of
 curated infrastructure applications necessary to build a useful Kubernetes
 infrastructure.
 
+The container run-time is ContainerD/runC and management through crictl, i.e. it
+does not have (nor need) the traditional Docker tooling.
+
 The following applications are included (images and/or manifests):
 
  - Network plugins Flannel, Weave-net, Calico, Canal (Flannel+Calico)

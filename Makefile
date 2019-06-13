@@ -55,4 +55,4 @@ build-helm-image-list:
 	echo "#!/bin/bash" > scripts/helm_chart_images.sh
 	echo "set -eux" >> scripts/helm_chart_images.sh
 	echo "# This file is auto-generated - do not edit!" >> scripts/helm_chart_images.sh
-	scripts/get_helm_image_list.sh 'docker pull' >> scripts/helm_chart_images.sh
+	scripts/get_helm_image_list.sh 'crictl pull' >> scripts/helm_chart_images.sh

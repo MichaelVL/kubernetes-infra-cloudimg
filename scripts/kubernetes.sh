@@ -11,22 +11,24 @@ cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 apt-get update
-# Ubuntu docker version
 
-echo "--> Installing docker"
-apt-get install -y docker.io
+echo "--> Installing containerd"
+apt-get install -y containerd
+echo "runtime-endpoint: unix:///run/containerd/containerd.sock" > /etc/crictl.yaml
+echo br_netfilter >> /etc/modules
+cat <<EOF >>  /etc/sysctl.d/k8s.conf
+net.ipv4.ip_forward = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+
+#echo "--> Installing docker"
+#apt-get install -y docker.io
 
 apt-get install -y \
     ca-certificates \
     software-properties-common
 
-# Docker docker version
-#curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-#add-apt-repository \
-#   "deb https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
-#   $(lsb_release -cs) \
-#   stable"
-#apt-get update && apt-get install -y docker-ce=$(apt-cache madison docker-ce | grep 17.03 | head -1 | awk '{print $3}')
 echo "--> Installing Kubernetes packages (${KUBERNETES_VERSION}-${KUBERNETES_PATCHLEVEL})"
 apt-get install -y ebtables ethtool socat
 apt-get install -y kubelet=${KUBERNETES_VERSION}-${KUBERNETES_PATCHLEVEL} kubeadm=${KUBERNETES_VERSION}-${KUBERNETES_PATCHLEVEL} kubectl kubernetes-cni
@@ -47,8 +49,8 @@ echo "${KUBERNETES_VERSION}" > /etc/kubernetes_version
 # Install crictl
 # https://github.com/kubernetes-sigs/cri-tools/releases
 CRICTL_VERSION="v1.14.0"
-wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRICTL_VERSION/crictl-$CRICTL_VERSION-linux-amd64.tar.gz
-sudo tar zxvf crictl-$CRICTL_VERSION-linux-amd64.tar.gz -C /usr/local/bin
+wget -q https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRICTL_VERSION/crictl-$CRICTL_VERSION-linux-amd64.tar.gz
+tar zxf crictl-$CRICTL_VERSION-linux-amd64.tar.gz -C /usr/local/bin
 rm -f crictl-$CRICTL_VERSION-linux-amd64.tar.gz
 
 # https://github.com/coreos/flannel/releases
@@ -82,9 +84,9 @@ curl -sO https://docs.projectcalico.org/$CALICO_VER/getting-started/kubernetes/i
 curl -sO https://docs.projectcalico.org/$CALICO_VER/getting-started/kubernetes/installation/hosted/canal/canal.yaml
 
 echo "--> Pulling Calico/Canal images"
-docker pull quay.io/calico/node:$CALICO_NODE_IMG_VER
-docker pull quay.io/calico/cni:$CALICO_CNI_IMG_VER
-docker pull quay.io/coreos/flannel:$CALICO_FLANNEL_VER
+crictl pull quay.io/calico/node:$CALICO_NODE_IMG_VER
+crictl pull quay.io/calico/cni:$CALICO_CNI_IMG_VER
+crictl pull quay.io/coreos/flannel:$CALICO_FLANNEL_VER
 
 echo "--> Fetching Flannel manifests"
 mkdir -p /etc/kubernetes/addon-manifests/flannel
@@ -92,16 +94,16 @@ cd /etc/kubernetes/addon-manifests/flannel
 curl -sO https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 echo "--> Fetching Flannel image"
-docker pull quay.io/coreos/flannel:$FLANNEL_VER
+crictl pull quay.io/coreos/flannel:$FLANNEL_VER
 
 echo "--> Fetching Weave-net manifests"
 mkdir -p /etc/kubernetes/addon-manifests/weave-net
 cd /etc/kubernetes/addon-manifests/weave-net
-curl -O https://cloud.weave.works/k8s/$WEAVE_NET_VER/net.yaml
+curl -sO https://cloud.weave.works/k8s/$WEAVE_NET_VER/net.yaml
 
 echo "--> Fetching Weave-net image"
-docker pull docker.io/weaveworks/weave-kube:$WEAVE_NET_IMG_VER
-docker pull docker.io/weaveworks/weave-npc:$WEAVE_NET_IMG_VER
+crictl pull docker.io/weaveworks/weave-kube:$WEAVE_NET_IMG_VER
+crictl pull docker.io/weaveworks/weave-npc:$WEAVE_NET_IMG_VER
 
 DASHBOARD_VERSION="v1.10.1"
 
@@ -109,7 +111,7 @@ DASHBOARD_VERSION="v1.10.1"
 # https://github.com/kubernetes/dashboard/pull/3504
 
 echo "--> Pulling Dashboard images"
-docker pull gcr.io/google_containers/kubernetes-dashboard-amd64:$DASHBOARD_VERSION
+crictl pull gcr.io/google_containers/kubernetes-dashboard-amd64:$DASHBOARD_VERSION
 
 echo "--> Fetching Dashboard manifests"
 mkdir -p /etc/kubernetes/addon-manifests/dashboard
