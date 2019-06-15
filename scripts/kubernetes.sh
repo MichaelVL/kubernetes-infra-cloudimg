@@ -104,16 +104,3 @@ curl -sO https://cloud.weave.works/k8s/$WEAVE_NET_VER/net.yaml
 echo "--> Fetching Weave-net image"
 crictl pull docker.io/weaveworks/weave-kube:$WEAVE_NET_IMG_VER
 crictl pull docker.io/weaveworks/weave-npc:$WEAVE_NET_IMG_VER
-
-DASHBOARD_VERSION="v1.10.1"
-
-# https://github.com/kubernetes/dashboard/issues/2986
-# https://github.com/kubernetes/dashboard/pull/3504
-
-echo "--> Pulling Dashboard images"
-crictl pull gcr.io/google_containers/kubernetes-dashboard-amd64:$DASHBOARD_VERSION
-
-echo "--> Fetching Dashboard manifests"
-mkdir -p /etc/kubernetes/addon-manifests/dashboard
-cd /etc/kubernetes/addon-manifests/dashboard
-curl -sO https://raw.githubusercontent.com/kubernetes/dashboard/$DASHBOARD_VERSION/src/deploy/recommended/kubernetes-dashboard.yaml

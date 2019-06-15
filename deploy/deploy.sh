@@ -28,11 +28,6 @@ function deploy_weave {
     kubectl apply -n kube-system -f /etc/kubernetes/addon-manifests/weave-net
 }
 
-function deploy_dashboard {
-    export KUBECONFIG=/etc/kubernetes/admin.conf
-    kubectl apply -n kube-system -f /etc/kubernetes/addon-manifests/dashboard
-}
-
 function deploy_nfs_storage_provider {
     export KUBECONFIG=/etc/kubernetes/admin.conf
     export NAMESPACE=default
@@ -89,9 +84,6 @@ do
 	;;
     --rook-ceph-provisioner)
 	deploy_rook_ceph_storage_provider
-	;;
-    --dashboard)
-	deploy_dashboard
 	;;
     --cert-manager-crd)
 	deploy_cert_manager_crd
