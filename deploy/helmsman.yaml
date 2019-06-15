@@ -22,9 +22,8 @@ apps:
     version: 2.7.0
     enabled: true
     namespace: kube-system
-#    set:
-#      args:
-#       - "--kubelet-insecure-tls"
+    set:
+      args[0]: "--kubelet-insecure-tls"
 
   prometheus:
     chart: stable/prometheus
