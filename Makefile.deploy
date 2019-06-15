@@ -1,5 +1,8 @@
 GRAFANA_ADMIN_PASSWD ?= ChangeMePlease
 
+.PHONY: all
+all: infra-init tiller-deploy base-apps-deploy infra-init-post
+
 .PHONY: infra-init
 infra-init: grafana-init metallb-init
 
@@ -22,9 +25,12 @@ metallb-init:
 	-kubectl create ns metallb
 	kubectl -nmetallb apply -f deploy/metallb-layer2.yaml
 
+.PHONY: tiller-deploy
+tiller-deploy:
+	helmsman --no-banner --keep-untracked-releases --apply -f deploy/tiller.yaml
+
 .PHONY: base-apps-deploy
 base-apps-deploy:
-	helmsman --no-banner --keep-untracked-releases --apply -f deploy/tiller.yaml
 	GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) helmsman --no-banner --keep-untracked-releases --apply -f deploy/helmsman.yaml -f deploy/istio.yaml -f deploy/loki.yaml
 
 # This depends on CRDs deployed above
