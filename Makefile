@@ -5,7 +5,7 @@
 .PHONY: test-cncf test-cncf-wait test-cncf-retrieve test-cncf-check
 
 ifndef KUBERNETES_VERSION
-KUBERNETES_VERSION=1.14.3
+KUBERNETES_VERSION=1.15.0
 endif
 ifndef KUBERNETES_PATCHLEVEL
 KUBERNETES_PATCHLEVEL=00
