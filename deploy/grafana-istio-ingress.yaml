@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: grafana-gateway
+  name: grafana
 spec:
   selector:
     istio: internal-gateway
@@ -21,7 +21,7 @@ spec:
   hosts:
   - "grafana.192.168.2.220.nip.io"
   gateways:
-  - grafana-gateway
+  - grafana
   http:
   - route:
     - destination:
