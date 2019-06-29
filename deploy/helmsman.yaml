@@ -13,7 +13,7 @@ namespaces:
 apps:
   metallb:
     chart: stable/metallb
-    version: 0.9.6
+    version: 0.9.7
     enabled: true
     namespace: metallb
 
@@ -27,7 +27,7 @@ apps:
 
   prometheus:
     chart: stable/prometheus
-    version: 8.11.4
+    version: 8.14.0
     enabled: true
     namespace: metrics
     set:
@@ -39,11 +39,13 @@ apps:
 
   grafana:
     chart: stable/grafana
-    version: 3.4.2
+    version: 3.5.6
     enabled: true
     namespace: metrics
     set:
       adminPassword: "$GRAFANA_ADMIN_PASSWD"
+      #persistence.enabled: true
+      #persistence.size: 10Mi
       sidecar.datasources.enabled: true
       sidecar.dashboards.enabled: true
       sidecar.dashboards.searchNamespace: ALL
@@ -53,6 +55,6 @@ apps:
 
   cert-manager:
     chart: jetstack/cert-manager
-    version: v0.8.0
+    version: v0.8.1
     enabled: false
     namespace: cert-manager
