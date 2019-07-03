@@ -39,14 +39,14 @@ apps:
 
   grafana:
     chart: stable/grafana
-    version: 3.5.6
+    version: 3.5.7
     enabled: true
     namespace: metrics
+    valuesFile: values-grafana-datasources.yaml
     set:
       adminPassword: "$GRAFANA_ADMIN_PASSWD"
       #persistence.enabled: true
       #persistence.size: 10Mi
-      sidecar.datasources.enabled: true
       sidecar.dashboards.enabled: true
       sidecar.dashboards.searchNamespace: ALL
       #ingress.enabled: true

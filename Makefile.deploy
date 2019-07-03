@@ -14,8 +14,6 @@ dashboard-kubernetes-health.json:
 .PHONY: grafana-init
 grafana-init: dashboard-kubernetes-health.json
 	-kubectl create ns metrics
-	kubectl -nmetrics apply -f deploy/grafana-datasources.yaml
-	-kubectl -nmetrics delete configmap dashboard
 	kubectl -nmetrics create configmap dashboard --from-file dashboard-kubernetes-health.json
 	kubectl -nmetrics label configmap dashboard grafana_dashboard=1
 
