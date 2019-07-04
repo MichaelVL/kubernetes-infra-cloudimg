@@ -1,19 +1,19 @@
 export HELM_VERSION='v2.13.1'
 
 export HELM_PROMETHEUS_CHART='stable/prometheus'
-export HELM_PROMETHEUS_VERSION='8.11.4'
+export HELM_PROMETHEUS_VERSION='8.14.0'
 
 export HELM_GRAFANA_CHART='stable/grafana'
-export HELM_GRAFANA_VERSION='3.4.2'
+export HELM_GRAFANA_VERSION='3.5.7'
 
 export HELM_METALLB_CHART='stable/metallb'
-export HELM_METALLB_VERSION='0.9.6'
+export HELM_METALLB_VERSION='0.9.7'
 
 export HELM_METRICS_SERVER_CHART='stable/metrics-server'
 export HELM_METRICS_SERVER_VERSION='2.8.2'
 
 export HELM_CERT_MANAGER_CHART='jetstack/cert-manager'
-export HELM_CERT_MANAGER_VERSION='v0.8.0'
+export HELM_CERT_MANAGER_VERSION='v0.8.1'
 
 export HELM_CONTOUR_CHART='contour'
 export HELM_CONTOUR_VERSION='0.2.5'
