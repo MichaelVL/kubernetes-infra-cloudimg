@@ -1,7 +1,10 @@
-GRAFANA_ADMIN_PASSWD ?= ChangeMePlease
+GRAFANA_ADMIN_PASSWD ?= null
 
 .PHONY: all
-all: infra-init tiller-deploy base-apps-deploy infra-init-post
+all: infra-init tiller-deploy base-apps-deploy contour-deploy
+
+.PHONY: all-istio
+all-istio: infra-init tiller-deploy base-apps-deploy contour-deploy infra-init-post
 
 .PHONY: infra-init
 infra-init: grafana-init metallb-init
@@ -10,10 +13,10 @@ Get Kubernetes health dashboard from https://github.com/MichaelVL/kubernetes-gra
 dashboard-kubernetes-health.json:
 	curl -sO https://raw.githubusercontent.com/MichaelVL/kubernetes-grafana-dashboard/master/dashboards/dashboard-kubernetes-health.json
 
-# Grafana data sources should be deployed before Grafana
 .PHONY: grafana-init
 grafana-init: dashboard-kubernetes-health.json
 	-kubectl create ns metrics
+	-kubectl -nmetrics delete configmap dashboard
 	kubectl -nmetrics create configmap dashboard --from-file dashboard-kubernetes-health.json
 	kubectl -nmetrics label configmap dashboard grafana_dashboard=1
 
@@ -29,9 +32,17 @@ tiller-deploy:
 
 .PHONY: base-apps-deploy
 base-apps-deploy:
-	GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) helmsman --no-banner --keep-untracked-releases --apply -f deploy/helmsman.yaml -f deploy/istio.yaml -f deploy/loki.yaml
+	GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) helmsman --no-banner --keep-untracked-releases --apply -f deploy/helmsman.yaml -f deploy/loki.yaml
 
-# This depends on CRDs deployed above
+.PHONY: contour-deploy
+contour-deploy:
+	helmsman --no-banner --keep-untracked-releases --apply -f deploy/contour.yaml
+
+.PHONY: istio-deploy
+istio-deploy:
+	helmsman --no-banner --keep-untracked-releases --apply -f deploy/istio.yaml
+
+# This depends on Istio CRDs deployed above
 .PHONY: infra-init-post
 infra-init-post:
 	kubectl -nmetrics apply -f deploy/grafana-istio-ingress.yaml
