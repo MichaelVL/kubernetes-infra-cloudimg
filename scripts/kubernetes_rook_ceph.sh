@@ -25,4 +25,4 @@ sed -i -e 's|    #- path: /var/lib/rook|    - path: /rook/storage-dir|' cluster.
 
 echo "--> Pulling ROOK/Ceph images (CEPH version $CEPH_VER)"
 crictl pull rook/ceph:master
-crictl pull ceph/ceph:$CEPH_VER
+crictl pull ceph/daemon-base:$CEPH_VER
