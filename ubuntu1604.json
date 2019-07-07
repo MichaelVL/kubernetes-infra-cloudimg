@@ -61,6 +61,7 @@
     ],
     "provisioners": [
 	{
+	    "type": "shell",
 	    "environment_vars": [
 		"SSH_USERNAME={{user `ssh_username`}}",
 		"SSH_PASSWORD={{user `ssh_password`}}",
@@ -83,8 +84,18 @@
 		"scripts/swap.sh",
 		"scripts/grub.sh",
 		"scripts/cleanup.sh"
-	    ],
-	    "type": "shell"
-	}	
+	    ]
+	},
+	{
+	    "type": "file",
+	    "source": "deploy/deploy.sh",
+	    "destination": "/tmp/deploy.sh"
+	},
+	{
+	    "type": "shell",
+            "inline": [
+                "echo '{{ user `ssh_password` }}' | sudo -S mv /tmp/deploy.sh /etc/kubernetes/deploy.sh"
+            ]
+	}
     ]
 }
