@@ -61,6 +61,8 @@ function deploy_rook_ceph_storage_provider {
 function deploy_cert_manager_crd {
     export KUBECONFIG=/etc/kubernetes/admin.conf
     kubectl create -f /etc/kubernetes/addon-manifests/cert-manager/00-crds.yaml
+    kubectl create namespace cert-manager
+    kubectl label namespace cert-manager certmanager.k8s.io/disable-validation="true"
 }
 
 while [[ $# -gt 0 ]]
