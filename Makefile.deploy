@@ -1,10 +1,10 @@
 GRAFANA_ADMIN_PASSWD ?= null
 
 .PHONY: all
-all: infra-init tiller-deploy base-apps-deploy contour-deploy
+all: infra-init tiller-deploy base-apps-deploy metrics-server-deploy contour-deploy
 
 .PHONY: all-istio
-all-istio: infra-init tiller-deploy base-apps-deploy contour-deploy infra-init-post
+all-istio: infra-init tiller-deploy base-apps-deploy metrics-server-deploy istio-deploy infra-init-post
 
 .PHONY: infra-init
 infra-init: grafana-init metallb-init
@@ -32,7 +32,11 @@ tiller-deploy:
 
 .PHONY: base-apps-deploy
 base-apps-deploy:
-	GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) helmsman --no-banner --keep-untracked-releases --apply -f deploy/helmsman.yaml -f deploy/loki.yaml
+	GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) helmsman --no-banner --keep-untracked-releases --apply -f deploy/base-apps.yaml -f deploy/loki.yaml
+
+.PHONY: metrics-server-deploy
+metrics-server-deploy:
+	GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) helmsman --no-banner --keep-untracked-releases --apply -f deploy/metrics-server.yaml
 
 .PHONY: contour-deploy
 contour-deploy:
