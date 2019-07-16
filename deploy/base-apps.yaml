@@ -33,19 +33,19 @@ apps:
     version: 3.5.7
     enabled: true
     namespace: metrics
-    valuesFile: values-grafana-datasources.yaml
+    valuesFiles:
+     - values-grafana-datasources.yaml
+    # - values-grafana-ingress.yaml
+    # - values-grafana-github-oauth.yaml
     set:
       adminPassword: "$GRAFANA_ADMIN_PASSWD"
       #persistence.enabled: true
       #persistence.size: 10Mi
       sidecar.dashboards.enabled: true
       sidecar.dashboards.searchNamespace: ALL
-      #ingress.enabled: true
-      #ingress.annotations."kubernetes\.io/ingress\.class": "internal"
-      #ingress.hosts[0]: ""
 
   cert-manager:
     chart: jetstack/cert-manager
     version: v0.8.1
-    enabled: false
+    enabled: true
     namespace: cert-manager
