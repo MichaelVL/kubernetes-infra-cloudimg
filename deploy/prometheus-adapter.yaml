@@ -1,0 +1,17 @@
+# For use with Helmsman
+
+helmRepos:
+  stable:      "https://kubernetes-charts.storage.googleapis.com"
+
+namespaces:
+  metrics:
+
+apps:
+  prom-adapter:
+    chart: stable/prometheus-adapter
+    version: 1.2.0
+    enabled: true
+    namespace: metrics
+    set:
+      prometheus.url: http://prometheus-server.metrics.svc
+      prometheus.port: 80
