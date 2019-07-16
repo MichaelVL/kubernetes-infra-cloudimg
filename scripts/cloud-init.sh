@@ -2,7 +2,7 @@
 
 set -eux
 
-apt-get install -y cloud-init cloud-initramfs-growroot
+DEBIAN_FRONTEND=noninteractive apt-get install -y cloud-init cloud-initramfs-growroot
 
 # Ubuntu sets 'distro: ubuntu' but provides no /etc/hosts template, hence
 # 'manage_etc_hosts: True' will not work.
