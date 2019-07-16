@@ -11,18 +11,23 @@ ifndef KUBERNETES_PATCHLEVEL
 KUBERNETES_PATCHLEVEL=00
 endif
 
-TARGET_DIR="kubeimg-${KUBERNETES_VERSION}-$$(date +%Y%m%d-%H%M)"
+ifndef UBUNTU_VERSION
+UBUNTU_VERSION=1604
+endif
+
+
+TARGET_DIR="kubeimg-${KUBERNETES_VERSION}-$(UBUNTU_VERSION)-$$(date +%Y%m%d-%H%M)"
 
 validate:
-	CHECKPOINT_DISABLE=1 packer validate ubuntu1604.json
+	CHECKPOINT_DISABLE=1 packer validate ubuntu$(UBUNTU_VERSION).json
 
 image-w-console: build-helm-image-list
-	KUBERNETES_VERSION=$(KUBERNETES_VERSION) KUBERNETES_PATCHLEVEL=$(KUBERNETES_PATCHLEVEL) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -color=false -var 'headless=false' ubuntu1604.json
-	mv output-tmp-ubuntu1604 ${TARGET_DIR}
+	KUBERNETES_VERSION=$(KUBERNETES_VERSION) KUBERNETES_PATCHLEVEL=$(KUBERNETES_PATCHLEVEL) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -color=false -var 'headless=false' ubuntu$(UBUNTU_VERSION).json
+	mv output-tmp-ubuntu$(UBUNTU_VERSION) ${TARGET_DIR}
 
 image: build-helm-image-list
-	KUBERNETES_VERSION=$(KUBERNETES_VERSION) KUBERNETES_PATCHLEVEL=$(KUBERNETES_PATCHLEVEL) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -color=false ubuntu1604.json | tee build.log
-	mv output-tmp-ubuntu1604 ${TARGET_DIR}
+	KUBERNETES_VERSION=$(KUBERNETES_VERSION) KUBERNETES_PATCHLEVEL=$(KUBERNETES_PATCHLEVEL) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -color=false ubuntu$(UBUNTU_VERSION).json | tee build.log
+	mv output-tmp-ubuntu$(UBUNTU_VERSION) ${TARGET_DIR}
 
 # This assumes a VM running with IP address in $TESTVM_IP and injected SSH key 
 test-image:

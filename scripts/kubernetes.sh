@@ -99,7 +99,7 @@ crictl pull quay.io/coreos/flannel:$FLANNEL_VER
 echo "--> Fetching Weave-net manifests"
 mkdir -p /etc/kubernetes/addon-manifests/weave-net
 cd /etc/kubernetes/addon-manifests/weave-net
-curl -sO https://cloud.weave.works/k8s/$WEAVE_NET_VER/net.yaml
+curl -LsO https://cloud.weave.works/k8s/$WEAVE_NET_VER/net.yaml
 
 echo "--> Fetching Weave-net image"
 crictl pull docker.io/weaveworks/weave-kube:$WEAVE_NET_IMG_VER
