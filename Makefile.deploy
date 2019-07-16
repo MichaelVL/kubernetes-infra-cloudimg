@@ -1,10 +1,11 @@
 GRAFANA_ADMIN_PASSWD ?= null
+LETSENCRYPT_EMAIL ?= letsencrypt@example.com
 
 .PHONY: all
-all: infra-init tiller-deploy base-apps-deploy metrics-server-deploy contour-deploy
+all: infra-init tiller-deploy base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
 
 .PHONY: all-istio
-all-istio: infra-init tiller-deploy base-apps-deploy metrics-server-deploy istio-deploy infra-init-post
+all-istio: infra-init tiller-deploy base-apps-deploy metrics-server-deploy prometheus-adapter-deploy istio-deploy infra-init-post
 
 .PHONY: infra-init
 infra-init: grafana-init metallb-init
@@ -36,7 +37,7 @@ base-apps-deploy:
 
 .PHONY: metrics-server-deploy
 metrics-server-deploy:
-	GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) helmsman --no-banner --keep-untracked-releases --apply -f deploy/metrics-server.yaml
+	helmsman --no-banner --keep-untracked-releases --apply -f deploy/metrics-server.yaml
 
 .PHONY: contour-deploy
 contour-deploy:
@@ -46,7 +47,15 @@ contour-deploy:
 istio-deploy:
 	helmsman --no-banner --keep-untracked-releases --apply -f deploy/istio.yaml
 
+.PHONY: prometheus-adapter-deploy
+prometheus-adapter-deploy:
+	helmsman --no-banner --keep-untracked-releases --apply -f deploy/prometheus-adapter.yaml
+
 # This depends on Istio CRDs deployed above
 .PHONY: infra-init-post
 infra-init-post:
 	kubectl -nmetrics apply -f deploy/grafana-istio-ingress.yaml
+
+.PHONY: letsencrypt-issuers
+letsencrypt-issuers:
+	cat deploy/tls-cluster-cert-issuers.yaml | LETSENCRYPT_EMAIL=$(LETSENCRYPT_EMAIL) envsubst | kubectl apply -f -
