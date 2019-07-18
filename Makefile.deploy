@@ -1,5 +1,9 @@
 GRAFANA_ADMIN_PASSWD ?= null
 LETSENCRYPT_EMAIL ?= letsencrypt@example.com
+DNS_DOMAIN ?= example.com
+OAUTH_CLIENT_ID ?= abc
+OAUTH_CLIENT_SECRET ?= abc
+OAUTH_ALLOWED_ORGS ?= abc
 
 .PHONY: all
 all: infra-init tiller-deploy base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
@@ -33,7 +37,7 @@ tiller-deploy:
 
 .PHONY: base-apps-deploy
 base-apps-deploy:
-	GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) helmsman --no-banner --keep-untracked-releases --apply -f deploy/base-apps.yaml -f deploy/loki.yaml
+	OAUTH_CLIENT_ID=$(OAUTH_CLIENT_ID) OAUTH_CLIENT_SECRET=$(OAUTH_CLIENT_SECRET) OAUTH_ALLOWED_ORGS=$(OAUTH_ALLOWED_ORGS) GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) DNS_DOMAIN=$(DNS_DOMAIN) helmsman --no-banner --keep-untracked-releases --apply -f deploy/base-apps.yaml -f deploy/loki.yaml
 
 .PHONY: metrics-server-deploy
 metrics-server-deploy:

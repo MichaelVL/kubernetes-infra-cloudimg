@@ -35,8 +35,8 @@ apps:
     namespace: metrics
     valuesFiles:
      - values-grafana-datasources.yaml
-    # - values-grafana-ingress.yaml
-    # - values-grafana-github-oauth.yaml
+     - values-grafana-ingress.yaml
+     - values-grafana-github-oauth.yaml
     set:
       adminPassword: "$GRAFANA_ADMIN_PASSWD"
       #persistence.enabled: true
