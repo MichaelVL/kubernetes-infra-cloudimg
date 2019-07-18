@@ -12,6 +12,7 @@ apps:
     version: 1.2.0
     enabled: true
     namespace: metrics
+    valuesFile: values-prometheus-adapter.yaml
     set:
       prometheus.url: http://prometheus-server.metrics.svc
       prometheus.port: 80
