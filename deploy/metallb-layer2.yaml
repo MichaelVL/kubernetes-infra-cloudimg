@@ -9,4 +9,4 @@ data:
     - name: example-vip-pool
       protocol: layer2
       addresses:
-      - 192.168.2.220-192.168.2.229
+      - $METALLB_RANGE_START-$METALLB_RANGE_END
