@@ -30,8 +30,8 @@ The manifests for deploying these add-ons are either from the stable helm charts
 (see [helmsman.yaml](deply/helmsman.yaml) and other files in the deploy folder)
 or stored in /etc/kubernetes/addon-manifests/
 
-The VM base image is based on Ubuntu, configured with cloud-init, no swap and
-build with Packer.  The Kubernetes version can be configured through the
+The VM base image is based on Ubuntu 18.04, configured with cloud-init, no swap
+and build with Packer.  The Kubernetes version can be configured through the
 variable KUBERNETES_VERSION.
 
 The image contain the installed Kubernetes version in the file
