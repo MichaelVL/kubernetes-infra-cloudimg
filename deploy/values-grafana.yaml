@@ -1,0 +1,11 @@
+grafana.ini:
+  server:
+    root_url: "https://grafana.$DNS_DOMAIN"
+adminPassword: "$GRAFANA_ADMIN_PASSWD"
+#persistence:
+#  enabled: true
+#  size: 10Mi
+sidecar:
+  dashboards:
+    enabled: true
+    searchNamespace: ALL
