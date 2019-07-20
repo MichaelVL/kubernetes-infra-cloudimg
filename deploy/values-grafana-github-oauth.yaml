@@ -1,6 +1,4 @@
 grafana.ini:
-  server:
-    root_url: "http://grafana.$DNS_DOMAIN"
   auth.github:
     enabled: true
     allow_sign_up: true

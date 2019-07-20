@@ -34,15 +34,10 @@ apps:
     enabled: true
     namespace: metrics
     valuesFiles:
+     - values-grafana.yaml
      - values-grafana-datasources.yaml
      - values-grafana-ingress.yaml
      - values-grafana-github-oauth.yaml
-    set:
-      adminPassword: "$GRAFANA_ADMIN_PASSWD"
-      #persistence.enabled: true
-      #persistence.size: 10Mi
-      sidecar.dashboards.enabled: true
-      sidecar.dashboards.searchNamespace: ALL
 
   cert-manager:
     chart: jetstack/cert-manager
