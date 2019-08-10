@@ -12,13 +12,13 @@ namespaces:
 apps:
   metallb:
     chart: stable/metallb
-    version: 0.9.7
+    version: 0.10.0
     enabled: true
     namespace: metallb
 
   prometheus:
     chart: stable/prometheus
-    version: 8.14.0
+    version: 8.15.0
     enabled: true
     namespace: metrics
     set:
@@ -30,7 +30,7 @@ apps:
 
   grafana:
     chart: stable/grafana
-    version: 3.5.7
+    version: 3.8.0
     enabled: true
     namespace: metrics
     valuesFiles:
@@ -41,6 +41,6 @@ apps:
 
   cert-manager:
     chart: jetstack/cert-manager
-    version: v0.8.1
+    version: v0.9.0
     enabled: true
     namespace: cert-manager
