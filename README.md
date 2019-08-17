@@ -24,6 +24,7 @@ The following applications are included (images and/or manifests):
    * [ROOK+CEPH storage provider](https://github.com/rook/rook)
  - [MetalLB load balancer/virtual IP solution](https://metallb.universe.tf)
  - Metrics server (note [issue 146](https://github.com/kubernetes-incubator/metrics-server/issues/146))
+ - [Vertical POD autoscaler](https://github.com/kubernetes/autoscaler)
  - Cert-manager
 
 The manifests for deploying these add-ons are either from the stable helm charts

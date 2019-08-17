@@ -11,16 +11,17 @@ function deploy_flannel {
 
 function deploy_canal {
     export KUBECONFIG=/etc/kubernetes/admin.conf
-    kubectl apply -f /etc/kubernetes/addon-manifests/canal/rbac.yaml
-    kubectl apply -f /etc/kubernetes/addon-manifests/canal/canal.yaml
+    cd /etc/kubernetes/addon-manifests/canal/
+    sed -i -e "s?10.244.0.0/16?$POD_CIDR?g" canal.yaml
+    kubectl apply -f canal.yaml
 }
 
 function deploy_calico {
     export KUBECONFIG=/etc/kubernetes/admin.conf
-    cp /etc/kubernetes/addon-manifests/calico/calico.yaml /etc/kubernetes/addon-manifests/calico/calico-orig.yaml
-    sed -i -e 's/192.168.0.0/10.244.0.0/' /etc/kubernetes/addon-manifests/calico/calico.yaml
-    kubectl apply -f /etc/kubernetes/addon-manifests/calico/rbac-kdd.yaml
-    kubectl apply -f /etc/kubernetes/addon-manifests/calico/calico.yaml
+    cd /etc/kubernetes/addon-manifests/calico/
+    cp calico.yaml calico-orig.yaml
+    sed -i -e 's/192.168.0.0/10.244.0.0/' calico.yaml
+    kubectl apply -f calico.yaml
 }
 
 function deploy_weave {
@@ -65,6 +66,12 @@ function deploy_cert_manager_crd {
     kubectl label namespace cert-manager certmanager.k8s.io/disable-validation="true"
 }
 
+function deploy_vertical_pod_autoscaler {
+    export KUBECONFIG=/etc/kubernetes/admin.conf
+    cd /etc/kubernetes/addon-manifests/vpa/vertical-pod-autoscaler
+    ./hack/vpa-up.sh
+}
+
 while [[ $# -gt 0 ]]
 do
   key="$1"
@@ -89,6 +96,9 @@ do
 	;;
     --cert-manager-crd)
 	deploy_cert_manager_crd
+	;;
+    --vpa)
+	deploy_vertical_pod_autoscaler
 	;;
   esac
   shift

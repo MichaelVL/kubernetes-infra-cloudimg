@@ -56,13 +56,7 @@ rm -f crictl-$CRICTL_VERSION-linux-amd64.tar.gz
 # https://github.com/coreos/flannel/releases
 # https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml
 FLANNEL_VER="v0.11.0-amd64"
-# https://docs.projectcalico.org/v3.5/getting-started/kubernetes/
-CALICO_VER="v3.5"
-# From https://docs.projectcalico.org/$CALICO_VER/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
-CALICO_NODE_IMG_VER="v3.5.0"
-CALICO_CNI_IMG_VER="v3.5.0"
-# For use with Canal, from https://docs.projectcalico.org/$CALICO_VER/getting-started/kubernetes/installation/hosted/canal/canal.yaml
-CALICO_FLANNEL_VER="v0.9.1"
+CALICO_VER="v3.8"
 WEAVE_NET_VER="v$KUBE_MM"
 # From https://cloud.weave.works/k8s/$WEAVE_NET_VER/net.yaml
 WEAVE_NET_IMG_VER="2.5.1"
@@ -74,19 +68,22 @@ echo "--> Fetching add-on images and manifests"
 echo "--> Fetching Calico manifests"
 mkdir -p /etc/kubernetes/addon-manifests/calico
 cd /etc/kubernetes/addon-manifests/calico
-curl -sO https://docs.projectcalico.org/$CALICO_VER/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
-curl -sO https://docs.projectcalico.org/$CALICO_VER/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+curl -sO https://docs.projectcalico.org/$CALICO_VER/manifests/calico.yaml
+echo "--> Pulling Calico images"
+for img in $(grep image calico.yaml |cut -d ':' -f2,3); do
+    echo "Pulling image $img"
+    crictl pull $img
+done
 
 echo "--> Fetching Canal manifests"
 mkdir -p /etc/kubernetes/addon-manifests/canal
 cd /etc/kubernetes/addon-manifests/canal
-curl -sO https://docs.projectcalico.org/$CALICO_VER/getting-started/kubernetes/installation/hosted/canal/rbac.yaml
-curl -sO https://docs.projectcalico.org/$CALICO_VER/getting-started/kubernetes/installation/hosted/canal/canal.yaml
-
-echo "--> Pulling Calico/Canal images"
-crictl pull quay.io/calico/node:$CALICO_NODE_IMG_VER
-crictl pull quay.io/calico/cni:$CALICO_CNI_IMG_VER
-crictl pull quay.io/coreos/flannel:$CALICO_FLANNEL_VER
+curl -sO https://docs.projectcalico.org/v3.8/manifests/canal.yaml
+echo "--> Pulling Canal images"
+for img in $(grep image canal.yaml |cut -d ':' -f2,3); do
+    echo "Pulling image $img"
+    crictl pull $img
+done
 
 echo "--> Fetching Flannel manifests"
 mkdir -p /etc/kubernetes/addon-manifests/flannel

@@ -78,6 +78,7 @@
 		"scripts/kubernetes.sh",
 		"scripts/kubernetes_nfs_storage.sh",
 		"scripts/kubernetes_rook_ceph.sh",
+		"scripts/kubernetes_vpa.sh",
 		"scripts/kubernetes_cert_manager.sh",
 		"scripts/helm_chart_images.sh",
 		"scripts/addon-images.sh",
