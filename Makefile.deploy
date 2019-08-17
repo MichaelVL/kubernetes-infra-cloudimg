@@ -10,6 +10,10 @@ OAUTH_ALLOWED_ORGS ?= abc
 .PHONY: all
 all: infra-init tiller-deploy base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
 
+# All, except Tiller. For use with Helm3
+.PHONY: all-h3
+all-h3: infra-init base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
+
 .PHONY: all-istio
 all-istio: infra-init tiller-deploy base-apps-deploy metrics-server-deploy prometheus-adapter-deploy istio-deploy infra-init-post
 
