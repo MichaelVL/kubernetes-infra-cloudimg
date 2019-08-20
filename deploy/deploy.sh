@@ -68,7 +68,7 @@ function deploy_cert_manager_crd {
 
 function deploy_vertical_pod_autoscaler {
     export KUBECONFIG=/etc/kubernetes/admin.conf
-    cd /etc/kubernetes/addon-manifests/vpa/vertical-pod-autoscaler
+    cd /etc/kubernetes/addon-manifests/vpa/autoscaler/vertical-pod-autoscaler
     ./hack/vpa-up.sh
 }
 
