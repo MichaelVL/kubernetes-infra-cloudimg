@@ -12,13 +12,13 @@ namespaces:
 apps:
   metallb:
     chart: stable/metallb
-    version: 0.10.0
+    version: 0.11.2
     enabled: true
     namespace: metallb
 
   prometheus:
     chart: stable/prometheus
-    version: 8.15.0
+    version: 9.1.0
     enabled: true
     namespace: metrics
     set:
@@ -30,7 +30,7 @@ apps:
 
   grafana:
     chart: stable/grafana
-    version: 3.8.0
+    version: 3.8.3
     enabled: true
     namespace: metrics
     valuesFiles:
