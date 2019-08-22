@@ -79,7 +79,7 @@ do
     --flannel)
 	deploy_flannel
 	;;
-    --canall)
+    --canal)
 	deploy_canal
 	;;
     --calico)
