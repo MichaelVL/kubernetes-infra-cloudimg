@@ -8,9 +8,6 @@ crictl images
 echo "--> Image count"
 crictl images -q | wc -l
 
-echo "--> Manifests available"
-ls -R /etc/kubernetes/addon-manifests/
-
 echo "--> Remove udev rules"
 rm -rf /dev/.udev/
 rm -f /lib/udev/rules.d/75-persistent-net-generator.rules
