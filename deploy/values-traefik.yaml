@@ -1,0 +1,13 @@
+dashboard:
+  enabled: false
+serviceType: LoadBalancer
+#serviceType: NodePort
+#service:
+#  nodePorts:
+#    http: 30080
+#    https: 30443
+rbac:
+  enabled: true
+metrics:
+  prometheus:
+    enabled: tru

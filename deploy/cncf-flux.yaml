@@ -1,0 +1,18 @@
+# For use with Helmsman
+
+helmRepos:
+  fluxcd:      "https://charts.fluxcd.io"
+
+namespaces:
+  flux:
+
+apps:
+  flux:
+    chart: fluxcd/flux
+    version: 0.14.0
+    enabled: true
+    namespace: flux
+    set:
+      helmOperator.create: true
+      helmOperator.createCRD: true
+      #git.url=git@github.com:fluxcd/flux-get-started

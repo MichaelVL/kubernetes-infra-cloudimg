@@ -53,6 +53,10 @@ metrics-server-deploy:
 contour-deploy:
 	helmsman --no-banner --keep-untracked-releases --apply -f deploy/contour.yaml
 
+.PHONY: traefik-deploy
+traefik-deploy:
+	helmsman --no-banner --keep-untracked-releases --apply -f deploy/traefik.yaml
+
 .PHONY: istio-deploy
 istio-deploy:
 	helmsman --no-banner --keep-untracked-releases --apply -f deploy/istio.yaml
@@ -69,3 +73,7 @@ infra-init-post:
 .PHONY: letsencrypt-issuers
 letsencrypt-issuers:
 	cat deploy/tls-cluster-cert-issuers.yaml | LETSENCRYPT_EMAIL=$(LETSENCRYPT_EMAIL) envsubst | kubectl apply -f -
+
+.PHONY: flux-deploy
+flux-deploy:
+	helmsman --no-banner --keep-untracked-releases --apply -f deploy/cncf-flux.yaml

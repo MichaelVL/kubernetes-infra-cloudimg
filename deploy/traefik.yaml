@@ -1,0 +1,16 @@
+# For use with Helmsman
+
+helmRepos:
+  stable:      "https://kubernetes-charts.storage.googleapis.com"
+
+namespaces:
+  traefik:
+
+apps:
+  traefik:
+    chart: stable/traefik
+    version: 1.76.1
+    enabled: true
+    namespace: traefik
+    valuesFiles:
+    - values-traefik.yaml
