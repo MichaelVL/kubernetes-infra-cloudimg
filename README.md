@@ -20,7 +20,7 @@ The following applications are included (images and/or manifests):
    * [Contour ingress controllers](https://github.com/heptio/contour)
    * [Istio ingress gateways](https://istio.io/)
  - Storage Providers
-   * [NFS storage provider](https://github.com/kubernetes-incubator/external-storage/tree/master/nfs)
+   * NFS dynamic storage provider
    * [ROOK+CEPH storage provider](https://github.com/rook/rook)
  - [MetalLB load balancer/virtual IP solution](https://metallb.universe.tf)
  - Metrics server (note [issue 146](https://github.com/kubernetes-incubator/metrics-server/issues/146))

@@ -77,3 +77,8 @@ letsencrypt-issuers:
 .PHONY: flux-deploy
 flux-deploy:
 	helmsman --no-banner --keep-untracked-releases --apply -f deploy/cncf-flux.yaml
+
+.PHONY: nfs-storage-provisioner
+nfs-storage-provisioner:
+	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') helmsman --no-banner --keep-untracked-releases --apply -f deploy/nfs-storage-provisioner.yaml
+	kubectl -n nfs-storage apply -f deploy/nfs-storage-provisioner-pv.yaml

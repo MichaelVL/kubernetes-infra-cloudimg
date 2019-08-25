@@ -46,3 +46,8 @@ for component in contour envoy; do
     IMAGE=`echo ${HELM_VALUES}|jq -r ".${component}.image | [.repository, .tag] | join(\":\")"`
     echo "$1 ${IMAGE}"
 done
+
+echo "# ${HELM_NFS_STORAGE_PROVISIONER_CHART} ${HELM_NFS_STORAGE_PROVISIONER_VERSION}"
+HELM_VALUES=$(helm inspect values ${HELM_NFS_STORAGE_PROVISIONER_CHART} --version ${HELM_NFS_STORAGE_PROVISIONER_VERSION} |yq .)
+IMAGE=`echo ${HELM_VALUES}|jq -r "[.image.repository, .image.tag] | join(\":\")"`
+echo "$1 ${IMAGE}"

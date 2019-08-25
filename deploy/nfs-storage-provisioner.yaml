@@ -1,0 +1,20 @@
+# For use with Helmsman
+
+helmRepos:
+  stable:      "https://kubernetes-charts.storage.googleapis.com"
+
+namespaces:
+  nfs-storage:
+
+apps:
+  nfs-storage:
+    chart: stable/nfs-server-provisioner
+    version: 0.3.0
+    enabled: true
+    namespace: nfs-storage
+    set:
+      persistence.enabled: true
+      persistence.storageClass: "-"
+      persistence.size: 200Gi
+      storageClass.defaultClass: true
+      nodeSelector."kubernetes\.io/hostname": $NFS_STORAGE_PROVISIONER_HOSTNAME

@@ -18,3 +18,6 @@ export HELM_CERT_MANAGER_VERSION='v0.9.0'
 export HELM_CONTOUR_CHART='contour'
 export HELM_CONTOUR_VERSION='0.2.5'
 export HELM_CONTOUR_URL='https://raw.githubusercontent.com/MichaelVL/contour-envoy-helm-chart/master/'
+
+export HELM_NFS_STORAGE_PROVISIONER_CHART='stable/nfs-server-provisioner'
+export HELM_NFS_STORAGE_PROVISIONER_VERSION='0.3.0'
