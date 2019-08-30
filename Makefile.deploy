@@ -1,4 +1,5 @@
 GRAFANA_ADMIN_PASSWD ?= ""
+HARBOR_ADMIN_PASSWD ?= ""
 LETSENCRYPT_EMAIL ?= letsencrypt@example.com
 DNS_DOMAIN ?= example.com
 METALLB_RANGE_START ?= 192.168.122.200
@@ -8,14 +9,14 @@ OAUTH_CLIENT_SECRET ?= abc
 OAUTH_ALLOWED_ORGS ?= abc
 
 .PHONY: all
-all: infra-init tiller-deploy base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
+all: infra-init tiller-deploy nfs-storage-provisioner base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
 
 # All, except Tiller. For use with Helm3
 .PHONY: all-h3
-all-h3: infra-init base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
+all-h3: infra-init nfs-storage-provisioner base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
 
 .PHONY: all-istio
-all-istio: infra-init tiller-deploy base-apps-deploy metrics-server-deploy prometheus-adapter-deploy istio-deploy infra-init-post
+all-istio: infra-init tiller-deploy nfs-storage-provisioner base-apps-deploy metrics-server-deploy prometheus-adapter-deploy istio-deploy infra-init-post
 
 .PHONY: infra-init
 infra-init: grafana-init metallb-init
@@ -82,3 +83,7 @@ flux-deploy:
 nfs-storage-provisioner:
 	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') helmsman --no-banner --keep-untracked-releases --apply -f deploy/nfs-storage-provisioner.yaml
 	kubectl -n nfs-storage apply -f deploy/nfs-storage-provisioner-pv.yaml
+
+.PHONY: harbor-deploy
+harbor-deploy:
+	HARBOR_ADMIN_PASSWD=$(HARBOR_ADMIN_PASSWD) helmsman --no-banner --keep-untracked-releases --apply -f deploy/harbor.yaml

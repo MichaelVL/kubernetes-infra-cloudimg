@@ -1,0 +1,19 @@
+# For use with Helmsman
+
+helmRepos:
+  harbor:      "https://helm.goharbor.io"
+
+namespaces:
+  harbor:
+
+apps:
+  harbor:
+    chart: harbor/harbor
+    version: 1.1.2
+    enabled: true
+    namespace: harbor
+    set:
+      harborAdminPassword: $HARBOR_ADMIN_PASSWD
+      expose.type: loadBalancer
+      expose.tls.enable: false
+      expose.tls.commonName: harbor.example.com
