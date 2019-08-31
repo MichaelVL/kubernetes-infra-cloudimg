@@ -87,3 +87,7 @@ nfs-storage-provisioner:
 .PHONY: harbor-deploy
 harbor-deploy:
 	HARBOR_ADMIN_PASSWD=$(HARBOR_ADMIN_PASSWD) helmsman --no-banner --keep-untracked-releases --apply -f deploy/harbor.yaml
+
+.PHONY: dashboard-deploy
+dashboard-deploy:
+	helmsman --no-banner --keep-untracked-releases --apply -f deploy/dashboard.yaml

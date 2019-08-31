@@ -1,0 +1,19 @@
+# For use with Helmsman
+
+helmRepos:
+  stable:      "https://kubernetes-charts.storage.googleapis.com"
+
+namespaces:
+#  dashboard:
+  kube-system:
+    useTiller: true
+
+apps:
+  dashboard:
+    chart: stable/kubernetes-dashboard
+    version: 1.8.0
+    enabled: true
+    #namespace: dashboard
+    namespace: kube-system
+    set:
+      service.type: LoadBalancer
