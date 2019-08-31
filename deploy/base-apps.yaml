@@ -30,7 +30,7 @@ apps:
 
   grafana:
     chart: stable/grafana
-    version: 3.8.4
+    version: 3.8.5
     enabled: true
     namespace: metrics
     valuesFiles:

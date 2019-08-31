@@ -4,7 +4,7 @@ export HELM_PROMETHEUS_CHART='stable/prometheus'
 export HELM_PROMETHEUS_VERSION='9.1.0'
 
 export HELM_GRAFANA_CHART='stable/grafana'
-export HELM_GRAFANA_VERSION='3.8.3'
+export HELM_GRAFANA_VERSION='3.8.5'
 
 export HELM_METALLB_CHART='stable/metallb'
 export HELM_METALLB_VERSION='0.11.2'
