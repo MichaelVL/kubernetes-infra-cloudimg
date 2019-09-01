@@ -29,18 +29,6 @@ function deploy_weave {
     kubectl apply -n kube-system -f /etc/kubernetes/addon-manifests/weave-net
 }
 
-function deploy_nfs_storage_provider {
-    export KUBECONFIG=/etc/kubernetes/admin.conf
-    export NAMESPACE=default
-    #export NAMESPACE=nfs-storage
-    #kubectl create ns $NAMESPACE
-    kubectl create -n  $NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/rbac.yaml
-    kubectl create -n  $NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/psp.yaml
-    kubectl create -n  $NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/deployment.yaml
-    kubectl create -n  $NAMESPACE -f /etc/kubernetes/addon-manifests/nfs-storage-provisioner/class.yaml
-    kubectl annotate -n $NAMESPACE storageclass example-nfs storageclass.beta.kubernetes.io/is-default-class=true
-}
-
 function deploy_rook_ceph_storage_provider {
     export KUBECONFIG=/etc/kubernetes/admin.conf
     # https://github.com/rook/rook/issues/2380
@@ -87,9 +75,6 @@ do
 	;;
     --weave)
 	deploy_weave
-	;;
-    --nfs-provisioner)
-	deploy_nfs_storage_provider
 	;;
     --rook-ceph-provisioner)
 	deploy_rook_ceph_storage_provider
