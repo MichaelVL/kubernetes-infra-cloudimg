@@ -1,0 +1,18 @@
+# For use with Helmsman
+
+helmRepos:
+  stable:      "https://kubernetes-charts.storage.googleapis.com"
+
+namespaces:
+  nfs-storage:
+
+apps:
+  nfs-client-provisioner:
+    chart: stable/nfs-client-provisioner
+    version: 1.2.6
+    enabled: true
+    namespace: nfs-storage
+    set:
+      nfs.server: $EXTERNAL_NFS_SERVER
+      nfs.path: $EXTERNAL_NFS_SERVER_PATH
+      storageClass.defaultClass: true

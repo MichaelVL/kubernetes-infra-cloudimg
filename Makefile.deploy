@@ -9,14 +9,14 @@ OAUTH_CLIENT_SECRET ?= abc
 OAUTH_ALLOWED_ORGS ?= abc
 
 .PHONY: all
-all: infra-init tiller-deploy nfs-storage-provisioner base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
+all: infra-init tiller-deploy nfs-server-storage-provisioner base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
 
 # All, except Tiller. For use with Helm3
 .PHONY: all-h3
-all-h3: infra-init nfs-storage-provisioner base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
+all-h3: infra-init nfs-server-storage-provisioner base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
 
 .PHONY: all-istio
-all-istio: infra-init tiller-deploy nfs-storage-provisioner base-apps-deploy metrics-server-deploy prometheus-adapter-deploy istio-deploy infra-init-post
+all-istio: infra-init tiller-deploy nfs-server-storage-provisioner base-apps-deploy metrics-server-deploy prometheus-adapter-deploy istio-deploy infra-init-post
 
 .PHONY: infra-init
 infra-init: grafana-init metallb-init
@@ -79,10 +79,14 @@ letsencrypt-issuers:
 flux-deploy:
 	helmsman --no-banner --keep-untracked-releases --apply -f deploy/cncf-flux.yaml
 
-.PHONY: nfs-storage-provisioner
-nfs-storage-provisioner:
+.PHONY: nfs-server-storage-provisioner
+nfs-server-storage-provisioner:
 	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') helmsman --no-banner --keep-untracked-releases --apply -f deploy/nfs-storage-provisioner.yaml
 	kubectl -n nfs-storage apply -f deploy/nfs-storage-provisioner-pv.yaml
+
+.PHONY: nfs-client-storage-provisioner
+nfs-client-storage-provisioner:
+	EXTERNAL_NFS_SERVER=$(EXTERNAL_NFS_SERVER) EXTERNAL_NFS_SERVER_PATH=$(EXTERNAL_NFS_SERVER_PATH) helmsman --no-banner --keep-untracked-releases --apply -f deploy/nfs-client-storage-provisioner.yaml
 
 .PHONY: harbor-deploy
 harbor-deploy:
