@@ -12,4 +12,4 @@ spec:
   claimRef:
     # These values pertains to the deployment of the nfs-server-provisioner chart
     namespace: nfs-storage
-    name: data-nfs-storage-nfs-server-provisioner-0
+    name: data-nfs-server-provisioner-0
