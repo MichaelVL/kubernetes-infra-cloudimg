@@ -1,0 +1,16 @@
+# For use with Helmsman
+
+helmRepos:
+  stable:      "https://kubernetes-charts.storage.googleapis.com"
+
+namespaces:
+  jenkins:
+
+apps:
+  jenkins:
+    chart: stable/jenkins
+    version: 1.6.0
+    enabled: true
+    namespace: jenkins
+    valuesFiles:
+    - values-jenkins.yaml

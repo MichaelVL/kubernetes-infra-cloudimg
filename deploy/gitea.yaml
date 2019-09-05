@@ -1,0 +1,21 @@
+# For use with Helmsman
+
+helmRepos:
+  local:      "http://127.0.0.1:8879"
+
+namespaces:
+  gitea:
+
+apps:
+  gitea:
+    chart: local/gitea
+    version: 1.6.1
+    enabled: true
+    namespace: gitea
+    set:
+      service.http.serviceType: LoadBalancer
+      service.ssh.serviceType: LoadBalancer
+      persistence.enabled: true
+      config.disableInstaller: true
+
+#  secretKey: define_your_secret
