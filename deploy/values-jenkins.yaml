@@ -1,4 +1,8 @@
 master:
+  serviceAnnotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: '8080'
+    prometheus.io/path: 'prometheus'
   installPlugins:
     - kubernetes
     - workflow-job
@@ -9,3 +13,4 @@ master:
     - blueocean
     - ssh-slaves
     - docker-plugin
+    - prometheus
