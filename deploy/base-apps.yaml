@@ -30,7 +30,7 @@ apps:
 
   grafana:
     chart: stable/grafana
-    version: 3.8.5
+    version: 3.8.12
     enabled: true
     namespace: metrics
     valuesFiles:
@@ -41,6 +41,6 @@ apps:
 
   cert-manager:
     chart: jetstack/cert-manager
-    version: v0.9.0
+    version: v0.10.0
     enabled: true
     namespace: cert-manager
