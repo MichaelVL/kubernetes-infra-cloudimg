@@ -44,7 +44,11 @@ tiller-deploy:
 
 .PHONY: base-apps-deploy
 base-apps-deploy:
-	OAUTH_CLIENT_ID=$(OAUTH_CLIENT_ID) OAUTH_CLIENT_SECRET=$(OAUTH_CLIENT_SECRET) OAUTH_ALLOWED_ORGS=$(OAUTH_ALLOWED_ORGS) GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) DNS_DOMAIN=$(DNS_DOMAIN) helmsman --no-banner --keep-untracked-releases --apply -f deploy/base-apps.yaml -f deploy/loki.yaml
+	helmsman --no-banner --keep-untracked-releases --apply -f deploy/metallb.yaml
+	helmsman --no-banner --keep-untracked-releases --apply -f deploy/cert-manager.yaml
+	-helmsman --no-banner --keep-untracked-releases --apply -f deploy/prometheus.yaml
+	OAUTH_CLIENT_ID=$(OAUTH_CLIENT_ID) OAUTH_CLIENT_SECRET=$(OAUTH_CLIENT_SECRET) OAUTH_ALLOWED_ORGS=$(OAUTH_ALLOWED_ORGS) GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) DNS_DOMAIN=$(DNS_DOMAIN) helmsman --no-banner --keep-untracked-releases --apply -f deploy/grafana.yaml
+	helmsman --no-banner --keep-untracked-releases --apply -f deploy/loki.yaml
 
 .PHONY: metrics-server-deploy
 metrics-server-deploy:
@@ -95,3 +99,9 @@ harbor-deploy:
 .PHONY: dashboard-deploy
 dashboard-deploy:
 	helmsman --no-banner --keep-untracked-releases --apply -f deploy/dashboard.yaml
+
+.PHONY: jenkins-deploy
+jenkins-deploy:
+	helmsman --no-banner --keep-untracked-releases --apply -f deploy/jenkins.yaml
+	-kubectl -njenkins create configmap dashboard --from-file jenkins-performance-and-health-overview_rev1.json
+	-kubectl -njenkins label configmap dashboard grafana_dashboard=1

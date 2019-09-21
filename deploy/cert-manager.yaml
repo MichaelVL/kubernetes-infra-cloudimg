@@ -1,0 +1,14 @@
+# For use with Helmsman
+
+helmRepos:
+  jetstack:    "https://charts.jetstack.io"
+
+namespaces:
+  cert-manager:
+
+apps:
+  cert-manager:
+    chart: jetstack/cert-manager
+    version: v0.10.0
+    enabled: true
+    namespace: cert-manager

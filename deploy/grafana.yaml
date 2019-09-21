@@ -1,0 +1,19 @@
+# For use with Helmsman
+
+helmRepos:
+  stable:      "https://kubernetes-charts.storage.googleapis.com"
+
+namespaces:
+  metrics:
+
+apps:
+  grafana:
+    chart: stable/grafana
+    version: 3.8.14
+    enabled: true
+    namespace: metrics
+    valuesFiles:
+     - values-grafana.yaml
+     - values-grafana-datasources.yaml
+     - values-grafana-ingress.yaml
+     - values-grafana-github-oauth.yaml

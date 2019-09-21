@@ -1,0 +1,14 @@
+# For use with Helmsman
+
+helmRepos:
+  stable:      "https://kubernetes-charts.storage.googleapis.com"
+
+namespaces:
+  metallb:
+
+apps:
+  metallb:
+    chart: stable/metallb
+    version: 0.11.2
+    enabled: true
+    namespace: metallb
