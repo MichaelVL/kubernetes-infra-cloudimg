@@ -8,6 +8,8 @@ OAUTH_CLIENT_ID ?= abc
 OAUTH_CLIENT_SECRET ?= abc
 OAUTH_ALLOWED_ORGS ?= abc
 
+HELMSMAN ?= "helmsman"
+
 .PHONY: all
 all: infra-init tiller-deploy nfs-server-storage-provisioner base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
 
@@ -40,35 +42,35 @@ metallb-init:
 
 .PHONY: tiller-deploy
 tiller-deploy:
-	helmsman --no-banner --keep-untracked-releases --apply -f deploy/tiller.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/tiller.yaml
 
 .PHONY: base-apps-deploy
 base-apps-deploy:
-	helmsman --no-banner --keep-untracked-releases --apply -f deploy/metallb.yaml
-	helmsman --no-banner --keep-untracked-releases --apply -f deploy/cert-manager.yaml
-	-helmsman --no-banner --keep-untracked-releases --apply -f deploy/prometheus.yaml
-	OAUTH_CLIENT_ID=$(OAUTH_CLIENT_ID) OAUTH_CLIENT_SECRET=$(OAUTH_CLIENT_SECRET) OAUTH_ALLOWED_ORGS=$(OAUTH_ALLOWED_ORGS) GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) DNS_DOMAIN=$(DNS_DOMAIN) helmsman --no-banner --keep-untracked-releases --apply -f deploy/grafana.yaml
-	helmsman --no-banner --keep-untracked-releases --apply -f deploy/loki.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/metallb.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/cert-manager.yaml
+	-$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/prometheus.yaml
+	OAUTH_CLIENT_ID=$(OAUTH_CLIENT_ID) OAUTH_CLIENT_SECRET=$(OAUTH_CLIENT_SECRET) OAUTH_ALLOWED_ORGS=$(OAUTH_ALLOWED_ORGS) GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) DNS_DOMAIN=$(DNS_DOMAIN) $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/grafana.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/loki.yaml
 
 .PHONY: metrics-server-deploy
 metrics-server-deploy:
-	helmsman --no-banner --keep-untracked-releases --apply -f deploy/metrics-server.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/metrics-server.yaml
 
 .PHONY: contour-deploy
 contour-deploy:
-	helmsman --no-banner --keep-untracked-releases --apply -f deploy/contour.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/contour.yaml
 
 .PHONY: traefik-deploy
 traefik-deploy:
-	helmsman --no-banner --keep-untracked-releases --apply -f deploy/traefik.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/traefik.yaml
 
 .PHONY: istio-deploy
 istio-deploy:
-	helmsman --no-banner --keep-untracked-releases --apply -f deploy/istio.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/istio.yaml
 
 .PHONY: prometheus-adapter-deploy
 prometheus-adapter-deploy:
-	helmsman --no-banner --keep-untracked-releases --apply -f deploy/prometheus-adapter.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/prometheus-adapter.yaml
 
 # This depends on Istio CRDs deployed above
 .PHONY: infra-init-post
@@ -81,27 +83,27 @@ letsencrypt-issuers:
 
 .PHONY: flux-deploy
 flux-deploy:
-	helmsman --no-banner --keep-untracked-releases --apply -f deploy/cncf-flux.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/cncf-flux.yaml
 
 .PHONY: nfs-server-storage-provisioner
 nfs-server-storage-provisioner:
-	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') helmsman --no-banner --keep-untracked-releases --apply -f deploy/nfs-storage-provisioner.yaml
+	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/nfs-storage-provisioner.yaml
 	kubectl -n nfs-storage apply -f deploy/nfs-storage-provisioner-pv.yaml
 
 .PHONY: nfs-client-storage-provisioner
 nfs-client-storage-provisioner:
-	EXTERNAL_NFS_SERVER=$(EXTERNAL_NFS_SERVER) EXTERNAL_NFS_SERVER_PATH=$(EXTERNAL_NFS_SERVER_PATH) helmsman --no-banner --keep-untracked-releases --apply -f deploy/nfs-client-storage-provisioner.yaml
+	EXTERNAL_NFS_SERVER=$(EXTERNAL_NFS_SERVER) EXTERNAL_NFS_SERVER_PATH=$(EXTERNAL_NFS_SERVER_PATH) $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/nfs-client-storage-provisioner.yaml
 
 .PHONY: harbor-deploy
 harbor-deploy:
-	HARBOR_ADMIN_PASSWD=$(HARBOR_ADMIN_PASSWD) helmsman --no-banner --keep-untracked-releases --apply -f deploy/harbor.yaml
+	HARBOR_ADMIN_PASSWD=$(HARBOR_ADMIN_PASSWD) $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/harbor.yaml
 
 .PHONY: dashboard-deploy
 dashboard-deploy:
-	helmsman --no-banner --keep-untracked-releases --apply -f deploy/dashboard.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/dashboard.yaml
 
 .PHONY: jenkins-deploy
 jenkins-deploy:
-	helmsman --no-banner --keep-untracked-releases --apply -f deploy/jenkins.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/jenkins.yaml
 	-kubectl -njenkins create configmap dashboard --from-file jenkins-performance-and-health-overview_rev1.json
 	-kubectl -njenkins label configmap dashboard grafana_dashboard=1
