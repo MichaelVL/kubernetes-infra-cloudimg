@@ -1,0 +1,16 @@
+rbac:
+  create: true
+alertmanager:
+  enabled: false
+pushgateway:
+  enabled: false,
+networkPolicy:
+  enabled: true
+server:
+  retention: '7d'
+nodeExporter:
+  tolerations:
+  - key: "node-role.kubernetes.io/master"
+    effect: "NoSchedule"
+  - key: "node-role.kubernetes.io/foo"
+    effect: "NoSchedule"

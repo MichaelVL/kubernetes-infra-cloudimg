@@ -12,9 +12,5 @@ apps:
     version: 9.1.1
     enabled: true
     namespace: metrics
-    set:
-      rbac.create: true
-      alertmanager.enabled: false
-      pushgateway.enabled: false,
-      networkPolicy.enabled: true
-      server.retention: '7d'
+    valuesFiles:
+     - values-prometheus.yaml
