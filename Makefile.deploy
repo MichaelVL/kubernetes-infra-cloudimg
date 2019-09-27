@@ -1,4 +1,4 @@
-GRAFANA_ADMIN_PASSWD ?= ""
+RAFANA_ADMIN_PASSWD ?= ""
 HARBOR_ADMIN_PASSWD ?= ""
 LETSENCRYPT_EMAIL ?= letsencrypt@example.com
 DNS_DOMAIN ?= example.com
@@ -98,9 +98,9 @@ nfs-client-storage-provisioner:
 harbor-deploy:
 	HARBOR_ADMIN_PASSWD=$(HARBOR_ADMIN_PASSWD) $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/harbor.yaml
 
-.PHONY: dashboard-deploy
-dashboard-deploy:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/dashboard.yaml
+.PHONY: kubernetes-dashboard-deploy
+kubernetes-dashboard-deploy:
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/kubernetes-dashboard.yaml
 
 .PHONY: jenkins-deploy
 jenkins-deploy:
