@@ -7,8 +7,10 @@ namespaces:
   oauth2proxy:
 
 apps:
-  promtail:
+  oauth2proxy:
     chart: stable/oauth2-proxy
     version: 0.15.0
     enabled: true
     namespace: oauth2proxy
+    valuesFiles:
+     - values-oauth2-proxy.yaml

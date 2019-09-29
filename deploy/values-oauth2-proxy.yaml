@@ -1,0 +1,5 @@
+ingress:
+  enabled: true
+  path: /oauth2
+  hosts:
+  - "oauth2.$DNS_DOMAIN"
