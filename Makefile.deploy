@@ -97,9 +97,9 @@ infra-init-post:
 letsencrypt-issuers:
 	cat deploy/tls-cluster-cert-issuers.yaml | LETSENCRYPT_EMAIL=$(LETSENCRYPT_EMAIL) envsubst | kubectl apply -f -
 
-.PHONY: flux-deploy
-flux-deploy:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/cncf-flux.yaml
+.PHONY: fluxcd-deploy
+fluxcd-deploy:
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/fluxcd.yaml
 
 .PHONY: nfs-server-storage-provisioner
 nfs-server-storage-provisioner:
