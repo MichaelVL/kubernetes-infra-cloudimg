@@ -1,0 +1,14 @@
+# For use with Helmsman
+
+helmRepos:
+  stable:      "https://kubernetes-charts.storage.googleapis.com"
+
+namespaces:
+  oauth2proxy:
+
+apps:
+  promtail:
+    chart: stable/oauth2-proxy
+    version: 0.15.0
+    enabled: true
+    namespace: oauth2proxy

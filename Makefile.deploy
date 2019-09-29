@@ -126,4 +126,4 @@ jenkins-deploy:
 
 .PHONY: oauth2-proxy-deploy
 oauth2-proxy-deploy:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/ oauth2-proxy.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/oauth2-proxy.yaml
