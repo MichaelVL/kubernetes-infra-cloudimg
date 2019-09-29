@@ -11,14 +11,18 @@ OAUTH_ALLOWED_ORGS ?= abc
 HELMSMAN ?= "helmsman"
 
 .PHONY: all
-all: infra-init tiller-deploy nfs-server-storage-provisioner base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
+all: infra-init tiller-deploy nfs-server-storage-provisioner metallb-deploy cert-manager-deploy prometheus-deploy grafana-deploy loki-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
 
 # All, except Tiller. For use with Helm3
 .PHONY: all-h3
-all-h3: infra-init nfs-server-storage-provisioner base-apps-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
+all-h3: infra-init nfs-server-storage-provisioner metallb-deploy cert-manager-deploy prometheus-deploy grafana-deploy loki-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
+
+# Hack for Kubernetes 1.16.0, no prometheus, no prometheus adapter no metrics server, no nfs-server-storage-provisioner, no cert-manager, no contour
+.PHONY: all-h3-2
+all-h3-2: infra-init metallb-deploy grafana-deploy loki-deploy
 
 .PHONY: all-istio
-all-istio: infra-init tiller-deploy nfs-server-storage-provisioner base-apps-deploy metrics-server-deploy prometheus-adapter-deploy istio-deploy infra-init-post
+all-istio: infra-init tiller-deploy nfs-server-storage-provisioner metallb-deploy cert-manager-deploy prometheus-deploy grafana-deploy loki-deploy metrics-server-deploy prometheus-adapter-deploy istio-deploy infra-init-post
 
 .PHONY: infra-init
 infra-init: grafana-init metallb-init
@@ -44,12 +48,24 @@ metallb-init:
 tiller-deploy:
 	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/tiller.yaml
 
-.PHONY: base-apps-deploy
-base-apps-deploy:
+.PHONY: metallb-deploy
+metallb-deploy:
 	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/metallb.yaml
+
+.PHONY: cert-manager-deploy
+cert-manager-deploy:
 	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/cert-manager.yaml
+
+.PHONY: prometheus-deploy
+prometheus-deploy:
 	-$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/prometheus.yaml
+
+.PHONY: grafana-deploy
+grafana-deploy:
 	OAUTH_CLIENT_ID=$(OAUTH_CLIENT_ID) OAUTH_CLIENT_SECRET=$(OAUTH_CLIENT_SECRET) OAUTH_ALLOWED_ORGS=$(OAUTH_ALLOWED_ORGS) GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) DNS_DOMAIN=$(DNS_DOMAIN) $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/grafana.yaml
+
+.PHONY: loki-deploy
+loki-deploy:
 	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/loki.yaml
 
 .PHONY: metrics-server-deploy
@@ -107,3 +123,7 @@ jenkins-deploy:
 	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/jenkins.yaml
 	-kubectl -njenkins create configmap dashboard --from-file jenkins-performance-and-health-overview_rev1.json
 	-kubectl -njenkins label configmap dashboard grafana_dashboard=1
+
+.PHONY: oauth2-proxy-deploy
+oauth2-proxy-deploy:
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/ oauth2-proxy.yaml
