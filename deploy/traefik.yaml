@@ -9,7 +9,7 @@ namespaces:
 apps:
   traefik:
     chart: stable/traefik
-    version: 1.77.0
+    version: 1.78.2
     enabled: true
     namespace: traefik
     valuesFiles:
