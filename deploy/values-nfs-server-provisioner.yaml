@@ -1,0 +1,15 @@
+persistence:
+  enabled: true
+  storageClass: "-"
+  size: 200Gi
+storageClass:
+  defaultClass: true
+nodeSelector:
+  "kubernetes.io/hostname": $NFS_STORAGE_PROVISIONER_HOSTNAME
+resources:
+  limits:
+    cpu: 200m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi

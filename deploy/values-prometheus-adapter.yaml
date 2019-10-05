@@ -1,3 +1,6 @@
+prometheus:
+  url: http://prometheus-server.metrics.svc
+  port: 80
 rules:
   default: false
   custom:
@@ -11,3 +14,10 @@ rules:
       matches: ^(.*)_total$
       as: "${1}_per_second"
     metricsQuery: 'sum(rate(<<.Series>>{<<.LabelMatchers>>}[2m])) by (<<.GroupBy>>)'
+resources:
+  limits:
+    cpu: 100m
+    memory: 64Mi
+  requests:
+    cpu: 10m
+    memory: 32Mi

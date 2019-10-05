@@ -12,5 +12,5 @@ apps:
     version: 2.8.7
     enabled: true
     namespace: metrics
-    set:
-      args[0]: "--kubelet-insecure-tls"
+    valuesFiles:
+     - values-metrics-server.yaml

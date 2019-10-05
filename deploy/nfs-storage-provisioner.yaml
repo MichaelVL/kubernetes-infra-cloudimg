@@ -12,9 +12,5 @@ apps:
     version: 0.3.1
     enabled: true
     namespace: nfs-storage
-    set:
-      persistence.enabled: true
-      persistence.storageClass: "-"
-      persistence.size: 200Gi
-      storageClass.defaultClass: true
-      nodeSelector."kubernetes\.io/hostname": $NFS_STORAGE_PROVISIONER_HOSTNAME
+    valuesFiles:
+     - values-nfs-server-provisioner.yaml
