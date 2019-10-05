@@ -1,0 +1,15 @@
+persistence:
+  enabled: true
+  storageClassName: ""
+  size: 10Gi
+config:
+  table_manager:
+    retention_deletes_enabled: true
+    retention_period: 5m
+resources:
+  limits:
+    cpu: 100m
+    memory: 64Mi
+  requests:
+    cpu: 25m
+    memory: 32Mi

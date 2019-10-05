@@ -3,14 +3,36 @@ rbac:
 alertmanager:
   enabled: false
 pushgateway:
-  enabled: false,
+  enabled: false
 networkPolicy:
   enabled: true
 server:
   retention: '7d'
+  resources:
+    limits:
+      cpu: 200m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
 nodeExporter:
   tolerations:
   - key: "node-role.kubernetes.io/master"
     effect: "NoSchedule"
   - key: "node-role.kubernetes.io/foo"
     effect: "NoSchedule"
+  resources:
+    limits:
+      cpu: 100m
+      memory: 32Mi
+    requests:
+      cpu: 50m
+      memory: 8Mi
+kubeStateMetrics:
+  resources:
+    limits:
+      cpu: 100m
+      memory: 32Mi
+    requests:
+      cpu: 50m
+      memory: 8Mi

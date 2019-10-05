@@ -12,3 +12,5 @@ apps:
     version: 0.11.2
     enabled: true
     namespace: metallb
+    valuesFiles:
+     - values-metallb.yaml

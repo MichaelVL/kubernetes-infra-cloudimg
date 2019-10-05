@@ -13,8 +13,8 @@ apps:
     enabled: true
     namespace: loki
     priority: -2
-    set:
-      loki.serviceName: loki
+    valuesFiles:
+     - values-promtail.yaml
 
   loki:
     chart: loki/loki
@@ -22,9 +22,5 @@ apps:
     enabled: true
     namespace: loki
     priority: -1
-    set:
-      persistence.enabled: true
-      persistence.storageClassName: ""
-      persistence.size: 10Gi
-      config.table_manager.retention_deletes_enabled: true
-      config.table_manager.retention_period: 5m
+    valuesFiles:
+     - values-loki.yaml
