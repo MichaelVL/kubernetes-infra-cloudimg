@@ -11,7 +11,7 @@ apps:
   contour-int:
     chart: "stagingrepo/contour"
     version: "0.2.5"
-    enabled: true
+    enabled: false
     namespace: "contour-int"
     priority: -2
     set:
