@@ -17,6 +17,10 @@ all: infra-init tiller-deploy nfs-server-storage-provisioner metallb-deploy cert
 .PHONY: all-h3
 all-h3: infra-init nfs-server-storage-provisioner metallb-deploy cert-manager-deploy prometheus-deploy grafana-deploy loki-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
 
+# All, except Tiller. For use with Helm3 and helm2yaml. ALSO without cert-manager
+.PHONY: all-h3-3
+all-h3-3: infra-init nfs-server-storage-provisioner metallb-deploy prometheus-deploy grafana-deploy loki-deploy metrics-server-deploy prometheus-adapter-deploy contour-deploy
+
 # Hack for Kubernetes 1.16.0, no prometheus, no prometheus adapter no metrics server, no nfs-server-storage-provisioner, no cert-manager, no contour
 .PHONY: all-h3-2
 all-h3-2: infra-init metallb-deploy grafana-deploy loki-deploy
