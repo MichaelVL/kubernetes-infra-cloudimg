@@ -9,7 +9,7 @@ namespaces:
 apps:
   prometheus:
     chart: stable/prometheus
-    version: 9.1.1
+    version: 9.2.0
     enabled: true
     namespace: metrics
     valuesFiles:

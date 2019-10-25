@@ -9,7 +9,7 @@ namespaces:
 apps:
   flux:
     chart: fluxcd/flux
-    version: 0.14.1
+    version: 0.15.0
     enabled: true
     namespace: flux
     set:
