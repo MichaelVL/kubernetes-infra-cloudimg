@@ -5,7 +5,8 @@ persistence:
 config:
   table_manager:
     retention_deletes_enabled: true
-    retention_period: 5m
+    # Must be a multiple of index.period, which is 168h
+    retention_period: 336h
 resources:
   limits:
     cpu: 100m
