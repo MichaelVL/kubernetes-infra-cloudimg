@@ -80,6 +80,7 @@
 		"scripts/kubernetes_rook_ceph.sh",
 		"scripts/kubernetes_vpa.sh",
 		"scripts/kubernetes_cert_manager.sh",
+		"scripts/kubernetes_contour.sh",
 		"scripts/helm_chart_images.sh",
 		"scripts/addon-images.sh",
 		"scripts/swap.sh",

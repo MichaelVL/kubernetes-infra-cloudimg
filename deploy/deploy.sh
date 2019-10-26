@@ -60,6 +60,11 @@ function deploy_vertical_pod_autoscaler {
     ./hack/vpa-up.sh
 }
 
+function deploy_contour {
+    export KUBECONFIG=/etc/kubernetes/admin.conf
+    kubectl apply -f /etc/kubernetes/addon-manifests/contour
+}
+
 while [[ $# -gt 0 ]]
 do
   key="$1"
@@ -84,6 +89,9 @@ do
 	;;
     --vpa)
 	deploy_vertical_pod_autoscaler
+	;;
+    --contour)
+	deploy_contour
 	;;
   esac
   shift

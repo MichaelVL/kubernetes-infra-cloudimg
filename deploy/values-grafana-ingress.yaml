@@ -1,9 +1,9 @@
 ingress:
   enabled: true
   annotations:
-    kubernetes.io/ingress.class: "external"
-    kubernetes.io/tls-acme: "true"
-    certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
+    #kubernetes.io/ingress.class: "external"
+    #kubernetes.io/tls-acme: "true"
+    #certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
   hosts:
    - grafana.$DNS_DOMAIN
   tls:
