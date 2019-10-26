@@ -13,5 +13,6 @@ apps:
     version: 2.8.8
     enabled: true
     namespace: kube-system
+    wait: true
     valuesFiles:
      - values-metrics-server.yaml
