@@ -63,6 +63,7 @@ function deploy_vertical_pod_autoscaler {
 function deploy_contour {
     export KUBECONFIG=/etc/kubernetes/admin.conf
     kubectl apply -f /etc/kubernetes/addon-manifests/contour
+    kubectl -n contour-monitoring label cm grafana-dashs grafana_dashboard=1
 }
 
 while [[ $# -gt 0 ]]
