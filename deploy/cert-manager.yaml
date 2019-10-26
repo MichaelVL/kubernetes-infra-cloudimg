@@ -12,3 +12,4 @@ apps:
     version: v0.11.0
     enabled: true
     namespace: cert-manager
+    wait: true
