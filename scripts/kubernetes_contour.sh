@@ -18,3 +18,5 @@ curl -sO https://raw.githubusercontent.com/projectcontour/contour/v1.0.0-beta.1/
 curl -sO https://raw.githubusercontent.com/projectcontour/contour/v1.0.0-beta.1/examples/grafana/01-namespace.yaml
 curl -sO https://raw.githubusercontent.com/projectcontour/contour/v1.0.0-beta.1/examples/grafana/02-grafana-configmap.yaml
 
+crictl pull docker.io/projectcontour/contour:v1.0.0-beta.1
+crictl pull docker.io/envoyproxy/envoy:v1.11.1
