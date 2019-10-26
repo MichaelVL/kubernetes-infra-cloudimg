@@ -25,6 +25,10 @@ all-h3-3: infra-init nfs-server-storage-provisioner metallb-deploy prometheus-de
 .PHONY: all-h3-2
 all-h3-2: infra-init metallb-deploy grafana-deploy loki-deploy
 
+.PHONY:wait
+wait:
+	bash -c 'until kubectl get nodes |grep master |grep Ready; do sleep 1; done'
+
 .PHONY: all-istio
 all-istio: infra-init tiller-deploy nfs-server-storage-provisioner metallb-deploy cert-manager-deploy prometheus-deploy grafana-deploy loki-deploy metrics-server-deploy prometheus-adapter-deploy istio-deploy infra-init-post
 
