@@ -9,7 +9,7 @@ namespaces:
 apps:
   grafana:
     chart: stable/grafana
-    version: 4.0.0
+    version: 4.0.2
     enabled: true
     namespace: metrics
     valuesFiles:
