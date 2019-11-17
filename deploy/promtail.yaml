@@ -7,11 +7,11 @@ namespaces:
   loki:
 
 apps:
-  loki:
-    chart: loki/loki
-    version: 0.17.1
+  promtail:
+    chart: loki/promtail
+    version: 0.13.1
     enabled: true
     namespace: loki
-    priority: -1
+    priority: -2
     valuesFiles:
-     - values-loki.yaml
+     - values-promtail.yaml

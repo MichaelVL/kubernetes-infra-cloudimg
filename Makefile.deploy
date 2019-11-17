@@ -13,26 +13,22 @@ HELMSMAN ?= "helmsman"
 # Path where YAMLs are rendered from Helm charts
 RENDER_PATH = rendered
 
+# Direct deployment with Helm2/Helmsman
 .PHONY: all-direct
 all-direct: infra-init tiller-deploy-direct nfs-server-storage-provisioner-deploy-direct metallb-deploy-direct cert-manager-deploy-direct prometheus-deploy-direct grafana-deploy-direct loki-deploy-direct metrics-server-deploy-direct prometheus-adapter-deploy-direct
 
 
-# All, except Tiller
-.PHONY: all-h3
-all-h3: infra-init nfs-server-storage-provisioner-deploy metallb-deploy cert-manager-deploy prometheus-deploy grafana-deploy loki-deploy metrics-server-deploy prometheus-adapter-deploy
-
-.PHONY: all-h3-direct
-all-h3-direct: infra-init nfs-server-storage-provisioner-deploy-direct metallb-deploy-direct cert-manager-deploy-direct prometheus-deploy-direct grafana-deploy-direct loki-deploy-direct metrics-server-deploy-direct prometheus-adapter-deploy-direct
-
-
+# Render and deploy as separate stages
 # All, except Tiller and cert-manager
-.PHONY: all-h3-2-render
-all-h3-2-render: infra-init nfs-server-storage-provisioner-render metallb-render prometheus-render grafana-render loki-render metrics-server-render prometheus-adapter-render
-.PHONY: all-h3-2-deploy
-all-h3-2-deploy: infra-init nfs-server-storage-provisioner-deploy metallb-deploy prometheus-deploy grafana-deploy loki-deploy metrics-server-deploy prometheus-adapter-deploy
+.PHONY: all-render
+all-render: nfs-server-storage-provisioner-render metallb-render prometheus-render grafana-render loki-render metrics-server-render prometheus-adapter-render audit-static-yaml
 
-.PHONY: all-h3-2-direct
-all-h3-2-direct: infra-init nfs-server-storage-provisioner-deploy-direct metallb-deploy-direct prometheus-deploy-direct grafana-deploy-direct loki-deploy-direct metrics-server-deploy-direct prometheus-adapter-deploy-direct
+.PHONY: all-deploy
+all-deploy: infra-init nfs-server-storage-provisioner-deploy metallb-deploy prometheus-deploy grafana-deploy loki-deploy metrics-server-deploy prometheus-adapter-deploy
+
+# Direct deployment with Helm3/Helmsman
+.PHONY: all-helm3-direct
+all-helm3-direct: infra-init nfs-server-storage-provisioner-deploy-direct metallb-deploy-direct prometheus-deploy-direct grafana-deploy-direct loki-deploy-direct metrics-server-deploy-direct prometheus-adapter-deploy-direct
 
 
 .PHONY:wait
@@ -64,7 +60,7 @@ grafana-init: dashboard-kubernetes-health.json
 .PHONY: metallb-init
 metallb-init:
 	-kubectl create ns metallb
-	cat deploy/metallb-layer2.yaml | METALLB_RANGE_START=$(METALLB_RANGE_START) METALLB_RANGE_END=$(METALLB_RANGE_END) envsubst | kubectl -nmetallb apply -f -
+	cat deploy/static-yaml/metallb-layer2.yaml | METALLB_RANGE_START=$(METALLB_RANGE_START) METALLB_RANGE_END=$(METALLB_RANGE_END) envsubst | kubectl -nmetallb apply -f -
 
 ############################
 .PHONY: tiller-deploy-direct
@@ -127,14 +123,16 @@ grafana-deploy-direct:
 .PHONY: loki-render
 loki-render:
 	deploy/helm2yaml.sh deploy/loki.yaml $(RENDER_PATH)
+	deploy/helm2yaml.sh deploy/promtail.yaml $(RENDER_PATH)
 
 .PHONY: loki-deploy
 loki-deploy:
 	deploy/manifest_deploy.sh $(RENDER_PATH)/loki.yaml $(RENDER_PATH)/loki-ns.yaml
+	deploy/manifest_deploy.sh $(RENDER_PATH)/promtail.yaml $(RENDER_PATH)/promtail-ns.yaml
 
 .PHONY: loki-deploy-direct
 loki-deploy-direct:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/loki.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/loki.yaml -f deploy/promtail.yaml
 
 ############################
 .PHONY: metrics-server-render
@@ -181,12 +179,12 @@ prometheus-adapter-deploy-direct:
 # This depends on Istio CRDs deployed above
 .PHONY: infra-init-post
 infra-init-post:
-	kubectl -nmetrics apply -f deploy/grafana-istio-ingress.yaml
+	kubectl -nmetrics apply -f deploy/static-yaml/grafana-istio-ingress.yaml
 
 ############################
 .PHONY: letsencrypt-issuers
 letsencrypt-issuers:
-	cat deploy/tls-cluster-cert-issuers.yaml | LETSENCRYPT_EMAIL=$(LETSENCRYPT_EMAIL) envsubst | kubectl apply -f -
+	cat deploy/static-yaml/tls-cluster-cert-issuers.yaml | LETSENCRYPT_EMAIL=$(LETSENCRYPT_EMAIL) envsubst | kubectl apply -f -
 
 ############################
 .PHONY: fluxcd-deploy-direct
@@ -201,12 +199,12 @@ nfs-server-storage-provisioner-render:
 .PHONY: nfs-server-storage-provisioner-deploy
 nfs-server-storage-provisioner-deploy:
 	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') deploy/manifest_deploy.sh $(RENDER_PATH)/nfs-server-storage-provisioner.yaml $(RENDER_PATH)/nfs-server-storage-provisioner-ns.yaml
-	kubectl -n nfs-storage apply -f deploy/nfs-storage-provisioner-pv.yaml
+	kubectl -n nfs-storage apply -f deploy/static-yaml/nfs-storage-provisioner-pv.yaml
 
 .PHONY: nfs-server-storage-provisioner-deploy-direct
 nfs-server-storage-provisioner:
 	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/nfs-server-storage-provisioner.yaml
-	kubectl -n nfs-storage apply -f deploy/nfs-storage-provisioner-pv.yaml
+	kubectl -n nfs-storage apply -f deploy/static-yaml/nfs-storage-provisioner-pv.yaml
 
 ############################
 .PHONY: nfs-client-storage-provisioner-render
@@ -244,6 +242,11 @@ oauth2-proxy-deploy-direct:
 	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/oauth2-proxy.yaml
 
 ############################
+STATIC_YAML := $(shell find deploy/static-yaml -type f | sed 's/^(.*)/-f $1/')
+.PHONY: audit-static-yaml
+audit-static-yaml:
+	./deploy/kubeaudit.sh all ${STATIC_YAML} 2> $(RENDER_PATH)/statis-yaml-audit.txt
+
 .PHONY: show-audit-reports
 show-audit-reports:
 	cat $(RENDER_PATH)/*-audit.txt
