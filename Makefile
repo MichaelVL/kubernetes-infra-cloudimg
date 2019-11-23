@@ -1,12 +1,9 @@
 -include Makefile.local
 -include Makefile.deploy
 
-.PHONY: validate image image-w-console test-image build-helm-image-list
-.PHONY: test-cncf test-cncf-wait test-cncf-retrieve test-cncf-check
-
 ifndef KUBERNETES_VERSION
 #KUBERNETES_VERSION=1.15.5
-KUBERNETES_VERSION=1.16.2
+KUBERNETES_VERSION=1.16.3
 endif
 ifndef KUBERNETES_PATCHLEVEL
 KUBERNETES_PATCHLEVEL=00
@@ -17,46 +14,57 @@ ifndef UBUNTU_VERSION
 UBUNTU_VERSION=1804
 endif
 
+SONOBUOY_IMAGE=sonobuoy/sonobuoy:v0.16.2
+KUBECFG=-v ${HOME}/.kube:${HOME}/.kube
+SONOBUOY_RESULT_MOUNT=-v $(shell pwd):/results
+SONOBUOY=docker run -ti --user $(shell id -u) --rm -e KUBECONFIG ${KUBECFG}:ro ${SONOBUOY_RESULT_MOUNT}:rw -w /results --entrypoint /sonobuoy ${SONOBUOY_IMAGE}
 
 TARGET_DIR="kubeimg-${KUBERNETES_VERSION}-$(UBUNTU_VERSION)-$$(date +%Y%m%d-%H%M)"
 
+.PHONY: validate
 validate:
 	CHECKPOINT_DISABLE=1 packer validate ubuntu$(UBUNTU_VERSION).json
 
+.PHONY: image-w-console
 image-w-console: build-helm-image-list
 	KUBERNETES_VERSION=$(KUBERNETES_VERSION) KUBERNETES_PATCHLEVEL=$(KUBERNETES_PATCHLEVEL) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -color=false -var 'headless=false' ubuntu$(UBUNTU_VERSION).json
 	mv output-tmp-ubuntu$(UBUNTU_VERSION) ${TARGET_DIR}
 
+.PHONY: image
 image: build-helm-image-list
 	KUBERNETES_VERSION=$(KUBERNETES_VERSION) KUBERNETES_PATCHLEVEL=$(KUBERNETES_PATCHLEVEL) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -color=false ubuntu$(UBUNTU_VERSION).json | tee build.log
 	mv output-tmp-ubuntu$(UBUNTU_VERSION) ${TARGET_DIR}
 
-# This assumes a VM running with IP address in $TESTVM_IP and injected SSH key 
+# This assumes a VM running with IP address in $TESTVM_IP and injected SSH key
+.PHONY: test-image
 test-image:
 	scp -i ${SSH_KEY} test.sh ${SSH_USER}@${TESTVM_IP}:.
 	ssh -i ${SSH_KEY} ${SSH_USER}@${TESTVM_IP} sudo bash ./test.sh
 
+.PHONY: test-cncf
 test-cncf:
-	sonobuoy run
+	$(shell ${SONOBUOY} run)
 
+.PHONY: test-cncf-status
+test-cncf-status:
+	$(eval SONOBUOY_STATUS =: $(shell ${SONOBUOY} status))
+	@echo $(SONOBUOY_STATUS)
+
+.PHONY: test-cncf-wait
 test-cncf-wait:
 	echo "Blocking on Sonobuoy"
 	date
 	sleep 10
-	while sonobuoy status | grep -q 'Sonobuoy is still running'; do sleep 10; done
+	while $(shell ${SONOBUOY} status) | grep -q 'Sonobuoy is still running'; do sleep 10; done
 	echo "Done!"
 	date
 
-test-cncf-retrieve:
-	sonobuoy retrieve
-
+.PHONY: test-cncf-check
 test-cncf-check:
-	$(eval SONOBUOY_UUID := $(shell kubectl -n heptio-sonobuoy get configmap sonobuoy-config-cm -o "jsonpath={.data['config\.json']}" | jq '.UUID' | sed -e 's/^"//' -e 's/"$$//'))
-	$(eval SONOBUOY_TS := $(shell kubectl -n heptio-sonobuoy get configmap sonobuoy-config-cm -o jsonpath='{.metadata.creationTimestamp}' | awk '{print substr($$0,1,4) substr($$0,6,2) substr($$0,9,2) substr($$0,12,2) substr($$0,15,2)}'))
-	$(eval SONOBUOY_ARCHIVE_NAME := $(SONOBUOY_TS)_sonobuoy_$(SONOBUOY_UUID).tar.gz)
-	sonobuoy e2e $(SONOBUOY_ARCHIVE_NAME) --show passed
-	sonobuoy e2e $(SONOBUOY_ARCHIVE_NAME) --show failed
+	$(eval SONOBUOY_ARCHIVE_NAME =: $(shell ${SONOBUOY} retrieve))
+	$(shell ${SONOBUOY} results $(SONOBUOY_ARCHIVE_NAME))
 
+.PHONY: build-helm-image-list
 build-helm-image-list:
 	helm repo update
 	echo "#!/bin/bash" > scripts/helm_chart_images.sh
