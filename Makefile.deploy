@@ -19,16 +19,16 @@ all-direct: infra-init tiller-deploy-direct nfs-server-storage-provisioner-deplo
 
 
 # Render and deploy as separate stages
-# All, except Tiller and cert-manager
+# All, except Tiller
 .PHONY: all-render
-all-render: nfs-server-storage-provisioner-render metallb-render prometheus-render grafana-render loki-render metrics-server-render prometheus-adapter-render audit-static-yaml
+all-render: nfs-server-storage-provisioner-render metallb-render cert-manager-render prometheus-render grafana-render loki-render metrics-server-render prometheus-adapter-render audit-static-yaml
 
 .PHONY: all-deploy
-all-deploy: infra-init nfs-server-storage-provisioner-deploy metallb-deploy prometheus-deploy grafana-deploy loki-deploy metrics-server-deploy prometheus-adapter-deploy
+all-deploy: infra-init nfs-server-storage-provisioner-deploy metallb-deploy cert-manager-deploy prometheus-deploy grafana-deploy loki-deploy metrics-server-deploy prometheus-adapter-deploy
 
 # Direct deployment with Helm3/Helmsman
 .PHONY: all-helm3-direct
-all-helm3-direct: infra-init nfs-server-storage-provisioner-deploy-direct metallb-deploy-direct prometheus-deploy-direct grafana-deploy-direct loki-deploy-direct metrics-server-deploy-direct prometheus-adapter-deploy-direct
+all-helm3-direct: infra-init nfs-server-storage-provisioner-deploy-direct metallb-deploy-direct cert-manager-deploy-direct prometheus-deploy-direct grafana-deploy-direct loki-deploy-direct metrics-server-deploy-direct prometheus-adapter-deploy-direct
 
 
 .PHONY:wait
