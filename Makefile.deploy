@@ -8,7 +8,8 @@ OAUTH_CLIENT_ID ?= abc
 OAUTH_CLIENT_SECRET ?= abc
 OAUTH_ALLOWED_ORGS ?= abc
 
-HELMSMAN ?= "helmsman"
+HELMSMAN ?= helmsman
+#HELMSMAN ?= docker run -e KUBECONFIG -v $(shell pwd):/tmp --rm -it praqma/helmsman:v1.13.0 helmsman
 
 # Path where YAMLs are rendered from Helm charts
 RENDER_PATH = rendered
@@ -74,7 +75,7 @@ metallb-render:
 
 .PHONY: metallb-deploy
 metallb-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH)/metallb.yaml $(RENDER_PATH)/metallb-ns.yaml
+	deploy/manifest_deploy.sh $(RENDER_PATH)/metallb.yaml $(RENDER_PATH)/metallb-ns.yaml $(RENDER_PATH)/metallb-w-ns.yaml
 
 .PHONY: metallb-deploy-direct
 metallb-deploy-direct:
@@ -87,7 +88,7 @@ cert-manager-render:
 
 .PHONY: cert-manager-deploy
 cert-manager-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH)/cert-manager.yaml $(RENDER_PATH)/cert-manager-ns.yaml
+	deploy/manifest_deploy.sh $(RENDER_PATH)/cert-manager.yaml $(RENDER_PATH)/cert-manager-ns.yaml $(RENDER_PATH)/cert-manager-w-ns.yaml
 
 .PHONY: cert-manager-deploy-direct
 cert-manager-deploy-direct:
@@ -100,7 +101,7 @@ prometheus-render:
 
 .PHONY: prometheus-deploy
 prometheus-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH)/prometheus.yaml $(RENDER_PATH)/prometheus-ns.yaml
+	deploy/manifest_deploy.sh $(RENDER_PATH)/prometheus.yaml $(RENDER_PATH)/prometheus-ns.yaml $(RENDER_PATH)/prometheus-w-ns.yaml
 
 .PHONY: prometheus-deploy-direct
 prometheus-deploy-direct:
@@ -113,7 +114,7 @@ grafana-render:
 
 .PHONY: grafana-deploy
 grafana-deploy:
-	OAUTH_CLIENT_ID=$(OAUTH_CLIENT_ID) OAUTH_CLIENT_SECRET=$(OAUTH_CLIENT_SECRET) OAUTH_ALLOWED_ORGS=$(OAUTH_ALLOWED_ORGS) GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) DNS_DOMAIN=$(DNS_DOMAIN) deploy/manifest_deploy.sh $(RENDER_PATH)/grafana.yaml $(RENDER_PATH)/grafana-ns.yaml
+	OAUTH_CLIENT_ID=$(OAUTH_CLIENT_ID) OAUTH_CLIENT_SECRET=$(OAUTH_CLIENT_SECRET) OAUTH_ALLOWED_ORGS=$(OAUTH_ALLOWED_ORGS) GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) DNS_DOMAIN=$(DNS_DOMAIN) deploy/manifest_deploy.sh $(RENDER_PATH)/grafana.yaml $(RENDER_PATH)/grafana-ns.yaml $(RENDER_PATH)/grafana-w-ns.yaml
 
 .PHONY: grafana-deploy-direct
 grafana-deploy-direct:
@@ -127,8 +128,8 @@ loki-render:
 
 .PHONY: loki-deploy
 loki-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH)/loki.yaml $(RENDER_PATH)/loki-ns.yaml
-	deploy/manifest_deploy.sh $(RENDER_PATH)/promtail.yaml $(RENDER_PATH)/promtail-ns.yaml
+	deploy/manifest_deploy.sh $(RENDER_PATH)/loki.yaml $(RENDER_PATH)/loki-ns.yaml $(RENDER_PATH)/loki-w-ns.yaml
+	deploy/manifest_deploy.sh $(RENDER_PATH)/promtail.yaml $(RENDER_PATH)/promtail-ns.yaml $(RENDER_PATH)/promtail-w-ns.yaml
 
 .PHONY: loki-deploy-direct
 loki-deploy-direct:
@@ -141,7 +142,7 @@ metrics-server-render:
 
 .PHONY: metrics-server-deploy
 metrics-server-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH)/metrics-server.yaml $(RENDER_PATH)/metrics-server-ns.yaml
+	deploy/manifest_deploy.sh $(RENDER_PATH)/metrics-server.yaml $(RENDER_PATH)/metrics-server-ns.yaml $(RENDER_PATH)/metrics-server-w-ns.yaml
 
 .PHONY: metrics-server-deploy-direct
 metrics-server-deploy-direct:
@@ -169,7 +170,7 @@ prometheus-adapter-render:
 
 .PHONY: prometheus-adapter-deploy
 prometheus-adapter-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH)/prometheus-adapter.yaml $(RENDER_PATH)/prometheus-adapter-ns.yaml
+	deploy/manifest_deploy.sh $(RENDER_PATH)/prometheus-adapter.yaml $(RENDER_PATH)/prometheus-adapter-ns.yaml $(RENDER_PATH)/prometheus-adapter-w-ns.yaml
 
 .PHONY: prometheus-adapter-deploy-direct
 prometheus-adapter-deploy-direct:
@@ -198,7 +199,7 @@ nfs-server-storage-provisioner-render:
 
 .PHONY: nfs-server-storage-provisioner-deploy
 nfs-server-storage-provisioner-deploy:
-	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') deploy/manifest_deploy.sh $(RENDER_PATH)/nfs-server-storage-provisioner.yaml $(RENDER_PATH)/nfs-server-storage-provisioner-ns.yaml
+	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') deploy/manifest_deploy.sh $(RENDER_PATH)/nfs-server-storage-provisioner.yaml $(RENDER_PATH)/nfs-server-storage-provisioner-ns.yaml $(RENDER_PATH)/nfs-server-storage-provisioner-w-ns.yaml
 	kubectl -n nfs-storage apply -f deploy/static-yaml/nfs-storage-provisioner-pv.yaml
 
 .PHONY: nfs-server-storage-provisioner-deploy-direct
@@ -213,7 +214,7 @@ nfs-client-storage-provisioner-render:
 
 .PHONY: nfs-client-storage-provisioner-deploy
 nfs-client-storage-provisioner-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH)/nfs-client-storage-provisioner.yaml $(RENDER_PATH)/nfs-client-storage-provisioner-ns.yaml
+	deploy/manifest_deploy.sh $(RENDER_PATH)/nfs-client-storage-provisioner.yaml $(RENDER_PATH)/nfs-client-storage-provisioner-ns.yaml $(RENDER_PATH)/nfs-client-storage-provisioner-w-ns.yaml
 
 .PHONY: nfs-client-storage-provisioner
 nfs-client-storage-provisioner:
