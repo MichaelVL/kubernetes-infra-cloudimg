@@ -9,7 +9,7 @@ namespaces:
 apps:
   nfs-client-provisioner:
     chart: stable/nfs-client-provisioner
-    version: 1.2.7
+    version: 1.2.8
     enabled: true
     namespace: nfs-storage
     set:
