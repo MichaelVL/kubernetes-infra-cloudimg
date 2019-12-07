@@ -3,11 +3,15 @@
 HELM2YAML_IMAGE='michaelvl/helm2yaml'
 KUBECTL_IMAGE='bitnami/kubectl:1.15.0'
 
-set -xe
+#set -x
+set -e
 
-manifest_path=$1
-namespace_path=$2
-manifest_w_explicit_ns_path=$3
+base_path=$1
+basename=$2
+
+manifest_path=$base_path/${basename}.yaml
+namespace_path=$base_path/${basename}-ns.yaml
+manifest_w_explicit_ns_path=$base_path/${basename}-w-ns.yaml
 
 # Pass-in both the user .kube folder and the current value of KUBECONFIG
 KUBECFG="-v ${HOME}/.kube:${HOME}/.kube"
