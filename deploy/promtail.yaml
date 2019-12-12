@@ -9,7 +9,7 @@ namespaces:
 apps:
   promtail:
     chart: loki/promtail
-    version: 0.14.0
+    version: 0.16.0
     enabled: true
     namespace: loki
     priority: -2
