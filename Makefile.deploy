@@ -22,10 +22,10 @@ all-direct: infra-init tiller-deploy-direct nfs-server-storage-provisioner-deplo
 # Render and deploy as separate stages
 # All, except Tiller
 .PHONY: all-render
-all-render: nfs-server-storage-provisioner-render metallb-render cert-manager-render prometheus-render grafana-render loki-render metrics-server-render prometheus-adapter-render audit-static-yaml
+all-render: nfs-server-storage-provisioner-render metallb-render cert-manager-render prometheus-render grafana-render loki-render metrics-server-render prometheus-adapter-render sealed-secrets-render audit-static-yaml
 
 .PHONY: all-deploy
-all-deploy: infra-init nfs-server-storage-provisioner-deploy metallb-deploy cert-manager-deploy prometheus-deploy grafana-deploy loki-deploy metrics-server-deploy prometheus-adapter-deploy
+all-deploy: infra-init nfs-server-storage-provisioner-deploy metallb-deploy cert-manager-deploy prometheus-deploy grafana-deploy loki-deploy metrics-server-deploy prometheus-adapter-deploy sealed-secrets-deploy
 
 # Direct deployment with Helm3/Helmsman
 .PHONY: all-helm3-direct
@@ -219,6 +219,19 @@ nfs-client-storage-provisioner-deploy:
 .PHONY: nfs-client-storage-provisioner
 nfs-client-storage-provisioner:
 	EXTERNAL_NFS_SERVER=$(EXTERNAL_NFS_SERVER) EXTERNAL_NFS_SERVER_PATH=$(EXTERNAL_NFS_SERVER_PATH) $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/nfs-client-storage-provisioner.yaml
+
+############################
+.PHONY: sealed-secrets-render
+sealed-secrets-render:
+	deploy/helm2yaml.sh deploy/sealed-secrets.yaml $(RENDER_PATH)
+
+.PHONY: sealed-secrets-deploy
+sealed-secrets-deploy:
+	deploy/manifest_deploy.sh $(RENDER_PATH) sealed-secrets
+
+.PHONY: sealed-secrets-get-cert
+sealed-secrets-get-cert:
+	kubeseal --fetch-cert --controller-name=flux-sealed-secrets --controller-namespace=sealed-secrets > sealed-secrets-pub-cert.pem
 
 ############################
 .PHONY: harbor-deploy-direct

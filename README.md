@@ -25,7 +25,8 @@ The following applications are included (images and/or manifests):
  - [MetalLB load balancer/virtual IP solution](https://metallb.universe.tf)
  - Metrics server (note [issue 146](https://github.com/kubernetes-incubator/metrics-server/issues/146))
  - [Vertical POD autoscaler](https://github.com/kubernetes/autoscaler)
- - Cert-manager
+ - [Cert-manager](https://github.com/jetstack/cert-manager)
+ - [Sealed Secrets Controller](https://github.com/bitnami-labs/sealed-secrets)
 
 The manifests for deploying these add-ons are either from the stable helm charts
 (see [helmsman.yaml](deply/helmsman.yaml) and other files in the deploy folder)
