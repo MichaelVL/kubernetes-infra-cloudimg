@@ -259,7 +259,7 @@ oauth2-proxy-deploy-direct:
 STATIC_YAML := $(shell find deploy/static-yaml -type f | sed 's/^(.*)/-f $1/')
 .PHONY: audit-static-yaml
 audit-static-yaml:
-	./deploy/kubeaudit.sh all ${STATIC_YAML} 2> $(RENDER_PATH)/statis-yaml-audit.txt
+	./deploy/kubeaudit.sh all ${STATIC_YAML} 2> $(RENDER_PATH)/static-yaml-audit.txt
 
 .PHONY: show-audit-reports
 show-audit-reports:
