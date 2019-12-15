@@ -13,6 +13,8 @@ env_vars=${3:-""}
 manifest_path=$base_path/${basename}.yaml
 namespace_path=$base_path/${basename}-ns.yaml
 manifest_w_explicit_ns_path=$base_path/${basename}-w-ns.yaml
+secrets_path=$base_path/${basename}-secrets-ns.yaml
+secrets_w_explicit_ns_path=$base_path/${basename}-secrets-w-ns.yaml
 
 env_set=""
 for e in $env_vars; do
@@ -27,13 +29,21 @@ KUBECTL_CMD="docker run -i --user $(id -u):$(id -g) --rm -e KUBECONFIG $KUBECFG:
 if [ ! -z $namespace_path ] && [ -f $namespace_path ]; then
     $KUBECTL_CMD apply -f $namespace_path
     NS=$(yq -r '.metadata.name' $namespace_path)
+    if [ ! -z $secrets_path ] && [ -f $secrets_path ]; then
+        cat $secrets_path | docker run --rm -i --entrypoint /bin/k8envsubst.py $env_set $HELM2YAML_IMAGE | $KUBECTL_CMD -n $NS apply -f -
+    fi
+fi
+
+if [ ! -z $secrets_w_explicit_ns_path ] && [ -f $secrets_w_explicit_ns_path ]; then
+    cat $secrets_w_explicit_ns_path | docker run --rm -i --entrypoint /bin/k8envsubst.py $env_set $HELM2YAML_IMAGE | $KUBECTL_CMD apply -f -
+fi
+
+if [ ! -z $namespace_path ] && [ -f $namespace_path ]; then
     if [ ! -z $manifest_path ] && [ -f $manifest_path ]; then
-        # The environment variables shown here are usefull for deployment of e.g. https://github.com/MichaelVL/kubernetes-infra-cloudimg
         cat $manifest_path | docker run --rm -i --entrypoint /bin/k8envsubst.py $env_set $HELM2YAML_IMAGE | $KUBECTL_CMD -n $NS apply -f -
     fi
 fi
 
 if [ ! -z $manifest_w_explicit_ns_path ] && [ -f $manifest_w_explicit_ns_path ]; then
-    # The environment variables shown here are usefull for deployment of e.g. https://github.com/MichaelVL/kubernetes-infra-cloudimg
     cat $manifest_w_explicit_ns_path | docker run --rm -i --entrypoint /bin/k8envsubst.py $env_set $HELM2YAML_IMAGE | $KUBECTL_CMD apply -f -
 fi
