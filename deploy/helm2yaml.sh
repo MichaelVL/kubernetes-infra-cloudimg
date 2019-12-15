@@ -1,7 +1,7 @@
 #! /bin/bash
 
 HELM2YAML_IMAGE='michaelvl/helm2yaml'
-KUBESEAL_IMAGE='michaelvl/kubeseal'
+KUBESEAL_IMAGE='michaelvl/kubeseal:v0.9.6'
 
 #set -x
 set -e
