@@ -110,11 +110,11 @@ prometheus-deploy-direct:
 ############################
 .PHONY: grafana-render
 grafana-render:
-	deploy/helm2yaml.sh deploy/grafana.yaml $(RENDER_PATH) "DNS_DOMAIN OAUTH_ALLOWED_ORGS"
+	deploy/helm2yaml.sh deploy/grafana.yaml $(RENDER_PATH) "DNS_DOMAIN OAUTH_ALLOWED_ORGS OAUTH_CLIENT_ID OAUTH_CLIENT_SECRET GRAFANA_ADMIN_PASSWD"
 
 .PHONY: grafana-deploy
 grafana-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH) grafana "OAUTH_CLIENT_ID OAUTH_CLIENT_SECRET GRAFANA_ADMIN_PASSWD"
+	deploy/manifest_deploy.sh $(RENDER_PATH) grafana
 
 .PHONY: grafana-deploy-direct
 grafana-deploy-direct:
