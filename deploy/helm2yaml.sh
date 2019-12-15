@@ -26,6 +26,8 @@ docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp/home $env_set \
        --auto-api-upgrade \
        --render-to /rendered/${appname}.yaml \
        --render-w-ns-to /rendered/${appname}-w-ns.yaml \
+       --render-secrets-to /rendered/${appname}-secrets.yaml \
+       --render-secrets-w-ns-to /rendered/${appname}-secrets-w-ns.yaml \
        --render-namespace-to /rendered/${appname}-ns.yaml \
        --hook-filter '' helmsman -f ${filename}
 
