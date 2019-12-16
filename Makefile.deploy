@@ -229,9 +229,18 @@ sealed-secrets-render:
 sealed-secrets-deploy:
 	deploy/manifest_deploy.sh $(RENDER_PATH) sealed-secrets
 
-.PHONY: sealed-secrets-get-cert
-sealed-secrets-get-cert:
-	kubeseal --fetch-cert --controller-name=flux-sealed-secrets --controller-namespace=sealed-secrets > sealed-secrets-pub-cert.pem
+.PHONY: sealed-secrets-cert-get
+sealed-secrets-cert-get:
+	kubeseal --fetch-cert --controller-name=flux-sealed-secrets --controller-namespace=kube-system > sealed-secrets-pub-cert.pem
+
+.PHONY: sealed-secrets-master-key-get
+sealed-secrets-master-key-get:
+	kubectl get secret -n kube-system -l sealedsecrets.bitnami.com/sealed-secrets-key -o yaml > sealed-secrets-master.key
+
+.PHONY: sealed-secrets-master-key-import
+sealed-secrets-master-key-import:
+	kubectl apply -f sealed-secrets-master.key
+	kubectl delete pod -n kube-system -l app.kubernetes.io/name=sealed-secrets
 
 ############################
 .PHONY: harbor-deploy-direct
