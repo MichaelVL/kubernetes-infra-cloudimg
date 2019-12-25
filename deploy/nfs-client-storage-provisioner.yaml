@@ -7,7 +7,7 @@ namespaces:
   nfs-storage:
 
 apps:
-  nfs-client-provisioner:
+  nfs-client-storage-provisioner:
     chart: stable/nfs-client-provisioner
     version: 1.2.8
     enabled: true
