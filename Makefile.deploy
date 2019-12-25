@@ -14,6 +14,12 @@ HELMSMAN ?= helmsman
 # Path where YAMLs are rendered from Helm charts
 RENDER_PATH = rendered
 
+.PHONY: all
+all: wait sealed-secrets-base sealed-secrets-master-key-import all-deploy
+
+.PHONY: sealed-secrets-base
+sealed-secrets-base: sealed-secrets-deploy sealed-secrets-master-key-import
+
 # Direct deployment with Helm2/Helmsman
 .PHONY: all-direct
 all-direct: infra-init tiller-deploy-direct nfs-server-storage-provisioner-deploy-direct metallb-deploy-direct cert-manager-deploy-direct prometheus-deploy-direct grafana-deploy-direct loki-deploy-direct metrics-server-deploy-direct prometheus-adapter-deploy-direct
@@ -199,7 +205,7 @@ nfs-server-storage-provisioner-render:
 
 .PHONY: nfs-server-storage-provisioner-deploy
 nfs-server-storage-provisioner-deploy:
-	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') deploy/manifest_deploy.sh $(RENDER_PATH) nfs-server-storage-provisioner NFS_STORAGE_PROVISIONER_HOSTNAME
+	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') deploy/manifest_deploy.sh $(RENDER_PATH) nfs-server-provisioner NFS_STORAGE_PROVISIONER_HOSTNAME
 	kubectl -n nfs-storage apply -f deploy/static-yaml/nfs-storage-provisioner-pv.yaml
 
 .PHONY: nfs-server-storage-provisioner-deploy-direct
