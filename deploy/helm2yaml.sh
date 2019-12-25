@@ -27,11 +27,9 @@ docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp/home $env_set \
        -v $(pwd):/src:ro -v $(pwd)/${render_to}:/rendered:rw $HELM2YAML_IMAGE \
        --api-versions apiregistration.k8s.io/v1beta1 --api-versions apiextensions.k8s.io/v1beta1 \
        --auto-api-upgrade \
-       --render-to /rendered/${appname}.yaml \
-       --render-w-ns-to /rendered/${appname}-w-ns.yaml \
-       --render-secrets-to /rendered/${appname}-secrets.yaml \
-       --render-secrets-w-ns-to /rendered/${appname}-secrets-w-ns.yaml \
-       --render-namespace-to /rendered/${appname}-ns.yaml \
+       --render-path /rendered \
+       --separate-with-namespace \
+       --separate-secrets \
        --hook-filter '' helmsman -f ${filename}
 
 ./deploy/kubeaudit.sh all -f $render_to/${appname}.yaml -f $render_to/${appname}-w-ns.yaml -f $render_to/${appname}-ns.yaml 2> $render_to/${appname}-audit.txt
