@@ -25,8 +25,6 @@ mkdir -p "$render_to"
 # Env HOME setting is necessary because Helm3 use HOME for config files
 docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp/home $env_set \
        -v $(pwd):/src:ro -v $(pwd)/${render_to}:/rendered:rw $HELM2YAML_IMAGE \
-       --api-versions apiregistration.k8s.io/v1beta1 --api-versions apiextensions.k8s.io/v1beta1 \
-       --auto-api-upgrade \
        --render-path /rendered \
        --separate-with-namespace \
        --separate-secrets \
@@ -34,7 +32,7 @@ docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp/home $env_set \
 
 ./deploy/kubeaudit.sh all -f $render_to/${appname}.yaml -f $render_to/${appname}-w-ns.yaml -f $render_to/${appname}-ns.yaml 2> $render_to/${appname}-audit.txt
 
-secrets_path=${render_to}/${appname}-secrets-ns.yaml
+secrets_path=${render_to}/${appname}-secrets.yaml
 secrets_w_explicit_ns_path=$render_to/${appname}-secrets-w-ns.yaml
 
 if [ ! -z $secrets_path ] && [ -f $secrets_path ]; then
