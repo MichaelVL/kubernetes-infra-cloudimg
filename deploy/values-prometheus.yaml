@@ -1,7 +1,7 @@
 rbac:
   create: true
 alertmanager:
-  enabled: false
+  enabled: true
 pushgateway:
   enabled: false
 networkPolicy:
@@ -15,6 +15,19 @@ server:
     requests:
       cpu: 100m
       memory: 256Mi
+alertmanager:
+  persistentVolume:
+    enabled: false
+  resources:
+    limits:
+      cpu: 10m
+      memory: 32Mi
+    requests:
+      cpu: 10m
+      memory: 32Mi
+  service:
+    type: NodePort
+    nodePort: 30000
 nodeExporter:
   tolerations:
   - key: "node-role.kubernetes.io/master"
