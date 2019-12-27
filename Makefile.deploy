@@ -11,6 +11,8 @@ OAUTH_ALLOWED_ORGS ?= abc
 HELMSMAN ?= helmsman
 #HELMSMAN ?= docker run -e KUBECONFIG -v $(shell pwd):/tmp --rm -it praqma/helmsman:v1.13.0 helmsman
 
+# Path where application deployment specs are stored
+APPS_PATH = deploy
 # Path where YAMLs are rendered from Helm charts
 RENDER_PATH = rendered
 
@@ -67,173 +69,173 @@ grafana-init: dashboard-kubernetes-health.json
 .PHONY: metallb-init
 metallb-init:
 	-kubectl create ns metallb
-	cat deploy/static-yaml/metallb-layer2.yaml | METALLB_RANGE_START=$(METALLB_RANGE_START) METALLB_RANGE_END=$(METALLB_RANGE_END) envsubst | kubectl -nmetallb apply -f -
+	cat $(APPS_PATH)/static-yaml/metallb-layer2.yaml | METALLB_RANGE_START=$(METALLB_RANGE_START) METALLB_RANGE_END=$(METALLB_RANGE_END) envsubst | kubectl -nmetallb apply -f -
 
 ############################
 .PHONY: tiller-deploy-direct
 tiller-deploy-direct:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/tiller.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/tiller.yaml
 
 ############################
 .PHONY: metallb-render
 metallb-render:
-	deploy/helm2yaml.sh deploy/metallb.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/metallb.yaml $(RENDER_PATH)
 
 .PHONY: metallb-deploy
 metallb-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH) metallb
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) metallb
 
 .PHONY: metallb-deploy-direct
 metallb-deploy-direct:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/metallb.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/metallb.yaml
 
 ############################
 .PHONY: cert-manager-render
 cert-manager-render:
-	deploy/helm2yaml.sh deploy/cert-manager.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/cert-manager.yaml $(RENDER_PATH)
 
 .PHONY: cert-manager-deploy
 cert-manager-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH) cert-manager
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) cert-manager
 
 .PHONY: cert-manager-deploy-direct
 cert-manager-deploy-direct:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/cert-manager.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/cert-manager.yaml
 
 ############################
 .PHONY: prometheus-render
 prometheus-render:
-	deploy/helm2yaml.sh deploy/prometheus.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/prometheus.yaml $(RENDER_PATH)
 
 .PHONY: prometheus-deploy
 prometheus-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH) prometheus
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) prometheus
 
 .PHONY: prometheus-deploy-direct
 prometheus-deploy-direct:
-	-$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/prometheus.yaml
+	-$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/prometheus.yaml
 
 ############################
 .PHONY: grafana-render
 grafana-render:
-	deploy/helm2yaml.sh deploy/grafana.yaml $(RENDER_PATH) "DNS_DOMAIN OAUTH_ALLOWED_ORGS OAUTH_CLIENT_ID OAUTH_CLIENT_SECRET GRAFANA_ADMIN_PASSWD"
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/grafana.yaml $(RENDER_PATH) "DNS_DOMAIN OAUTH_ALLOWED_ORGS OAUTH_CLIENT_ID OAUTH_CLIENT_SECRET GRAFANA_ADMIN_PASSWD"
 
 .PHONY: grafana-deploy
 grafana-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH) grafana
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) grafana
 
 .PHONY: grafana-deploy-direct
 grafana-deploy-direct:
-	OAUTH_CLIENT_ID=$(OAUTH_CLIENT_ID) OAUTH_CLIENT_SECRET=$(OAUTH_CLIENT_SECRET) OAUTH_ALLOWED_ORGS=$(OAUTH_ALLOWED_ORGS) GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) DNS_DOMAIN=$(DNS_DOMAIN) $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/grafana.yaml
+	OAUTH_CLIENT_ID=$(OAUTH_CLIENT_ID) OAUTH_CLIENT_SECRET=$(OAUTH_CLIENT_SECRET) OAUTH_ALLOWED_ORGS=$(OAUTH_ALLOWED_ORGS) GRAFANA_ADMIN_PASSWD=$(GRAFANA_ADMIN_PASSWD) DNS_DOMAIN=$(DNS_DOMAIN) $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/grafana.yaml
 
 ############################
 .PHONY: loki-render
 loki-render:
-	deploy/helm2yaml.sh deploy/loki.yaml $(RENDER_PATH)
-	deploy/helm2yaml.sh deploy/promtail.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/loki.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/promtail.yaml $(RENDER_PATH)
 
 .PHONY: loki-deploy
 loki-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH) loki
-	deploy/manifest_deploy.sh $(RENDER_PATH) promtail
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) loki
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) promtail
 
 .PHONY: loki-deploy-direct
 loki-deploy-direct:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/loki.yaml -f deploy/promtail.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/loki.yaml -f $(APPS_PATH)/promtail.yaml
 
 ############################
 .PHONY: metrics-server-render
 metrics-server-render:
-	deploy/helm2yaml.sh deploy/metrics-server.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/metrics-server.yaml $(RENDER_PATH)
 
 .PHONY: metrics-server-deploy
 metrics-server-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH) metrics-server
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) metrics-server
 
 .PHONY: metrics-server-deploy-direct
 metrics-server-deploy-direct:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/metrics-server.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/metrics-server.yaml
 
 ############################
 .PHONY: contour-deploy-direct
 contour-deploy-direct:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/contour.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/contour.yaml
 
 ############################
 .PHONY: traefik-deploy-direct
 traefik-deploy-direct:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/traefik.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/traefik.yaml
 
 ############################
 .PHONY: istio-deploy-direct
 istio-deploy-direct:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/istio.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/istio.yaml
 
 ############################
 .PHONY: prometheus-adapter-render
 prometheus-adapter-render:
-	deploy/helm2yaml.sh deploy/prometheus-adapter.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/prometheus-adapter.yaml $(RENDER_PATH)
 
 .PHONY: prometheus-adapter-deploy
 prometheus-adapter-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH) prometheus-adapter
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) prometheus-adapter
 
 .PHONY: prometheus-adapter-deploy-direct
 prometheus-adapter-deploy-direct:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/prometheus-adapter.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/prometheus-adapter.yaml
 
 ############################
 # This depends on Istio CRDs deployed above
 .PHONY: infra-init-post
 infra-init-post:
-	kubectl -nmetrics apply -f deploy/static-yaml/grafana-istio-ingress.yaml
+	kubectl -nmetrics apply -f $(APPS_PATH)/static-yaml/grafana-istio-ingress.yaml
 
 ############################
 .PHONY: letsencrypt-issuers
 letsencrypt-issuers:
-	cat deploy/static-yaml/tls-cluster-cert-issuers.yaml | LETSENCRYPT_EMAIL=$(LETSENCRYPT_EMAIL) envsubst | kubectl apply -f -
+	cat $(APPS_PATH)/static-yaml/tls-cluster-cert-issuers.yaml | LETSENCRYPT_EMAIL=$(LETSENCRYPT_EMAIL) envsubst | kubectl apply -f -
 
 ############################
 .PHONY: fluxcd-deploy-direct
 fluxcd-deploy-direct:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/fluxcd.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/fluxcd.yaml
 
 ############################
 .PHONY: nfs-server-storage-provisioner-render
 nfs-server-storage-provisioner-render:
-	deploy/helm2yaml.sh deploy/nfs-server-storage-provisioner.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/nfs-server-storage-provisioner.yaml $(RENDER_PATH)
 
 .PHONY: nfs-server-storage-provisioner-deploy
 nfs-server-storage-provisioner-deploy:
-	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') deploy/manifest_deploy.sh $(RENDER_PATH) nfs-server-provisioner NFS_STORAGE_PROVISIONER_HOSTNAME
-	kubectl -n nfs-storage apply -f deploy/static-yaml/nfs-storage-provisioner-pv.yaml
+	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') $(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) nfs-server-provisioner NFS_STORAGE_PROVISIONER_HOSTNAME
+	kubectl -n nfs-storage apply -f $(APPS_PATH)/static-yaml/nfs-storage-provisioner-pv.yaml
 
 .PHONY: nfs-server-storage-provisioner-deploy-direct
 nfs-server-storage-provisioner:
-	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/nfs-server-storage-provisioner.yaml
-	kubectl -n nfs-storage apply -f deploy/static-yaml/nfs-storage-provisioner-pv.yaml
+	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/nfs-server-storage-provisioner.yaml
+	kubectl -n nfs-storage apply -f $(APPS_PATH)/static-yaml/nfs-storage-provisioner-pv.yaml
 
 ############################
 .PHONY: nfs-client-storage-provisioner-render
 nfs-client-storage-provisioner-render:
-	deploy/helm2yaml.sh deploy/nfs-client-storage-provisioner.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/nfs-client-storage-provisioner.yaml $(RENDER_PATH)
 
 .PHONY: nfs-client-storage-provisioner-deploy
 nfs-client-storage-provisioner-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH) nfs-client-storage-provisioner
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) nfs-client-storage-provisioner
 
 .PHONY: nfs-client-storage-provisioner
 nfs-client-storage-provisioner:
-	EXTERNAL_NFS_SERVER=$(EXTERNAL_NFS_SERVER) EXTERNAL_NFS_SERVER_PATH=$(EXTERNAL_NFS_SERVER_PATH) $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/nfs-client-storage-provisioner.yaml
+	EXTERNAL_NFS_SERVER=$(EXTERNAL_NFS_SERVER) EXTERNAL_NFS_SERVER_PATH=$(EXTERNAL_NFS_SERVER_PATH) $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/nfs-client-storage-provisioner.yaml
 
 ############################
 .PHONY: sealed-secrets-render
 sealed-secrets-render:
-	deploy/helm2yaml.sh deploy/sealed-secrets.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/sealed-secrets.yaml $(RENDER_PATH)
 
 .PHONY: sealed-secrets-deploy
 sealed-secrets-deploy:
-	deploy/manifest_deploy.sh $(RENDER_PATH) sealed-secrets
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) sealed-secrets
 
 .PHONY: sealed-secrets-cert-get
 sealed-secrets-cert-get:
@@ -251,30 +253,30 @@ sealed-secrets-master-key-import:
 ############################
 .PHONY: harbor-deploy-direct
 harbor-deploy-direct:
-	HARBOR_ADMIN_PASSWD=$(HARBOR_ADMIN_PASSWD) $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/harbor.yaml
+	HARBOR_ADMIN_PASSWD=$(HARBOR_ADMIN_PASSWD) $(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/harbor.yaml
 
 ############################
 .PHONY: kubernetes-dashboard-deploy-direct
 kubernetes-dashboard-deploy-direct:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/kubernetes-dashboard.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/kubernetes-dashboard.yaml
 
 ############################
 .PHONY: jenkins-deploy-direct
 jenkins-deploy-direct:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/jenkins.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/jenkins.yaml
 	-kubectl -njenkins create configmap dashboard --from-file jenkins-performance-and-health-overview_rev1.json
 	-kubectl -njenkins label configmap dashboard grafana_dashboard=1
 
 ############################
 .PHONY: oauth2-proxy-deploy-direct
 oauth2-proxy-deploy-direct:
-	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f deploy/oauth2-proxy.yaml
+	$(HELMSMAN) --no-banner --keep-untracked-releases --apply -f $(APPS_PATH)/oauth2-proxy.yaml
 
 ############################
-STATIC_YAML := $(shell find deploy/static-yaml -type f | sed 's/^(.*)/-f $1/')
+STATIC_YAML := $(shell find $(APPS_PATH)/static-yaml -type f | sed 's/^(.*)/-f $1/')
 .PHONY: audit-static-yaml
 audit-static-yaml:
-	./deploy/kubeaudit.sh all ${STATIC_YAML} 2> $(RENDER_PATH)/static-yaml-audit.txt
+	./$(APPS_PATH)/kubeaudit.sh all ${STATIC_YAML} 2> $(RENDER_PATH)/static-yaml-audit.txt
 
 .PHONY: show-audit-reports
 show-audit-reports:
