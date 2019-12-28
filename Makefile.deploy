@@ -79,11 +79,11 @@ tiller-deploy-direct:
 ############################
 .PHONY: metallb-render
 metallb-render:
-	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/metallb.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/metallb.yaml $(RENDER_PATH)/metallb
 
 .PHONY: metallb-deploy
 metallb-deploy:
-	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) metallb
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH)/metallb metallb
 
 .PHONY: metallb-deploy-direct
 metallb-deploy-direct:
@@ -92,11 +92,11 @@ metallb-deploy-direct:
 ############################
 .PHONY: cert-manager-render
 cert-manager-render:
-	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/cert-manager.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/cert-manager.yaml $(RENDER_PATH)/cert-manager
 
 .PHONY: cert-manager-deploy
 cert-manager-deploy:
-	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) cert-manager
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH)/cert-manager cert-manager
 
 .PHONY: cert-manager-deploy-direct
 cert-manager-deploy-direct:
@@ -105,11 +105,11 @@ cert-manager-deploy-direct:
 ############################
 .PHONY: prometheus-render
 prometheus-render:
-	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/prometheus.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/prometheus.yaml $(RENDER_PATH)/prometheus
 
 .PHONY: prometheus-deploy
 prometheus-deploy:
-	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) prometheus
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH)/prometheus prometheus
 
 .PHONY: prometheus-deploy-direct
 prometheus-deploy-direct:
@@ -118,11 +118,11 @@ prometheus-deploy-direct:
 ############################
 .PHONY: grafana-render
 grafana-render:
-	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/grafana.yaml $(RENDER_PATH) "DNS_DOMAIN OAUTH_ALLOWED_ORGS OAUTH_CLIENT_ID OAUTH_CLIENT_SECRET GRAFANA_ADMIN_PASSWD"
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/grafana.yaml $(RENDER_PATH)/grafana "DNS_DOMAIN OAUTH_ALLOWED_ORGS OAUTH_CLIENT_ID OAUTH_CLIENT_SECRET GRAFANA_ADMIN_PASSWD"
 
 .PHONY: grafana-deploy
 grafana-deploy:
-	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) grafana
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH)/grafana grafana
 
 .PHONY: grafana-deploy-direct
 grafana-deploy-direct:
@@ -131,13 +131,13 @@ grafana-deploy-direct:
 ############################
 .PHONY: loki-render
 loki-render:
-	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/loki.yaml $(RENDER_PATH)
-	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/promtail.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/loki.yaml $(RENDER_PATH)/loki
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/promtail.yaml $(RENDER_PATH)/promtail
 
 .PHONY: loki-deploy
 loki-deploy:
-	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) loki
-	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) promtail
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH)/loki loki
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH)/promtail promtail
 
 .PHONY: loki-deploy-direct
 loki-deploy-direct:
@@ -146,11 +146,11 @@ loki-deploy-direct:
 ############################
 .PHONY: metrics-server-render
 metrics-server-render:
-	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/metrics-server.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/metrics-server.yaml $(RENDER_PATH)/metrics-server
 
 .PHONY: metrics-server-deploy
 metrics-server-deploy:
-	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) metrics-server
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH)/metrics-server metrics-server
 
 .PHONY: metrics-server-deploy-direct
 metrics-server-deploy-direct:
@@ -174,11 +174,11 @@ istio-deploy-direct:
 ############################
 .PHONY: prometheus-adapter-render
 prometheus-adapter-render:
-	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/prometheus-adapter.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/prometheus-adapter.yaml $(RENDER_PATH)/prometheus-adapter
 
 .PHONY: prometheus-adapter-deploy
 prometheus-adapter-deploy:
-	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) prometheus-adapter
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH)/prometheus-adapter prometheus-adapter
 
 .PHONY: prometheus-adapter-deploy-direct
 prometheus-adapter-deploy-direct:
@@ -203,11 +203,11 @@ fluxcd-deploy-direct:
 ############################
 .PHONY: nfs-server-storage-provisioner-render
 nfs-server-storage-provisioner-render:
-	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/nfs-server-storage-provisioner.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/nfs-server-storage-provisioner.yaml $(RENDER_PATH)/nfs-server-provisioner
 
 .PHONY: nfs-server-storage-provisioner-deploy
 nfs-server-storage-provisioner-deploy:
-	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') $(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) nfs-server-provisioner NFS_STORAGE_PROVISIONER_HOSTNAME
+	NFS_STORAGE_PROVISIONER_HOSTNAME=$(shell kubectl get --no-headers=true no | head -n 1 | cut -f 1 -d' ') $(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH)/nfs-server-provisioner nfs-server-provisioner NFS_STORAGE_PROVISIONER_HOSTNAME
 	kubectl -n nfs-storage apply -f $(APPS_PATH)/static-yaml/nfs-storage-provisioner-pv.yaml
 
 .PHONY: nfs-server-storage-provisioner-deploy-direct
@@ -218,11 +218,11 @@ nfs-server-storage-provisioner:
 ############################
 .PHONY: nfs-client-storage-provisioner-render
 nfs-client-storage-provisioner-render:
-	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/nfs-client-storage-provisioner.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/nfs-client-storage-provisioner.yaml $(RENDER_PATH)/nfs-client-provisioner
 
 .PHONY: nfs-client-storage-provisioner-deploy
 nfs-client-storage-provisioner-deploy:
-	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) nfs-client-storage-provisioner
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH)/nfs-client-provisioner nfs-client-provisioner
 
 .PHONY: nfs-client-storage-provisioner
 nfs-client-storage-provisioner:
@@ -231,11 +231,11 @@ nfs-client-storage-provisioner:
 ############################
 .PHONY: sealed-secrets-render
 sealed-secrets-render:
-	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/sealed-secrets.yaml $(RENDER_PATH)
+	$(APPS_PATH)/helm2yaml.sh $(APPS_PATH)/sealed-secrets.yaml $(RENDER_PATH)/sealed-secrets
 
 .PHONY: sealed-secrets-deploy
 sealed-secrets-deploy:
-	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH) sealed-secrets
+	$(APPS_PATH)/manifest_deploy.sh $(RENDER_PATH)/sealed-secrets sealed-secrets
 
 .PHONY: sealed-secrets-cert-get
 sealed-secrets-cert-get:
