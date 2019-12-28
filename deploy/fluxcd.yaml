@@ -9,10 +9,11 @@ namespaces:
 apps:
   flux:
     chart: fluxcd/flux
-    version: 0.16.0
+    version: 1.0.0
     enabled: true
     namespace: flux
     set:
-      helmOperator.create: true
-      helmOperator.createCRD: true
+      helmOperator.create: false
+      helmOperator.createCRD: false
+      git.readonly: true
       #git.url=git@github.com:fluxcd/flux-get-started
