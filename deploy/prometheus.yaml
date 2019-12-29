@@ -4,13 +4,13 @@ helmRepos:
   stable:      "https://kubernetes-charts.storage.googleapis.com"
 
 namespaces:
-  metrics:
+  monitoring-prometheus:
 
 apps:
   prometheus:
     chart: stable/prometheus
     version: 9.7.1
     enabled: true
-    namespace: metrics
+    namespace: monitoring-prometheus
     valuesFiles:
      - values-prometheus.yaml

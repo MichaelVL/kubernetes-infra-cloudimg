@@ -1,5 +1,5 @@
 loki:
-  serviceName: loki
+  serviceName: loki.monitoring-loki.svc
 resources:
   limits:
     cpu: 100m

@@ -4,14 +4,14 @@ helmRepos:
   stable:      "https://kubernetes-charts.storage.googleapis.com"
 
 namespaces:
-  metrics:
+  monitoring-grafana:
 
 apps:
   grafana:
     chart: stable/grafana
     version: 4.2.2
     enabled: true
-    namespace: metrics
+    namespace: monitoring-grafana
     valuesFiles:
      - values-grafana.yaml
      - values-grafana-datasources.yaml

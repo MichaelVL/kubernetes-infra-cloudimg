@@ -4,14 +4,14 @@ helmRepos:
   loki: "https://grafana.github.io/loki/charts"
 
 namespaces:
-  loki:
+  monitoring-loki:
 
 apps:
   loki:
     chart: loki/loki
     version: 0.22.0
     enabled: true
-    namespace: loki
+    namespace: monitoring-loki
     priority: -1
     valuesFiles:
      - values-loki.yaml

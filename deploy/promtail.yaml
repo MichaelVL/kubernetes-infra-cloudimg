@@ -4,14 +4,14 @@ helmRepos:
   loki: "https://grafana.github.io/loki/charts"
 
 namespaces:
-  loki:
+  monitoring-promtail:
 
 apps:
   promtail:
     chart: loki/promtail
     version: 0.16.0
     enabled: true
-    namespace: loki
+    namespace: monitoring-promtail
     priority: -2
     valuesFiles:
      - values-promtail.yaml

@@ -5,12 +5,12 @@ datasources:
     - name: prometheus
       type: prometheus
       access: proxy
-      url: http://prometheus-server.metrics.svc:80
+      url: http://prometheus-server.monitoring-prometheus.svc:80
       isDefault: true
       editable: false
     - name: loki
       type: loki
       access: proxy
-      url: http://loki.loki.svc:3100
+      url: http://loki.monitoring-loki.svc:3100
       isDefault: false
       editable: false
