@@ -5,7 +5,8 @@ persistence:
 storageClass:
   defaultClass: true
 nodeSelector:
-  "kubernetes.io/hostname": $NFS_STORAGE_PROVISIONER_HOSTNAME
+  #"kubernetes.io/hostname": $NFS_STORAGE_PROVISIONER_HOSTNAME
+  storage-node: '1'
 resources:
   limits:
     cpu: 200m
