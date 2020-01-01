@@ -13,7 +13,7 @@ env_vars=${3:-""}
 manifest_path=$base_path/${basename}.yaml
 namespace_path=$base_path/${basename}-ns.yaml
 manifest_w_explicit_ns_path=$base_path/${basename}-w-ns.yaml
-secrets_path=$base_path/${basename}-secrets-ns.yaml
+secrets_path=$base_path/${basename}-secrets.yaml
 secrets_w_explicit_ns_path=$base_path/${basename}-secrets-w-ns.yaml
 
 env_set=""
