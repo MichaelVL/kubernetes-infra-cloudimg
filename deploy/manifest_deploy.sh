@@ -24,7 +24,7 @@ done
 # Pass-in both the user .kube folder and the current value of KUBECONFIG
 KUBECFG="-v ${HOME}/.kube:${HOME}/.kube"
 MANIFESTS="-v $(pwd):/work"
-KUBECTL_CMD="docker run -i --user $(id -u):$(id -g) --rm -e KUBECONFIG $KUBECFG:ro -w /work $MANIFESTS:ro ${KUBECTL_IMAGE}"
+KUBECTL_CMD="docker run -i --user $(id -u):$(id -g) --net host --rm -e KUBECONFIG $KUBECFG:ro -w /work $MANIFESTS:ro ${KUBECTL_IMAGE}"
 
 if [ ! -z $namespace_path ] && [ -f $namespace_path ]; then
     $KUBECTL_CMD apply -f $namespace_path
