@@ -9,7 +9,7 @@ namespaces:
 apps:
   prom-adapter:
     chart: stable/prometheus-adapter
-    version: 1.4.0
+    version: 2.0.1
     enabled: true
     namespace: monitoring-prom-adapter
     valuesFiles:
