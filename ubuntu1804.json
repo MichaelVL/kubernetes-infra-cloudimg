@@ -82,7 +82,7 @@
 		"scripts/kubernetes_cert_manager.sh",
 		"scripts/kubernetes_contour.sh",
 		"scripts/argocd.sh",
-		"scripts/k-rail.sh",
+		"scripts/gatekeeper-opa.sh",
 		"scripts/helm_chart_images.sh",
 		"scripts/addon-images.sh",
 		"scripts/swap.sh",
