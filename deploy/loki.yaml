@@ -9,7 +9,7 @@ namespaces:
 apps:
   loki:
     chart: loki/loki
-    version: 0.22.0
+    version: 0.25.1
     enabled: true
     namespace: monitoring-loki
     priority: -1
