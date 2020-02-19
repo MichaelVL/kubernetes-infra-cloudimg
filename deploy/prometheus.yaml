@@ -14,3 +14,4 @@ apps:
     namespace: monitoring-prometheus
     valuesFiles:
      - values-prometheus.yaml
+     - values-prometheus-alerting-rules.yaml
