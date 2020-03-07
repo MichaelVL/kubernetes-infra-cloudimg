@@ -1,7 +1,5 @@
 rbac:
   create: true
-alertmanager:
-  enabled: true
 pushgateway:
   enabled: false
 networkPolicy:
@@ -16,6 +14,8 @@ server:
       cpu: 100m
       memory: 256Mi
 alertmanager:
+  enabled: true
+  configFromSecret: alertmanager-config-secret
   persistentVolume:
     enabled: false
   resources:
