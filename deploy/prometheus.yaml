@@ -9,7 +9,7 @@ namespaces:
 apps:
   prometheus:
     chart: stable/prometheus
-    version: 10.4.0
+    version: 11.0.2
     enabled: true
     namespace: monitoring-prometheus
     valuesFiles:
