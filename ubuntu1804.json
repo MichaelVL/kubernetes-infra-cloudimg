@@ -87,6 +87,7 @@
 		"scripts/addon-images.sh",
 		"scripts/swap.sh",
 		"scripts/grub.sh",
+		"scripts/remove-motd.sh",
 		"scripts/cleanup.sh"
 	    ]
 	},
