@@ -55,11 +55,9 @@ rm -f crictl-$CRICTL_VERSION-linux-amd64.tar.gz
 
 # https://github.com/coreos/flannel/releases
 # https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml
-FLANNEL_VER="v0.11.0-amd64"
-CALICO_VER="v3.8"
+FLANNEL_VER="v0.12.0-amd64"
+CALICO_VER="v3.13"
 WEAVE_NET_VER="v$KUBE_MM"
-# From https://cloud.weave.works/k8s/$WEAVE_NET_VER/net.yaml
-WEAVE_NET_IMG_VER="2.5.1"
 
 kubeadm config images pull
 
@@ -99,5 +97,7 @@ cd /etc/kubernetes/addon-manifests/weave-net
 curl -LsO https://cloud.weave.works/k8s/$WEAVE_NET_VER/net.yaml
 
 echo "--> Fetching Weave-net image"
-crictl pull docker.io/weaveworks/weave-kube:$WEAVE_NET_IMG_VER
-crictl pull docker.io/weaveworks/weave-npc:$WEAVE_NET_IMG_VER
+for img in $(grep image net.yaml |cut -d ':' -f2,3 |sed "s/'//g"); do
+    echo "Pulling image $img"
+    crictl pull $img
+done
