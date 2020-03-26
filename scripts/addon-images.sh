@@ -11,3 +11,7 @@ crictl pull bitnami/mongodb:3.7.1-r0
 
 echo "--> Images available after installing additional images"
 crictl images
+
+echo "--> Disk space available"
+df
+
