@@ -30,7 +30,8 @@ image-w-console: build-helm-image-list
 	mv output-tmp-ubuntu$(UBUNTU_VERSION) ${TARGET_DIR}
 
 .PHONY: image
-image: build-helm-image-list
+#image: build-helm-image-list
+image:
 	KUBERNETES_VERSION=$(KUBERNETES_VERSION) KUBERNETES_PATCHLEVEL=$(KUBERNETES_PATCHLEVEL) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -color=false ubuntu$(UBUNTU_VERSION).json | tee build.log
 	mv output-tmp-ubuntu$(UBUNTU_VERSION) ${TARGET_DIR}
 
@@ -63,10 +64,10 @@ test-cncf-check:
 	$(eval SONOBUOY_ARCHIVE_NAME =: $(shell ${SONOBUOY} retrieve))
 	$(shell ${SONOBUOY} results $(SONOBUOY_ARCHIVE_NAME))
 
-.PHONY: build-helm-image-list
-build-helm-image-list:
-	helm repo update
-	echo "#!/bin/bash" > scripts/helm_chart_images.sh
-	echo "set -eux" >> scripts/helm_chart_images.sh
-	echo "# This file is auto-generated - do not edit!" >> scripts/helm_chart_images.sh
-	scripts/get_helm_image_list.sh 'crictl pull' >> scripts/helm_chart_images.sh
+#.PHONY: build-helm-image-list
+#build-helm-image-list:
+#	helm repo update
+#	echo "#!/bin/bash" > scripts/helm_chart_images.sh
+#	echo "set -eux" >> scripts/helm_chart_images.sh
+#	echo "# This file is auto-generated - do not edit!" >> scripts/helm_chart_images.sh
+#	scripts/get_helm_image_list.sh 'crictl pull' >> scripts/helm_chart_images.sh
