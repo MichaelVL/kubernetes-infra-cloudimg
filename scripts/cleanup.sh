@@ -45,5 +45,8 @@ set +e
 dd if=/dev/zero of=/zap bs=1M; rm -f /zap; echo "Zero-filling OK"
 set -e
 
+echo "--> Disk space available"
+df
+
 echo "--> Syncing..."
 sync
