@@ -47,23 +47,10 @@ function deploy_rook_ceph_storage_provider {
     kubectl annotate storageclass rook-ceph-block storageclass.beta.kubernetes.io/is-default-class=true
 }
 
-function deploy_cert_manager_crd {
-    export KUBECONFIG=/etc/kubernetes/admin.conf
-    kubectl create -f /etc/kubernetes/addon-manifests/cert-manager/00-crds.yaml
-    kubectl create namespace cert-manager
-    kubectl label namespace cert-manager certmanager.k8s.io/disable-validation="true"
-}
-
 function deploy_vertical_pod_autoscaler {
     export KUBECONFIG=/etc/kubernetes/admin.conf
     cd /etc/kubernetes/addon-manifests/vpa/autoscaler/vertical-pod-autoscaler
     ./hack/vpa-up.sh
-}
-
-function deploy_contour {
-    export KUBECONFIG=/etc/kubernetes/admin.conf
-    kubectl apply -f /etc/kubernetes/addon-manifests/contour
-    kubectl -n projectcontour-monitoring label cm grafana-dashs grafana_dashboard=1
 }
 
 while [[ $# -gt 0 ]]
@@ -85,14 +72,8 @@ do
     --rook-ceph-provisioner)
 	deploy_rook_ceph_storage_provider
 	;;
-    --cert-manager-crd)
-	deploy_cert_manager_crd
-	;;
     --vpa)
 	deploy_vertical_pod_autoscaler
-	;;
-    --contour)
-	deploy_contour
 	;;
   esac
   shift
