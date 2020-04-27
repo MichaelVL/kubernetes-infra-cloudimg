@@ -17,11 +17,15 @@ crictl pull docker.io/calico/node:v3.8.8-1
 crictl pull docker.io/calico/pod2daemon-flexvol:v3.13.2
 crictl pull docker.io/calico/pod2daemon-flexvol:v3.8.8
 crictl pull docker.io/ceph/ceph:v14.2.8
+crictl pull docker.io/ceph/ceph:v14.2.9
 crictl pull docker.io/directxman12/k8s-prometheus-adapter-amd64:v0.6.0
 crictl pull docker.io/envoyproxy/envoy:v1.13.1
 crictl pull docker.io/grafana/grafana:6.6.2
+crictl pull docker.io/grafana/grafana:6.7.1
+crictl pull docker.io/grafana/loki:1.4.1
 crictl pull docker.io/grafana/loki:v1.2.0
 crictl pull docker.io/grafana/loki:v1.3.0
+crictl pull docker.io/grafana/promtail:1.4.1
 crictl pull docker.io/grafana/promtail:v1.3.0
 crictl pull docker.io/jimmidyson/configmap-reload:v0.3.0
 crictl pull docker.io/kiwigrid/k8s-sidecar:0.1.99
@@ -49,12 +53,14 @@ crictl pull k8s.gcr.io/kube-apiserver:v1.18.2
 crictl pull k8s.gcr.io/kube-controller-manager:v1.18.2
 crictl pull k8s.gcr.io/kube-proxy:v1.18.2
 crictl pull k8s.gcr.io/kube-scheduler:v1.18.2
+crictl pull k8s.gcr.io/metrics-server-amd64:v0.3.6
 crictl pull k8s.gcr.io/pause:3.1
 crictl pull k8s.gcr.io/pause:3.2
 crictl pull k8s.gcr.io/vpa-admission-controller:0.6.3
 crictl pull k8s.gcr.io/vpa-recommender:0.6.3
 crictl pull k8s.gcr.io/vpa-updater:0.6.3
 crictl pull quay.io/bitnami/sealed-secrets-controller:v0.10.0
+crictl pull quay.io/bitnami/sealed-secrets-controller:v0.12.1
 crictl pull quay.io/coreos/flannel:v0.11.0
 crictl pull quay.io/coreos/flannel:v0.12.0-amd64
 crictl pull quay.io/coreos/kube-state-metrics:v1.9.5
@@ -66,6 +72,9 @@ crictl pull quay.io/jetstack/cert-manager-webhook:v0.14.1
 crictl pull quay.io/kubernetes_incubator/nfs-provisioner:v2.3.0
 crictl pull quay.io/open-policy-agent/gatekeeper:v3.1.0-beta.7
 crictl pull quay.io/pusher/oauth2_proxy:v5.1.0
+crictl pull us.gcr.io/k8s-artifacts-prod/autoscaling/vpa-admission-controller:0.8.0
+crictl pull us.gcr.io/k8s-artifacts-prod/autoscaling/vpa-recommender:0.8.0
+crictl pull us.gcr.io/k8s-artifacts-prod/autoscaling/vpa-updater:0.8.0
 
 echo "--> Images available after installing additional images"
 crictl images
