@@ -30,10 +30,13 @@ image-w-console: build-helm-image-list
 	mv output-tmp-ubuntu$(UBUNTU_VERSION) ${TARGET_DIR}
 
 .PHONY: image
-#image: build-helm-image-list
 image:
 	KUBERNETES_VERSION=$(KUBERNETES_VERSION) KUBERNETES_PATCHLEVEL=$(KUBERNETES_PATCHLEVEL) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -color=false ubuntu$(UBUNTU_VERSION).json | tee build.log
 	mv output-tmp-ubuntu$(UBUNTU_VERSION) ${TARGET_DIR}
+
+.PHONY: image-aws
+image-aws:
+	KUBERNETES_VERSION=$(KUBERNETES_VERSION) KUBERNETES_PATCHLEVEL=$(KUBERNETES_PATCHLEVEL) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -only=amazon-ebs -color=false ubuntu$(UBUNTU_VERSION).json | tee build.log
 
 # This assumes a VM running with IP address in $TESTVM_IP and injected SSH key
 .PHONY: test-image

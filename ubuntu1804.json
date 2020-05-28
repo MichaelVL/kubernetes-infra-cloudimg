@@ -57,6 +57,32 @@
 		[ "-m", "{{ user `memory` }}" ],
 		[ "-smp", "cpus={{ user `cpus`}}"]
 	    ]
+	},
+	{
+	    "type": "amazon-ebs",
+	    "region": "eu-central-1",
+	    "source_ami_filter": {
+		"filters": {
+		    "virtualization-type": "hvm",
+		    "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+		    "root-device-type": "ebs"
+		},
+		"owners": ["099720109477"],
+		"most_recent": true
+	    },
+	    "instance_type": "t2.micro",
+	    "ssh_username": "ubuntu",
+	    "ami_name": "kubernetes-base-{{timestamp}}",
+            "ami_block_device_mappings": [ {
+                "device_name": "/dev/xvda",
+                "volume_size": 20,
+                "delete_on_termination": true
+            } ],
+            "launch_block_device_mappings": [ {
+                "device_name": "/dev/xvda",
+                "volume_size": 20,
+                "delete_on_termination": true
+            } ]
 	}
     ],
     "provisioners": [
