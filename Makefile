@@ -31,7 +31,7 @@ image-w-console: build-helm-image-list
 
 .PHONY: image
 image:
-	KUBERNETES_VERSION=$(KUBERNETES_VERSION) KUBERNETES_PATCHLEVEL=$(KUBERNETES_PATCHLEVEL) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -color=false ubuntu$(UBUNTU_VERSION).json | tee build.log
+	KUBERNETES_VERSION=$(KUBERNETES_VERSION) KUBERNETES_PATCHLEVEL=$(KUBERNETES_PATCHLEVEL) CHECKPOINT_DISABLE=1 PACKER_KEY_INTERVAL=10ms packer build -only=qemu -color=false ubuntu$(UBUNTU_VERSION).json | tee build.log
 	mv output-tmp-ubuntu$(UBUNTU_VERSION) ${TARGET_DIR}
 
 .PHONY: image-aws
