@@ -78,3 +78,6 @@ crictl pull us.gcr.io/k8s-artifacts-prod/autoscaling/vpa-updater:0.8.0
 
 echo "--> Images available after installing additional images"
 crictl images
+
+echo "--> Disk space available"
+df
